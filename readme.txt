@@ -4,14 +4,17 @@ F1WebSite
 -topka teamów (najwięcej zwycięstw, najwięcej poleposition)
 
 /drivers:
--lista wszystkich kierowców
+-lista wszystkich kierowców posortowanych po liczbie zwycięstw
 -wyszukiwanie poszczególnego kierowcy
--każdy kierowca ma przekierowanie do /frivers/{id}
+-każdy kierowca ma przekierowanie do /drivers/{id}
+-każdy kierowca ma liczbę zwycięstw
 
 /drivers/{id}:
--liczba 1, 2, 3 miejsc
--lista ostatnich wyścigów
+-lista ostatnich 10 wyścigów
 -wyszukiwanie poszczególnego wyścigu kierowcy
+-liczba 1, 2, 3 miejsc
+-liczba wyścigów
+-łączna liczba punktów
 
 /consturctors:
 -lista wszystkich konstruktorów
