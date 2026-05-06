@@ -7,11 +7,13 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class DriverWinsDto {
+public class DriverWinsRacesDto {
     
     private Long id;
 
     private String name;
 
     private Long firstPlaces;
+
+    private Long numOfRaces;
 }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,4 +23,7 @@ public class DriverEntity {
     private String name;
 
     private String url;
+
+    @OneToMany(mappedBy = "driver")
+    private List<ResultEntity> results;
 }
