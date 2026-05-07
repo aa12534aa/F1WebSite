@@ -10,23 +10,27 @@ F1WebSite
 -każdy kierowca ma liczbę zwycięstw
 
 /drivers/{id}:
--lista ostatnich 10 wyścigów
+-lista ostatnich 10 wyścigów z (miejscem startowym, miejscem końcowym, punktami, rokiem wyścigu, nazwą wyścigu)
 -wyszukiwanie poszczególnego wyścigu kierowcy
 -liczba 1, 2, 3 miejsc
 -liczba wyścigów
 -łączna liczba punktów
+-liczba poleposition
 
 -może (tor na którym kierowca ma najwięcej wygranych)
 
 /consturctors:
--lista wszystkich konstruktorów
+-lista wszystkich konstruktorów posortowanych po liczbie zwycięstw
 -wyszukiwanie poszczególnego konstruktora
--każdy konstruktor ma przekierowanie do indywidualnego widoku ze statystykami
+-każdy konstruktor ma przekierowanie do indywidualnego widoku ze
+-każdy konstruktor ma liczbę zwycięstw
 
 /constructors/{id}:
--liczba 1, 2, 3 miejsc
 -lista ostatnich wyścigów
 -wyszukiwanie poszczególnego wyścigu zespołu
+-liczba 1, 2, 3 miejsc
+-liczba wyścigów
+-łączna liczba punktów
 
-/races:
+/tracks:
 -tory z liczbą wyścigów

@@ -2,10 +2,13 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.dto.DriverAllInfoDto;
-import com.tp.F1WebSite.dto.DriverRacesDto;
+import com.tp.F1WebSite.dto.DriverRaceDto;
 import com.tp.F1WebSite.dto.DriverWinsRacesDto;
 import com.tp.F1WebSite.repositories.DriverRepository;
 import com.tp.F1WebSite.services.DriverService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,18 +37,25 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public List<DriverWinsRacesDto> findManyByName(String searchName) {
-        List<DriverWinsRacesDto> drivers = driverRepository.findDriversWinsRacesByName(searchName);
+    public Page<DriverWinsRacesDto> findManyByName(String searchName, Pageable pageable) {
+        Page<DriverWinsRacesDto> drivers = driverRepository.findDriversWinsRacesByName(searchName, pageable);
         return drivers;
     }
 
     @Override
     public DriverAllInfoDto findOneById(Long driverId) {
         DriverAllInfoDto driverAllInfo = driverRepository.findDriverAllInfo(driverId);
-        List<DriverRacesDto> driverRaces = driverRepository.findDriverAllRaces(driverId);
+        List<DriverRaceDto> driverRaces = driverRepository.findDriverAllRaces(driverId);
+        Long numOfPolePositions = driverRepository.findNumOfPolePositions(driverId);
 
         driverAllInfo.setRaces(driverRaces);
+        driverAllInfo.setNumOfPolePosition(numOfPolePositions);
 
         return driverAllInfo;
+    }
+
+    @Override
+    public List<DriverWinsRacesDto> findBestDrivers() {
+        return driverRepository.findDriversWinsRacesByName("", PageRequest.of(0, 10)).getContent();
     }
 }

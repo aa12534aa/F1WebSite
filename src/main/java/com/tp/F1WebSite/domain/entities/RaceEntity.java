@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -20,7 +21,7 @@ public class RaceEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long raceId;
 
-    private Integer year;
+    private LocalDate date;
 
     private String name;
 

@@ -8,8 +8,8 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class DriverWinsRacesDto {
-    
-    private Long id;
+
+    private Long driverId;
 
     private String name;
 

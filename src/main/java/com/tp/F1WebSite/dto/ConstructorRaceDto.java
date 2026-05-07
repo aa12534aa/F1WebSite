@@ -1,28 +1,27 @@
 package com.tp.F1WebSite.dto;
 
-import com.tp.F1WebSite.domain.entities.ResultEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DriverRacesDto {
+public class ConstructorRaceDto {
 
-    private Long id;
+    private String driverName;
 
     private Integer grid;
 
     private  Integer position;
 
-    private Integer points;
+    private Double points;
 
-    private Integer raceYear;
+    private LocalDate date;
 
     private String raceName;
 }

@@ -1,6 +1,5 @@
 package com.tp.F1WebSite.dto;
 
-import com.tp.F1WebSite.domain.entities.RaceEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +11,6 @@ import java.util.List;
 @Builder
 public class DriverAllInfoDto {
 
-    private Long id;
-
     private String name;
 
     private String url;
@@ -24,14 +21,15 @@ public class DriverAllInfoDto {
 
     private Long thirdPlaces;
 
-    private Long gainedPoints;
+    private Double gainedPoints;
 
     private Long numOfRaces;
 
-    private List<DriverRacesDto> races;
+    private Long numOfPolePosition;
 
-    public DriverAllInfoDto(Long id, String name, String url, Long firstPlaces, Long secondPlaces, Long thirdPlaces, Long gainedPoints, Long numOfRaces) {
-        this.id = id;
+    private List<DriverRaceDto> races;
+
+    public DriverAllInfoDto(String name, String url, Long firstPlaces, Long secondPlaces, Long thirdPlaces, Double gainedPoints, Long numOfRaces) {
         this.name = name;
         this.url = url;
         this.firstPlaces = firstPlaces;

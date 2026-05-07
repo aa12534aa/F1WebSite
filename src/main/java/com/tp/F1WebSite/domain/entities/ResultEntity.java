@@ -34,5 +34,5 @@ public class ResultEntity {
 
     private  Integer position;
 
-    private Integer points;
+    private Double points;
 }

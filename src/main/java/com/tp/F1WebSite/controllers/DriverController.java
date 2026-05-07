@@ -6,6 +6,8 @@ import com.tp.F1WebSite.dto.DriverAllInfoDto;
 import com.tp.F1WebSite.dto.DriverWinsRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.services.DriverService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +27,13 @@ public class DriverController {
     }
 
     @GetMapping(path = "/drivers")
-    public List<DriverWinsRacesDto> getManyDrivers(@RequestParam(required = false) String searchName) {
-        List<DriverWinsRacesDto> drivers;
-        System.out.println(searchName);
+    public Page<DriverWinsRacesDto> getManyDrivers(@RequestParam(required = false) String searchName, Pageable pageable) {
+        Page<DriverWinsRacesDto> drivers;
 
         if (searchName != null && !searchName.isEmpty()) {
-            drivers = driverService.findManyByName(searchName);
+            drivers = driverService.findManyByName(searchName, pageable);
         } else {
-            drivers = driverService.findManyByName("");
+            drivers = driverService.findManyByName("", pageable);
         }
 
         return drivers;

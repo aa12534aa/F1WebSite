@@ -26,4 +26,7 @@ public class DriverEntity {
 
     @OneToMany(mappedBy = "driver")
     private List<ResultEntity> results;
+
+    @OneToMany(mappedBy = "driver")
+    private List<QualifyingEntity> qualifying;
 }

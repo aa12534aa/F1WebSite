@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,4 +21,7 @@ public class ConstructorEntity {
     private Long constructorId;
 
     private String name;
+
+    @OneToMany(mappedBy = "constructor")
+    private List<ResultEntity> results;
 }

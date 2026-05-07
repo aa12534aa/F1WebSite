@@ -23,5 +23,5 @@ public class ResultDto {
 
     private Integer position;
 
-    private Integer points;
+    private Double points;
 }

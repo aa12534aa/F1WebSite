@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,7 +15,7 @@ public class RaceDto {
 
     private Long raceId;
 
-    private Integer year;
+    private LocalDate date;
 
     private String name;
 }
