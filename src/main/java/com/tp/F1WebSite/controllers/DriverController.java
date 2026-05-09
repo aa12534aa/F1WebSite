@@ -17,9 +17,9 @@ import java.util.List;
 @RestController
 public class DriverController {
 
-    private DriverService driverService;
+    private final DriverService driverService;
 
-    private Mapper<DriverEntity, DriverDto> driverMapper;
+    private final Mapper<DriverEntity, DriverDto> driverMapper;
 
     public DriverController(DriverService driverService, Mapper<DriverEntity, DriverDto> driverMapper) {
         this.driverService = driverService;

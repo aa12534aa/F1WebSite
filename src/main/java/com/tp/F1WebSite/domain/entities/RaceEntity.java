@@ -21,6 +21,10 @@ public class RaceEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long raceId;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "circuit_id")
+    private CircuitEntity circuit;
+
     private LocalDate date;
 
     private String name;

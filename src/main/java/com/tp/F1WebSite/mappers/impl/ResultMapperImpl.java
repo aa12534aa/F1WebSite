@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ResultMapperImpl implements Mapper<ResultEntity, ResultDto> {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public ResultMapperImpl(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;

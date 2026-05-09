@@ -1,4 +1,4 @@
-package com.tp.F1WebSite.dto;
+package com.tp.F1WebSite.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TracksRacesDto {
+public class CircuitDto {
+
+    private Long circuitId;
 
     private String name;
 
-    private Long numOfRaces;
+    private String country;
+
+    private String url;
 }

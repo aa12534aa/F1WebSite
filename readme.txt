@@ -19,8 +19,7 @@ F1WebSite
 -liczba wyścigów
 -łączna liczba punktów
 -liczba poleposition
-
--może (tor na którym kierowca ma najwięcej wygranych)
+-tor na którym kierowca ma najwięcej wygranych
 
 // zrobione
 /consturctors:
@@ -37,8 +36,47 @@ F1WebSite
 -liczba wyścigów
 -łączna liczba punktów
 
-/tracks:
+// zrobione
+/circuits:
 -tory z liczbą wyścigów
 
-może (/tracks/{id} lista zwycięzców w ostatnich wyścigach na danym torze)
-ale trzeba stworzyć tabele circuts i ją zaimportować
+może (/tracks/{id} lista zwycięzców w ostatnich wyścigach na danym torze, kierowca który najwięcej wygrał)
+ale trzeba stworzyć tabele circuts i ją
+
+
+struktura bazy danych
+drivers:
+-id
+-name
+-url
+
+constructors:
+-id
+-name
+
+circuits:
+-id
+-name
+-country
+-url
+
+races:
+-id
+-date
+-name
+
+qualifying:
+-id
+-race_id
+-driver_id
+-constructor_id
+-position
+
+results:
+-id
+-race_id
+-driver_id
+-constructor_id
+-grid
+-position
+-points

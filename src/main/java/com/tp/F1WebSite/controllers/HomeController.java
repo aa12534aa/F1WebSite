@@ -16,8 +16,8 @@ import java.util.List;
 @RestController
 public class HomeController {
 
-    private DriverService driverService;
-    private ConstructorService constructorService;
+    private final DriverService driverService;
+    private final ConstructorService constructorService;
 
     public HomeController(DriverService driverService, ConstructorService constructorService) {
         this.driverService = driverService;

@@ -2,6 +2,7 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.dto.DriverAllInfoDto;
+import com.tp.F1WebSite.dto.DriverTrackWins;
 import com.tp.F1WebSite.dto.DriverRaceDto;
 import com.tp.F1WebSite.dto.DriverWinsRacesDto;
 import com.tp.F1WebSite.repositories.DriverRepository;
@@ -18,7 +19,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class DriverServiceImpl implements DriverService {
 
-    private DriverRepository driverRepository;
+    private final DriverRepository driverRepository;
 
     public DriverServiceImpl(DriverRepository driverRepository) {
         this.driverRepository = driverRepository;
@@ -45,8 +46,26 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public DriverAllInfoDto findOneById(Long driverId) {
         DriverAllInfoDto driverAllInfo = driverRepository.findDriverAllInfo(driverId);
+
         List<DriverRaceDto> driverRaces = driverRepository.findDriverAllRaces(driverId);
+
         Long numOfPolePositions = driverRepository.findNumOfPolePositions(driverId);
+
+        List<DriverTrackWins> driverTracksWins = driverRepository.findDriverTracksWins(driverId);
+        if (driverTracksWins.isEmpty()) {
+            driverAllInfo.setBestTracks(List.of());
+        } else {
+            Long numOfWins = driverTracksWins.stream().map(DriverTrackWins::getNumOfWins)
+                    .max(Long::compareTo).orElse(0L);
+            if (numOfWins > 0L) {
+                List<DriverTrackWins> bestTracks = driverTracksWins.stream().filter(driverTrackWins ->
+                        driverTrackWins.getNumOfWins().
+                        equals(numOfWins)).toList();
+                driverAllInfo.setBestTracks(bestTracks);
+            } else {
+                driverAllInfo.setBestTracks(List.of());
+            }
+        }
 
         driverAllInfo.setRaces(driverRaces);
         driverAllInfo.setNumOfPolePosition(numOfPolePositions);

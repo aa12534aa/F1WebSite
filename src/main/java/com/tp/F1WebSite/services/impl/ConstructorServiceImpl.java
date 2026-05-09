@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class ConstructorServiceImpl implements ConstructorService {
 
-    private ConstructorRepository constructorRepository;
+    private final ConstructorRepository constructorRepository;
 
     public ConstructorServiceImpl(ConstructorRepository constructorRepository) {
         this.constructorRepository = constructorRepository;

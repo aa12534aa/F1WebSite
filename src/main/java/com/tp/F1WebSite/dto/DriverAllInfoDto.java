@@ -27,6 +27,8 @@ public class DriverAllInfoDto {
 
     private Long numOfPolePosition;
 
+    private List<DriverTrackWins> bestTracks;
+
     private List<DriverRaceDto> races;
 
     public DriverAllInfoDto(String name, String url, Long firstPlaces, Long secondPlaces, Long thirdPlaces, Double gainedPoints, Long numOfRaces) {

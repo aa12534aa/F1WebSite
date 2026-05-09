@@ -20,9 +20,9 @@ import java.util.List;
 @RestController
 public class ConstructorController {
 
-    private ConstructorService constructorService;
+    private final ConstructorService constructorService;
 
-    private Mapper<ConstructorEntity, ConstructorDto> constructorMapper;
+    private final Mapper<ConstructorEntity, ConstructorDto> constructorMapper;
 
     public ConstructorController(ConstructorService constructorService, Mapper<ConstructorEntity, ConstructorDto> constructorMapper) {
         this.constructorService = constructorService;

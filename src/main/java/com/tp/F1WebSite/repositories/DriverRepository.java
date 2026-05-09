@@ -2,6 +2,7 @@ package com.tp.F1WebSite.repositories;
 
 import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.dto.DriverAllInfoDto;
+import com.tp.F1WebSite.dto.DriverTrackWins;
 import com.tp.F1WebSite.dto.DriverRaceDto;
 import com.tp.F1WebSite.dto.DriverWinsRacesDto;
 
@@ -79,4 +80,18 @@ public interface DriverRepository extends CrudRepository<DriverEntity, Long>,
     WHERE driver.driverId = :driverId
     """)
     Long findNumOfPolePositions(Long driverId);
+
+    @Query(value = """
+    SELECT new com.tp.F1WebSite.dto.DriverTrackWins (
+        race.circuit.name,
+        race.circuit.country,
+        COUNT(CASE WHEN result.position = 1 THEN 1 END)
+        )
+    FROM ResultEntity result
+    JOIN result.race race
+    WHERE result.driver.driverId = :driverId
+    GROUP BY race.circuit.name, race.circuit.country
+    ORDER BY COUNT(CASE WHEN result.position = 1 THEN 1 END) DESC
+    """)
+    List<DriverTrackWins> findDriverTracksWins(Long driverId);
 }

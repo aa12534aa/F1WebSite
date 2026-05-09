@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class QualifyingDto {
 
-    private Long qulifyingId;
+    private Long qualifyingId;
 
     private RaceDto race;
 
@@ -19,5 +19,5 @@ public class QualifyingDto {
 
     private ConstructorDto constructor;
 
-    private Integer points;
+    private Integer position;
 }

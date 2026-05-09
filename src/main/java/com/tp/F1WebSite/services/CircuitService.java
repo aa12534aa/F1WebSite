@@ -4,6 +4,7 @@ import com.tp.F1WebSite.dto.CircuitRacesDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface RaceService {
+public interface CircuitService {
 
+    Page<CircuitRacesDto> findManyByName(String searchCircuit, Pageable pageable);
 }

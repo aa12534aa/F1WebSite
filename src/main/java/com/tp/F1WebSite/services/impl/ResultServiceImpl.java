@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResultServiceImpl implements ResultService {
 
-    private ResultRepository resultRepository;
+    private final ResultRepository resultRepository;
 
     public ResultServiceImpl(ResultRepository resultRepository) {
         this.resultRepository = resultRepository;
