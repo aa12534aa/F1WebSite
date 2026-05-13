@@ -9,10 +9,12 @@ import com.tp.F1WebSite.services.RaceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/circuits")
 public class CircuitController {
 
     private final CircuitService circuitService;
@@ -22,7 +24,7 @@ public class CircuitController {
         this.circuitService = circuitService;
     }
 
-    @GetMapping(path = "/circuits")
+    @GetMapping(path = "")
     public Page<CircuitRacesDto> getManyTracks(@RequestParam(required = false) String searchCircuit, Pageable pageable) {
         Page<CircuitRacesDto> tracks;
 

@@ -53,20 +53,32 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
     """)
     ConstructorAllInfoDto findConstructorAllInfo(Long constructorId);
 
-    @Query("""
+    @Query(value = """
     SELECT new com.tp.F1WebSite.dto.ConstructorRaceDto (
+        constructor.name,
         driver.name,
         result.grid,
         result.position,
         result.points,
         race.date,
-        race.name
+        race.name,
+        circuit.country
         )
     FROM ResultEntity result
     JOIN result.race race
     JOIN result.driver driver
-    WHERE result.constructor.constructorId = :constructorId
+    JOIN result.constructor constructor
+    Join race.circuit circuit
+    WHERE constructor.constructorId = :constructorId AND LOWER(circuit.country) LIKE LOWER(CONCAT('%', :searchCountry, '%'))
     ORDER BY race.date DESC
+    """,
+    countQuery = """
+    SELECT COUNT(result.resultId)
+    FROM ResultEntity result
+    JOIN result.constructor constructor
+    JOIN result.race race
+    JOIN race.circuit circuit
+    WHERE constructor.constructorId = :constructorId AND LOWER(circuit.country) LIKE LOWER(CONCAT('%', :searchCountry, '%'))
     """)
-    List<ConstructorRaceDto> findConstructorAllRaces(Long constructorId);
+    Page<ConstructorRaceDto> findConstructorAllRaces(Long constructorId, String searchCountry, Pageable pageable);
 }

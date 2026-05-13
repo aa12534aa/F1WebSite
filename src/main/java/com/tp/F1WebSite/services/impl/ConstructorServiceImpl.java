@@ -33,11 +33,12 @@ public class ConstructorServiceImpl implements ConstructorService {
 
     @Override
     public ConstructorAllInfoDto findOneById(Long constructorId) {
-        ConstructorAllInfoDto constructorAllInfo = constructorRepository.findConstructorAllInfo(constructorId);
-        List<ConstructorRaceDto> constructorRaces = constructorRepository.findConstructorAllRaces(constructorId);
+        return constructorRepository.findConstructorAllInfo(constructorId);
+    }
 
-        constructorAllInfo.setRaces(constructorRaces);
-        return constructorAllInfo;
+    @Override
+    public Page<ConstructorRaceDto> findOneByIdRaces(Long constructorId, String searchCountry, Pageable pageable) {
+        return constructorRepository.findConstructorAllRaces(constructorId, searchCountry, pageable);
     }
 
     @Override

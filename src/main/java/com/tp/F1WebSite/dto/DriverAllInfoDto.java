@@ -3,10 +3,12 @@ package com.tp.F1WebSite.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class DriverAllInfoDto {
@@ -27,9 +29,7 @@ public class DriverAllInfoDto {
 
     private Long numOfPolePosition;
 
-    private List<DriverTrackWins> bestTracks;
-
-    private List<DriverRaceDto> races;
+    private List<DriverCircuitsWins> bestCircuits;
 
     public DriverAllInfoDto(String name, String url, Long firstPlaces, Long secondPlaces, Long thirdPlaces, Double gainedPoints, Long numOfRaces) {
         this.name = name;

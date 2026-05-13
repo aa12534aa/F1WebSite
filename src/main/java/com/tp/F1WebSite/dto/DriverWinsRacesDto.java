@@ -13,7 +13,7 @@ public class DriverWinsRacesDto {
 
     private String name;
 
-    private Long firstPlaces;
+    private Long numOfWins;
 
     private Long numOfRaces;
 }

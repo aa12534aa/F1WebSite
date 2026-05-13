@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Builder
 public class DriverRaceDto {
 
+    private String name;
+
     private String team;
 
     private Integer grid;
@@ -24,4 +26,6 @@ public class DriverRaceDto {
     private LocalDate date;
 
     private String raceName;
+
+    private String country;
 }

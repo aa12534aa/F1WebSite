@@ -2,7 +2,7 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.dto.DriverAllInfoDto;
-import com.tp.F1WebSite.dto.DriverTrackWins;
+import com.tp.F1WebSite.dto.DriverCircuitsWins;
 import com.tp.F1WebSite.dto.DriverRaceDto;
 import com.tp.F1WebSite.dto.DriverWinsRacesDto;
 import com.tp.F1WebSite.repositories.DriverRepository;
@@ -47,30 +47,35 @@ public class DriverServiceImpl implements DriverService {
     public DriverAllInfoDto findOneById(Long driverId) {
         DriverAllInfoDto driverAllInfo = driverRepository.findDriverAllInfo(driverId);
 
-        List<DriverRaceDto> driverRaces = driverRepository.findDriverAllRaces(driverId);
-
         Long numOfPolePositions = driverRepository.findNumOfPolePositions(driverId);
+        List<DriverCircuitsWins> bestCircuits = findOneByIdBestCircuit(driverId);
 
-        List<DriverTrackWins> driverTracksWins = driverRepository.findDriverTracksWins(driverId);
-        if (driverTracksWins.isEmpty()) {
-            driverAllInfo.setBestTracks(List.of());
-        } else {
-            Long numOfWins = driverTracksWins.stream().map(DriverTrackWins::getNumOfWins)
-                    .max(Long::compareTo).orElse(0L);
-            if (numOfWins > 0L) {
-                List<DriverTrackWins> bestTracks = driverTracksWins.stream().filter(driverTrackWins ->
-                        driverTrackWins.getNumOfWins().
-                        equals(numOfWins)).toList();
-                driverAllInfo.setBestTracks(bestTracks);
-            } else {
-                driverAllInfo.setBestTracks(List.of());
-            }
-        }
-
-        driverAllInfo.setRaces(driverRaces);
         driverAllInfo.setNumOfPolePosition(numOfPolePositions);
+        driverAllInfo.setBestCircuits(bestCircuits);
 
         return driverAllInfo;
+    }
+
+    @Override
+    public Page<DriverRaceDto> findOneByIdRaces(Long driverId, String searchCountry, Pageable pageable) {
+        return driverRepository.findDriverManyRacesByCountry(driverId, searchCountry, pageable);
+    }
+
+    @Override
+    public List<DriverCircuitsWins> findOneByIdBestCircuit(Long driverId) {
+        List<DriverCircuitsWins> driverTracksWins = driverRepository.findDriverTracksWins(driverId);
+        if (driverTracksWins.isEmpty()) {
+            return List.of();
+        } else {
+            Long numOfWins = driverTracksWins.stream().map(DriverCircuitsWins::getNumOfWins)
+                    .max(Long::compareTo).orElse(0L);
+            if (numOfWins > 0L) {
+                return driverTracksWins.stream().filter(driverCircuitsWins ->
+                        driverCircuitsWins.getNumOfWins().equals(numOfWins)).toList();
+            } else {
+                return List.of();
+            }
+        }
     }
 
     @Override

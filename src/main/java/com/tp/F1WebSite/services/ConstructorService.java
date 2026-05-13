@@ -16,5 +16,7 @@ public interface ConstructorService {
 
     ConstructorAllInfoDto findOneById(Long constructorId);
 
+    Page<ConstructorRaceDto> findOneByIdRaces(Long constructorId, String searchCountry, Pageable pageable);
+
     List<ConstructorWinsRacesDto> findBestConstructors();
 }

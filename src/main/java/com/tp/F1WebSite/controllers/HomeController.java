@@ -9,11 +9,13 @@ import com.tp.F1WebSite.services.DriverService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/home")
 public class HomeController {
 
     private final DriverService driverService;
@@ -24,7 +26,7 @@ public class HomeController {
         this.constructorService = constructorService;
     }
 
-    @GetMapping(path = "/")
+    @GetMapping(path = "")
     public ResponseEntity<BestDriversConstructors> getBestAndDriversConstructors() {
         List<DriverWinsRacesDto> bestDrivers = driverService.findBestDrivers();
         List<ConstructorWinsRacesDto> bestConstructors = constructorService.findBestConstructors();

@@ -24,15 +24,4 @@ public class ConstructorAllInfoDto {
     private Double gainedPoints;
 
     private Long numOfRaces;
-
-    private List<ConstructorRaceDto> races;
-
-    public ConstructorAllInfoDto(String name, Long firstPlaces, Long secondPlaces, Long thirdPlaces, Double gainedPoints, Long numOfRaces) {
-        this.name = name;
-        this.firstPlaces = firstPlaces;
-        this.secondPlaces = secondPlaces;
-        this.thirdPlaces = thirdPlaces;
-        this.gainedPoints = gainedPoints;
-        this.numOfRaces = numOfRaces;
-    }
 }

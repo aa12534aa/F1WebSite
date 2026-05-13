@@ -1,46 +1,56 @@
 F1WebSite
 // zrobione
-/home:
+/api/home:
 -topka kierowców (najwięcej zwycięstw, najwięcej poleposition)
 -topka teamów (najwięcej zwycięstw, najwięcej poleposition)
 
 // zrobione
-/drivers:
--lista wszystkich kierowców posortowanych po liczbie zwycięstw
+/api/drivers:
+-page wszystkich kierowców posortowanych po liczbie zwycięstw
+-wyszukiwanie kierowców po imieniu+nazwisku
 -wyszukiwanie poszczególnego kierowcy
 -każdy kierowca ma przekierowanie do /drivers/{id}
 -każdy kierowca ma liczbę zwycięstw
 
 // zrobione
-/drivers/{id}:
--lista ostatnich 10 wyścigów z (miejscem startowym, miejscem końcowym, punktami, rokiem wyścigu, nazwą wyścigu)
--wyszukiwanie poszczególnego wyścigu kierowcy
+/api/drivers/{id}:
 -liczba 1, 2, 3 miejsc
 -liczba wyścigów
 -łączna liczba punktów
 -liczba poleposition
+
+// zrobione
+/api/drivers/{id}/races
+-page ostatnich 10 wyścigów z (miejscem startowym, miejscem końcowym, punktami, rokiem wyścigu, nazwą wyścigu)
+-wyszukiwanie wyścigów po kraju
+
+// zrobione
+/api/drivers/{id}/best-circuit
 -tor na którym kierowca ma najwięcej wygranych
 
 // zrobione
-/consturctors:
--lista wszystkich konstruktorów posortowanych po liczbie zwycięstw
--wyszukiwanie poszczególnego konstruktora
+/api/constructors:
+-page wszystkich konstruktorów posortowanych po liczbie zwycięstw
+-wyszukiwanie konstruktorów po nazwie
 -każdy konstruktor ma przekierowanie do indywidualnego widoku ze
 -każdy konstruktor ma liczbę zwycięstw
 
 // zrobione
-/constructors/{id}:
--lista ostatnich wyścigów
--wyszukiwanie poszczególnego wyścigu zespołu
+/api/constructors/{id}:
 -liczba 1, 2, 3 miejsc
 -liczba wyścigów
 -łączna liczba punktów
 
 // zrobione
-/circuits:
+/api/constructors/{id}/races:
+-page ostatnich wyścigów
+-wyszukiwanie wyścigów po kraju
+
+// zrobione
+/api/circuits:
 -tory z liczbą wyścigów
 
-może (/tracks/{id} lista zwycięzców w ostatnich wyścigach na danym torze, kierowca który najwięcej wygrał)
+może (/circuits/{id} lista zwycięzców w ostatnich wyścigach na danym torze, kierowca który najwięcej wygrał)
 ale trzeba stworzyć tabele circuts i ją
 
 
@@ -62,6 +72,7 @@ circuits:
 
 races:
 -id
+-circuit_id
 -date
 -name
 

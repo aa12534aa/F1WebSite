@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DriverTrackWins {
+public class DriverCircuitsWins {
 
-    private String trackName;
+    private String circuitName;
 
     private String country;
 

@@ -2,21 +2,21 @@ package com.tp.F1WebSite.repositories;
 
 import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.dto.DriverAllInfoDto;
-import com.tp.F1WebSite.dto.DriverTrackWins;
+import com.tp.F1WebSite.dto.DriverCircuitsWins;
 import com.tp.F1WebSite.dto.DriverRaceDto;
 import com.tp.F1WebSite.dto.DriverWinsRacesDto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface DriverRepository extends CrudRepository<DriverEntity, Long>,
+public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
         PagingAndSortingRepository<DriverEntity, Long> {
 
     @Query(value = """ 
@@ -56,22 +56,34 @@ public interface DriverRepository extends CrudRepository<DriverEntity, Long>,
     """)
     DriverAllInfoDto findDriverAllInfo(Long driverId);
 
-    @Query("""
+    @Query(value = """
     SELECT new com.tp.F1WebSite.dto.DriverRaceDto (
+        driver.name,
         constructor.name,
         result.grid,
         result.position,
         result.points,
         race.date,
-        race.name
+        race.name,
+        circuit.country
         )
     FROM ResultEntity result
     JOIN result.race race
     JOIN result.constructor constructor
-    WHERE result.driver.driverId = :driverId
+    JOIN result.driver driver
+    JOIN race.circuit circuit
+    WHERE driver.driverId = :driverId AND LOWER(circuit.country) LIKE LOWER(CONCAT('%', :searchCountry, '%'))
     ORDER BY race.date DESC
+    """,
+    countQuery = """
+    SELECT COUNT(result.resultId)
+    FROM ResultEntity result
+    JOIN result.driver driver
+    JOIN result.race race
+    JOIN race.circuit circuit
+    WHERE driver.driverId = :driverId AND LOWER(circuit.country) LIKE LOWER(CONCAT('%', :searchCountry, '%'))
     """)
-    List<DriverRaceDto> findDriverAllRaces(Long driverId);
+    Page<DriverRaceDto> findDriverManyRacesByCountry(Long driverId, String searchCountry, Pageable pageable);
 
     @Query("""
     SELECT COUNT(CASE WHEN qualifying.position = 1 THEN 1 END)
@@ -82,16 +94,17 @@ public interface DriverRepository extends CrudRepository<DriverEntity, Long>,
     Long findNumOfPolePositions(Long driverId);
 
     @Query(value = """
-    SELECT new com.tp.F1WebSite.dto.DriverTrackWins (
-        race.circuit.name,
-        race.circuit.country,
+    SELECT new com.tp.F1WebSite.dto.DriverCircuitsWins (
+        circuit.name,
+        circuit.country,
         COUNT(CASE WHEN result.position = 1 THEN 1 END)
         )
     FROM ResultEntity result
     JOIN result.race race
+    JOIN race.circuit circuit
     WHERE result.driver.driverId = :driverId
-    GROUP BY race.circuit.name, race.circuit.country
+    GROUP BY circuit.name, circuit.country
     ORDER BY COUNT(CASE WHEN result.position = 1 THEN 1 END) DESC
     """)
-    List<DriverTrackWins> findDriverTracksWins(Long driverId);
+    List<DriverCircuitsWins> findDriverTracksWins(Long driverId);
 }
