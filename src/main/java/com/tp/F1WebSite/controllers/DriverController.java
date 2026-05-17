@@ -8,6 +8,7 @@ import com.tp.F1WebSite.dto.DriverCircuitsWins;
 import com.tp.F1WebSite.dto.DriverWinsRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.services.DriverService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,8 @@ public class DriverController {
 
     private final DriverService driverService;
 
-    private final Mapper<DriverEntity, DriverDto> driverMapper;
-
-    public DriverController(DriverService driverService, Mapper<DriverEntity, DriverDto> driverMapper) {
+    public DriverController(DriverService driverService) {
         this.driverService = driverService;
-        this.driverMapper = driverMapper;
     }
 
     @GetMapping(path = "")
@@ -69,5 +67,12 @@ public class DriverController {
         }
 
         return driverRaces;
+    }
+
+    @PostMapping(path = "")
+    public ResponseEntity<DriverDto> createDriver(@Valid @RequestBody DriverDto driverDto) {
+        DriverDto savedDriver = driverService.createOne(driverDto);
+
+        return new ResponseEntity<>(savedDriver, HttpStatus.CREATED);
     }
 }

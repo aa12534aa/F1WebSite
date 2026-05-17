@@ -20,8 +20,13 @@ public class DriverEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long driverId;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String nationality;
+
+    @Column(nullable = false, unique = true)
     private String url;
 
     @OneToMany(mappedBy = "driver")

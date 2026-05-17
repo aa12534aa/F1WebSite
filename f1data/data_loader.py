@@ -11,7 +11,7 @@ race_columns = ['raceId', 'circuitId', 'date', 'name']
 
 results_columns = ['resultId', 'raceId', 'driverId', 'constructorId', 'grid', 'position', 'points']
 
-drivers_columns = ['driverId', 'forename', 'surname', 'url']
+drivers_columns = ['driverId', 'forename', 'surname', 'nationality', 'url']
 
 constructors_columns = ['constructorId', 'name']
 

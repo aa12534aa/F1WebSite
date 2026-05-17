@@ -9,6 +9,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CircuitRepository extends CrudRepository<CircuitEntity, Long>,
         PagingAndSortingRepository<CircuitEntity, Long> {
@@ -20,7 +22,7 @@ public interface CircuitRepository extends CrudRepository<CircuitEntity, Long>,
         COUNT(race.raceId)
         )
     FROM CircuitEntity circuit
-    JOIN circuit.races race
+    LEFT JOIN circuit.races race
     WHERE LOWER(circuit.name) LIKE LOWER(CONCAT('%', :searchCircuit, '%'))
     GROUP BY circuit.name, circuit.country
     ORDER BY COUNT(race.raceId) DESC
@@ -30,5 +32,9 @@ public interface CircuitRepository extends CrudRepository<CircuitEntity, Long>,
     FROM CircuitEntity circuit
     WHERE LOWER(circuit.name) LIKE LOWER(CONCAT('%', :searchCircuit, '%'))
     """)
-    Page<CircuitRacesDto> findTracksRacesByName(String searchCircuit, Pageable pageable);
+    Page<CircuitRacesDto> findCircuitsRacesByName(String searchCircuit, Pageable pageable);
+
+    Boolean existsByName(String name);
+
+    Optional<CircuitEntity> findByName(String name);
 }

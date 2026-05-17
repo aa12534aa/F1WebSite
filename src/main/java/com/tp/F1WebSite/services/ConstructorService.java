@@ -1,5 +1,6 @@
 package com.tp.F1WebSite.services;
 
+import com.tp.F1WebSite.domain.dto.ConstructorDto;
 import com.tp.F1WebSite.dto.ConstructorAllInfoDto;
 import com.tp.F1WebSite.dto.ConstructorRaceDto;
 import com.tp.F1WebSite.dto.ConstructorWinsRacesDto;
@@ -19,4 +20,6 @@ public interface ConstructorService {
     Page<ConstructorRaceDto> findOneByIdRaces(Long constructorId, String searchCountry, Pageable pageable);
 
     List<ConstructorWinsRacesDto> findBestConstructors();
+
+    ConstructorDto createOne(ConstructorDto constructorDto);
 }

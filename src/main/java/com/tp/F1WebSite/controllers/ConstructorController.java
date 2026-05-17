@@ -7,6 +7,7 @@ import com.tp.F1WebSite.dto.ConstructorRaceDto;
 import com.tp.F1WebSite.dto.ConstructorWinsRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.services.ConstructorService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,8 @@ public class ConstructorController {
 
     private final ConstructorService constructorService;
 
-    private final Mapper<ConstructorEntity, ConstructorDto> constructorMapper;
-
-    public ConstructorController(ConstructorService constructorService, Mapper<ConstructorEntity, ConstructorDto> constructorMapper) {
+    public ConstructorController(ConstructorService constructorService) {
         this.constructorService = constructorService;
-        this.constructorMapper = constructorMapper;
     }
 
     @GetMapping(path = "")
@@ -68,5 +66,12 @@ public class ConstructorController {
         }
 
         return constructorRaces;
+    }
+
+    @PostMapping(path = "")
+    public ResponseEntity<ConstructorDto> createConstructor(@Valid @RequestBody ConstructorDto constructorDto) {
+        ConstructorDto savedConstructor = constructorService.createOne(constructorDto);
+
+        return new ResponseEntity<>(savedConstructor, HttpStatus.CREATED);
     }
 }

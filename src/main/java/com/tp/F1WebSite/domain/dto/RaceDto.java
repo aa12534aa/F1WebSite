@@ -15,6 +15,8 @@ public class RaceDto {
 
     private Long raceId;
 
+    private CircuitDto circuit;
+
     private LocalDate date;
 
     private String name;

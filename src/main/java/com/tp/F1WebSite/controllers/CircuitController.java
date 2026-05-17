@@ -1,5 +1,6 @@
 package com.tp.F1WebSite.controllers;
 
+import com.tp.F1WebSite.domain.dto.CircuitDto;
 import com.tp.F1WebSite.domain.dto.RaceDto;
 import com.tp.F1WebSite.domain.entities.RaceEntity;
 import com.tp.F1WebSite.dto.CircuitRacesDto;
@@ -8,10 +9,9 @@ import com.tp.F1WebSite.services.CircuitService;
 import com.tp.F1WebSite.services.RaceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/circuits")
@@ -35,5 +35,12 @@ public class CircuitController {
         }
 
         return tracks;
+    }
+
+    @PostMapping(path = "")
+    public ResponseEntity<CircuitDto> createCircuit(@RequestBody CircuitDto circuitDto) {
+        CircuitDto savedCircuit = circuitService.createOne(circuitDto);
+
+        return new ResponseEntity<>(savedCircuit, HttpStatus.CREATED);
     }
 }

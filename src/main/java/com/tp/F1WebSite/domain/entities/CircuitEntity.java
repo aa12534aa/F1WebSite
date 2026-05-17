@@ -20,10 +20,13 @@ public class CircuitEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long circuitId;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(nullable = false)
     private String country;
 
+    @Column(nullable = false)
     private String url;
 
     @OneToMany(mappedBy = "circuit")

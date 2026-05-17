@@ -1,16 +1,20 @@
 package com.tp.F1WebSite.services.impl;
 
+import com.tp.F1WebSite.domain.dto.DriverDto;
 import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.dto.DriverAllInfoDto;
 import com.tp.F1WebSite.dto.DriverCircuitsWins;
 import com.tp.F1WebSite.dto.DriverRaceDto;
 import com.tp.F1WebSite.dto.DriverWinsRacesDto;
+import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.DriverRepository;
 import com.tp.F1WebSite.services.DriverService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,8 +25,12 @@ public class DriverServiceImpl implements DriverService {
 
     private final DriverRepository driverRepository;
 
-    public DriverServiceImpl(DriverRepository driverRepository) {
+    private final Mapper<DriverEntity, DriverDto> driverMapper;
+
+    public DriverServiceImpl(DriverRepository driverRepository,
+                             Mapper<DriverEntity, DriverDto> driverMapper) {
         this.driverRepository = driverRepository;
+        this.driverMapper = driverMapper;
     }
 
     @Override
@@ -81,5 +89,22 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public List<DriverWinsRacesDto> findBestDrivers() {
         return driverRepository.findDriversWinsRacesByName("", PageRequest.of(0, 10)).getContent();
+    }
+
+    @Override
+    public DriverDto createOne(DriverDto driverDto) {
+        DriverEntity driverEntity = driverMapper.mapFrom(driverDto);
+
+        Boolean exists = driverRepository.existsByUrl(driverEntity.getUrl());
+        if (exists) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Driver already exists"
+            );
+        }
+
+        DriverEntity savedDriver = driverRepository.save(driverEntity);
+
+        return driverMapper.mapTo(savedDriver);
     }
 }

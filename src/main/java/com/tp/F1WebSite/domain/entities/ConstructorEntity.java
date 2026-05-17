@@ -20,8 +20,12 @@ public class ConstructorEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long constructorId;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "constructor")
     private List<ResultEntity> results;
+
+    @OneToMany(mappedBy = "constructor")
+    private List<QualifyingEntity> qualifying;
 }

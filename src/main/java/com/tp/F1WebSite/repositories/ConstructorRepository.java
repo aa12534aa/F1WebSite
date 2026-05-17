@@ -12,6 +12,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ConstructorRepository extends CrudRepository<ConstructorEntity, Long>,
@@ -25,7 +26,7 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
         COUNT(result.resultId)
         )
     FROM ConstructorEntity constructor
-    JOIN constructor.results result
+    LEFT JOIN constructor.results result
     WHERE LOWER(constructor.name) LIKE LOWER(CONCAT('%', :searchName, '%'))
     GROUP BY constructor.constructorId, constructor.name
     ORDER BY COUNT(CASE WHEN result.position = 1 THEN 1 END) DESC
@@ -47,7 +48,7 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
         COUNT(result.resultId)
         )
     FROM ConstructorEntity constructor
-    JOIN constructor.results result
+    LEFT JOIN constructor.results result
     WHERE constructor.constructorId = :constructorId
     GROUP BY constructor.constructorId, constructor.name
     """)
@@ -81,4 +82,8 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
     WHERE constructor.constructorId = :constructorId AND LOWER(circuit.country) LIKE LOWER(CONCAT('%', :searchCountry, '%'))
     """)
     Page<ConstructorRaceDto> findConstructorAllRaces(Long constructorId, String searchCountry, Pageable pageable);
+
+    Boolean existsByName(String name);
+
+    Optional<ConstructorEntity> findByName(String name);
 }

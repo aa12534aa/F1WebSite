@@ -14,6 +14,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
@@ -27,7 +28,7 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
         Count(result.resultId)
         )
     FROM DriverEntity driver
-    JOIN driver.results result
+    LEFT JOIN driver.results result
     WHERE LOWER(driver.name) LIKE LOWER(CONCAT('%', :searchName, '%'))
     GROUP BY driver.driverId, driver.name
     ORDER BY COUNT(CASE WHEN result.position = 1 THEN 1 END) DESC
@@ -50,7 +51,7 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
         COUNT(result.resultId)
         )
     FROM DriverEntity driver
-    JOIN driver.results result
+    LEFT JOIN driver.results result
     WHERE driver.driverId = :driverId
     GROUP BY driver.driverId, driver.name, driver.url
     """)
@@ -88,7 +89,7 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
     @Query("""
     SELECT COUNT(CASE WHEN qualifying.position = 1 THEN 1 END)
     FROM DriverEntity driver
-    JOIN driver.qualifying qualifying
+    LEFT JOIN driver.qualifying qualifying
     WHERE driver.driverId = :driverId
     """)
     Long findNumOfPolePositions(Long driverId);
@@ -107,4 +108,8 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
     ORDER BY COUNT(CASE WHEN result.position = 1 THEN 1 END) DESC
     """)
     List<DriverCircuitsWins> findDriverTracksWins(Long driverId);
+
+    Boolean existsByUrl(String url);
+
+    Optional<DriverEntity> findByUrl(String url);
 }

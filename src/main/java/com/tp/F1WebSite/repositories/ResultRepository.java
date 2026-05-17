@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ResultRepository extends CrudRepository<ResultEntity, Long> {
+
+    Boolean existsByRace_RaceIdAndDriver_Url(Long raceId, String driverUrl);
 }

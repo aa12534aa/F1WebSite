@@ -1,5 +1,6 @@
 package com.tp.F1WebSite.services;
 
+import com.tp.F1WebSite.domain.dto.DriverDto;
 import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.dto.DriverAllInfoDto;
 import com.tp.F1WebSite.dto.DriverRaceDto;
@@ -25,4 +26,6 @@ public interface DriverService {
     List<DriverCircuitsWins> findOneByIdBestCircuit(Long driverId);
 
     List<DriverWinsRacesDto> findBestDrivers();
+
+    DriverDto createOne(DriverDto driverDto);
 }
