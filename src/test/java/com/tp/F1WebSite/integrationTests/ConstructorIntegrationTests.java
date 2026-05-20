@@ -1,6 +1,7 @@
 package com.tp.F1WebSite.integrationTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
 import com.tp.F1WebSite.CustomPageImpl;
 import com.tp.F1WebSite.dto.ConstructorAllInfoDto;
@@ -35,10 +36,9 @@ public class ConstructorIntegrationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
-    private ConstructorRepository constructorRepository;
-
-    @Sql("/testData/PrepareData.sql")
+    // GET
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     void shouldReturnConstructorsPage() {
         ResponseEntity<CustomPageImpl<ConstructorWinsRacesDto>> response =
@@ -52,15 +52,19 @@ public class ConstructorIntegrationTests {
         PageImpl<ConstructorWinsRacesDto> responseBody = response.getBody();
         assertThat(responseBody).isNotEmpty();
         assertThat(responseBody.getContent()).hasSize(2);
-        assertThat(responseBody.getContent()).extracting("name")
-                .containsExactlyInAnyOrder("ferrari", "Mercedes");
-        assertThat(responseBody.getContent()).extracting("numOfWins")
-                .containsExactlyInAnyOrder(2L, 0L);
-        assertThat(responseBody.getContent()).extracting("numOfRaces")
-                .containsExactlyInAnyOrder(4L, 4L);
+        assertThat(responseBody.getContent()).extracting(
+                        ConstructorWinsRacesDto::getName,
+                        ConstructorWinsRacesDto::getNumOfWins,
+                        ConstructorWinsRacesDto::getNumOfRaces
+                )
+                .containsExactlyInAnyOrder(
+                        tuple("ferrari", 2L, 4L),
+                        tuple("Mercedes", 0L, 4L)
+        );
     }
 
-    @Sql("/testData/PrepareData.sql")
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     void shouldReturnConstructorAllInfo() {
         ResponseEntity<ConstructorAllInfoDto> response =
@@ -79,7 +83,8 @@ public class ConstructorIntegrationTests {
         assertThat(responseBody.getNumOfRaces()).isEqualTo(4L);
     }
 
-    @Sql("/testData/PrepareData.sql")
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     void shouldReturnConstructorRacesPage() {
         ResponseEntity<CustomPageImpl<ConstructorRaceDto>> response =

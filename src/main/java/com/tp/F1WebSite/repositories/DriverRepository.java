@@ -48,12 +48,13 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
         COUNT(CASE WHEN result.position = 2 THEN 1 END),
         COUNT(CASE WHEN result.position = 3 THEN 1 END),
         SUM(result.points),
-        COUNT(result.resultId)
+        COUNT(result.resultId),
+        driver.nationality
         )
     FROM DriverEntity driver
     LEFT JOIN driver.results result
     WHERE driver.driverId = :driverId
-    GROUP BY driver.driverId, driver.name, driver.url
+    GROUP BY driver.driverId, driver.name, driver.url, driver.nationality
     """)
     DriverAllInfoDto findDriverAllInfo(Long driverId);
 
@@ -96,18 +97,19 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
 
     @Query(value = """
     SELECT new com.tp.F1WebSite.dto.DriverCircuitsWins (
+        circuit.circuitId,
         circuit.name,
         circuit.country,
         COUNT(CASE WHEN result.position = 1 THEN 1 END)
         )
-    FROM ResultEntity result
-    JOIN result.race race
-    JOIN race.circuit circuit
-    WHERE result.driver.driverId = :driverId
-    GROUP BY circuit.name, circuit.country
-    ORDER BY COUNT(CASE WHEN result.position = 1 THEN 1 END) DESC
+    FROM DriverEntity driver
+    LEFT JOIN driver.results result
+    LEFT JOIN result.race race
+    LEFT JOIN race.circuit circuit
+    WHERE driver.driverId = :driverId
+    GROUP BY circuit.circuitId, circuit.name, circuit.country
     """)
-    List<DriverCircuitsWins> findDriverTracksWins(Long driverId);
+    List<DriverCircuitsWins> findDriverCircuitsWins(Long driverId);
 
     Boolean existsByUrl(String url);
 

@@ -28,6 +28,7 @@ public class DriverController {
         this.driverService = driverService;
     }
 
+    // GET
     @GetMapping(path = "")
     public Page<DriverWinsRacesDto> getManyDrivers(@RequestParam(required = false) String searchName, Pageable pageable) {
         Page<DriverWinsRacesDto> drivers;
@@ -69,6 +70,7 @@ public class DriverController {
         return driverRaces;
     }
 
+    // POST
     @PostMapping(path = "")
     public ResponseEntity<DriverDto> createDriver(@Valid @RequestBody DriverDto driverDto) {
         DriverDto savedDriver = driverService.createOne(driverDto);

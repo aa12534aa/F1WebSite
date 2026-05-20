@@ -2,6 +2,8 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.dto.CircuitDto;
 import com.tp.F1WebSite.domain.entities.CircuitEntity;
+import com.tp.F1WebSite.dto.CircuitAllInfoDto;
+import com.tp.F1WebSite.dto.CircuitDriverWinsDto;
 import com.tp.F1WebSite.dto.CircuitRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.CircuitRepository;
@@ -11,6 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CircuitServiceImpl implements CircuitService {
@@ -25,11 +30,46 @@ public class CircuitServiceImpl implements CircuitService {
         this.circuitMapper = circuitMapper;
     }
 
+    // GET
     @Override
     public Page<CircuitRacesDto> findManyByName(String searchCircuit, Pageable pageable) {
         return circuitRepository.findCircuitsRacesByName(searchCircuit, pageable);
     }
 
+    @Override
+    public Boolean isExisting(Long circuitId) {
+        return circuitRepository.existsById(circuitId);
+    }
+
+    @Override
+    public CircuitAllInfoDto findOneById(Long circuitId) {
+        CircuitAllInfoDto circuitAllInfo = circuitRepository.findCircuitAllInfo(circuitId);
+
+        List<CircuitDriverWinsDto> bestDrivers = findOneByIdBestDrivers(circuitId);
+
+        circuitAllInfo.setBestDrivers(bestDrivers);
+
+        return circuitAllInfo;
+    }
+
+    @Override
+    public List<CircuitDriverWinsDto> findOneByIdBestDrivers(Long circuitId) {
+        List<CircuitDriverWinsDto> circuitDriversWins = circuitRepository.findCircuitDriversWins(circuitId);
+        if (circuitDriversWins.isEmpty()) {
+            return List.of();
+        }
+
+        Long numOfWins = circuitDriversWins.stream().map(CircuitDriverWinsDto::getNumOfWins)
+                .max(Long::compareTo).orElse(0L);
+        if (numOfWins > 0L) {
+            return circuitDriversWins.stream().filter(circuitDriver ->
+                numOfWins.equals(circuitDriver.getNumOfWins())
+            ).toList();
+        }
+        return List.of();
+    }
+
+    // POST
     @Override
     public CircuitDto createOne(CircuitDto circuitDto) {
         CircuitEntity circuitEntity = circuitMapper.mapFrom(circuitDto);

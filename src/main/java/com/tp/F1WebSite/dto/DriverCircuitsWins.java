@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DriverCircuitsWins {
 
+    private Long circuitId;
+
     private String circuitName;
 
     private String country;

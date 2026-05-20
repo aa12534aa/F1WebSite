@@ -26,6 +26,7 @@ public class HomeController {
         this.constructorService = constructorService;
     }
 
+    // GET
     @GetMapping(path = "")
     public ResponseEntity<BestDriversConstructors> getBestAndDriversConstructors() {
         List<DriverWinsRacesDto> bestDrivers = driverService.findBestDrivers();

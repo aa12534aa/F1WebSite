@@ -40,10 +40,12 @@ public class DriverRepositoryTests {
         assertThat(driverWinsRaces.size()).isEqualTo(4);
     }
 
-    @Test
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void shouldCreateDriver() {
         DriverEntity driver = DriverEntity.builder()
                 .name("john son")
+                .nationality("UK")
                 .url("dskjfo")
                 .build();
         DriverEntity savedDriver = driverRepository.save(driver);

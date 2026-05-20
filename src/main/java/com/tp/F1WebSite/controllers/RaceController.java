@@ -10,13 +10,14 @@ import com.tp.F1WebSite.dto.ResultCreationDto;
 import com.tp.F1WebSite.services.QualifyingService;
 import com.tp.F1WebSite.services.RaceService;
 import com.tp.F1WebSite.services.ResultService;
-import com.tp.F1WebSite.services.impl.QualifyingServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/races")
@@ -32,6 +33,7 @@ public class RaceController {
         this.qualifyingService = qualifyingService;
     }
 
+    // GET
     @GetMapping(path = "")
     public Page<RaceCircuitDto> getManyRaces(@RequestParam(required = false) String searchName,
                                              Pageable pageable) {
@@ -46,15 +48,26 @@ public class RaceController {
         return races;
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<RaceDto> getOneRace(@PathVariable("id") Long raceId) {
+        return new ResponseEntity<>(raceService.findOneById(raceId), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}/results")
+    public List<ResultDto> getManyResults(@PathVariable("id") Long raceId) {
+        return resultService.findMany(raceId);
+    }
+
+    @GetMapping(path = "/{id}/qualifying")
+    public List<QualifyingDto> getManyQualifying(@PathVariable("id") Long raceId) {
+        return qualifyingService.findMany(raceId);
+    }
+
+
+    // POST
     @PostMapping(path = "")
     public ResponseEntity<RaceDto> createRace(@Valid @RequestBody RaceCreationDto raceCreationDto) {
         return new ResponseEntity<>(raceService.createOne(raceCreationDto), HttpStatus.CREATED);
-    }
-
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<RaceDto> getOneRace(@PathVariable("id") Long raceId) {
-        // dodaj wyświtlanie result dla wyscigu
-        return new ResponseEntity<>(raceService.findOneById(raceId), HttpStatus.OK);
     }
 
     @PostMapping(path = "/{id}/results")

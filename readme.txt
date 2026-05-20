@@ -56,11 +56,15 @@ GET /api/circuits:
 -tory z liczbą wyścigów
 
 // zrobione
+GET /api/circuits/{id}:
+-nazwa toru
+-kraj
+-url
+-lista kierowców z największą liczbą wygranych na danym torze
+
+// zrobione
 POST /api/circuits:
 -tworzenie toru
-
-może (/circuits/{id} lista zwycięzców w ostatnich wyścigach na danym torze, kierowca który najwięcej wygrał)
-ale trzeba stworzyć tabele circuts i ją
 
 // zrobione
 GET /api/races:
@@ -77,6 +81,14 @@ GET /api/races/{id}
 -data
 -informacje o torze
 -lista results
+
+// zrobione
+GET /api/races/{id}/results
+-rezultaty kierowców w danym wyscigu
+
+// zrobione
+GET /api/races/{id}/qualifying:
+-kwalfikacje kierowców w danym wyścigu
 
 // zrobione
 POST /api/races:

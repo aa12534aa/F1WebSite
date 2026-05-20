@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CircuitRacesDto {
 
+    private Long circuitId;
+
     private String name;
 
     private String country;

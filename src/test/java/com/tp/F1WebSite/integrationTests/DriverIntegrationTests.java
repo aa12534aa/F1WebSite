@@ -1,6 +1,7 @@
 package com.tp.F1WebSite.integrationTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
 import com.tp.F1WebSite.CustomPageImpl;
 import com.tp.F1WebSite.dto.DriverAllInfoDto;
@@ -36,7 +37,9 @@ public class DriverIntegrationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Sql(scripts = "/testData/PrepareData.sql")
+    // GET
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     void shouldReturnDriversPage() {
         ResponseEntity<CustomPageImpl<DriverWinsRacesDto>> response =
@@ -50,15 +53,21 @@ public class DriverIntegrationTests {
         PageImpl<DriverWinsRacesDto> restPage = response.getBody();
         assertThat(restPage).isNotEmpty();
         assertThat(restPage.getContent()).hasSize(4);
-        assertThat(restPage.getContent()).extracting("name")
-                .containsExactlyInAnyOrder("Julian Sokołowski", "Max Verstappen", "Lewis Hamilton", "Charles Leclerc");
-        assertThat(restPage.getContent()).extracting("numOfWins")
-                .containsExactlyInAnyOrder(1L, 0L, 0L, 1L);
-        assertThat(restPage.getContent()).extracting("numOfRaces")
-                .containsExactlyInAnyOrder(2L, 2L, 2L, 2L);
+        assertThat(restPage.getContent()).extracting(
+                        DriverWinsRacesDto::getName,
+                        DriverWinsRacesDto::getNumOfWins,
+                        DriverWinsRacesDto::getNumOfRaces
+                )
+                .containsExactlyInAnyOrder(
+                        tuple("Julian Sokołowski", 1L, 2L),
+                        tuple("Max Verstappen", 0L, 2L),
+                        tuple("Lewis Hamilton", 0L, 2L),
+                        tuple("Charles Leclerc", 1L, 2L)
+                );
     }
 
-    @Sql(scripts = "/testData/PrepareData.sql")
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     void shouldReturnDriverAllInfo() {
         ResponseEntity<DriverAllInfoDto> response =
@@ -76,9 +85,11 @@ public class DriverIntegrationTests {
         assertThat(body.getSecondPlaces()).isEqualTo(1L);
         assertThat(body.getThirdPlaces()).isEqualTo(0L);
         assertThat(body.getGainedPoints()).isEqualTo(43.0);
+        assertThat(body.getNationality()).isEqualTo("Poland");
     }
 
-    @Sql("/testData/PrepareData.sql")
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     void shouldReturnDriverBestCircuitsList() {
         ResponseEntity<DriverAllInfoDto> response =
@@ -98,7 +109,8 @@ public class DriverIntegrationTests {
         assertThat(responseBodyBestCircuits.getFirst().getNumOfWins()).isEqualTo(1L);
     }
 
-    @Sql(scripts = "/testData/PrepareData.sql")
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     void shouldReturnDriverRacesPage() {
         ResponseEntity<CustomPageImpl<DriverRaceDto>> response =

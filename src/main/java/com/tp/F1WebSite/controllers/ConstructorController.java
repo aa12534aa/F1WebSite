@@ -27,6 +27,7 @@ public class ConstructorController {
         this.constructorService = constructorService;
     }
 
+    // GET
     @GetMapping(path = "")
     public Page<ConstructorWinsRacesDto> getAllConstructors(@RequestParam(required = false) String searchName, Pageable pageable) {
         Page<ConstructorWinsRacesDto> constructors;
@@ -68,6 +69,7 @@ public class ConstructorController {
         return constructorRaces;
     }
 
+    // POST
     @PostMapping(path = "")
     public ResponseEntity<ConstructorDto> createConstructor(@Valid @RequestBody ConstructorDto constructorDto) {
         ConstructorDto savedConstructor = constructorService.createOne(constructorDto);

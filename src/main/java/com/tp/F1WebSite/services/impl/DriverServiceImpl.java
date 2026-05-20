@@ -33,6 +33,7 @@ public class DriverServiceImpl implements DriverService {
         this.driverMapper = driverMapper;
     }
 
+    // GET
     @Override
     public Boolean isExisting(Long driverId) {
         return driverRepository.existsById(driverId);
@@ -71,19 +72,19 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public List<DriverCircuitsWins> findOneByIdBestCircuit(Long driverId) {
-        List<DriverCircuitsWins> driverTracksWins = driverRepository.findDriverTracksWins(driverId);
-        if (driverTracksWins.isEmpty()) {
+        List<DriverCircuitsWins> driverCircuitsWins = driverRepository.findDriverCircuitsWins(driverId);
+        if (driverCircuitsWins.isEmpty()) {
             return List.of();
-        } else {
-            Long numOfWins = driverTracksWins.stream().map(DriverCircuitsWins::getNumOfWins)
-                    .max(Long::compareTo).orElse(0L);
-            if (numOfWins > 0L) {
-                return driverTracksWins.stream().filter(driverCircuitsWins ->
-                        driverCircuitsWins.getNumOfWins().equals(numOfWins)).toList();
-            } else {
-                return List.of();
-            }
         }
+
+        Long numOfWins = driverCircuitsWins.stream().map(DriverCircuitsWins::getNumOfWins)
+                .max(Long::compareTo).orElse(0L);
+        if (numOfWins > 0L) {
+            return driverCircuitsWins.stream().filter(driverCircuits ->
+                    driverCircuits.getNumOfWins().equals(numOfWins)).toList();
+        }
+
+        return List.of();
     }
 
     @Override
@@ -91,6 +92,7 @@ public class DriverServiceImpl implements DriverService {
         return driverRepository.findDriversWinsRacesByName("", PageRequest.of(0, 10)).getContent();
     }
 
+    // POST
     @Override
     public DriverDto createOne(DriverDto driverDto) {
         DriverEntity driverEntity = driverMapper.mapFrom(driverDto);

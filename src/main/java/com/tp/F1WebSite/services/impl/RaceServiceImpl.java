@@ -31,6 +31,7 @@ public class RaceServiceImpl implements RaceService {
         this.raceMapper = raceMapper;
     }
 
+    // GET
     @Override
     public Boolean isExisting(Long raceId) {
         return raceRepository.existsById(raceId);
@@ -51,6 +52,7 @@ public class RaceServiceImpl implements RaceService {
         return raceMapper.mapTo(raceEntity);
     }
 
+    // POST
     @Override
     public RaceDto createOne(RaceCreationDto raceCreationDto) {
         if (raceRepository.existsByDate(raceCreationDto.getDate())) {

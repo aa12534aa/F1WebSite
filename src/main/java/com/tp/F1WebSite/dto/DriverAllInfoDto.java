@@ -27,11 +27,13 @@ public class DriverAllInfoDto {
 
     private Long numOfRaces;
 
+    private String nationality;
+
     private Long numOfPolePosition;
 
     private List<DriverCircuitsWins> bestCircuits;
 
-    public DriverAllInfoDto(String name, String url, Long firstPlaces, Long secondPlaces, Long thirdPlaces, Double gainedPoints, Long numOfRaces) {
+    public DriverAllInfoDto(String name, String url, Long firstPlaces, Long secondPlaces, Long thirdPlaces, Double gainedPoints, Long numOfRaces, String nationality) {
         this.name = name;
         this.url = url;
         this.firstPlaces = firstPlaces;
@@ -39,5 +41,6 @@ public class DriverAllInfoDto {
         this.thirdPlaces = thirdPlaces;
         this.gainedPoints = gainedPoints;
         this.numOfRaces = numOfRaces;
+        this.nationality = nationality;
     }
 }

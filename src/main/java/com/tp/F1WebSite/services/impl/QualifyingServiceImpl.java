@@ -17,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class QualifyingServiceImpl implements QualifyingService {
 
@@ -40,6 +43,17 @@ public class QualifyingServiceImpl implements QualifyingService {
         this.qualifyingMapper = qualifyingMapper;
     }
 
+    // GET
+
+
+    @Override
+    public List<QualifyingDto> findMany(Long raceId) {
+        List<QualifyingEntity> qualifyingEntity = qualifyingRepository.findAllByRace_RaceIdOrderByPositionAsc(raceId);
+
+        return qualifyingEntity.stream().map(qualifyingMapper::mapTo).collect(Collectors.toList());
+    }
+
+    // POST
     @Override
     public QualifyingDto createOne(Long raceId, QualifyingCreationDto qualifyingCreationDto) {
 

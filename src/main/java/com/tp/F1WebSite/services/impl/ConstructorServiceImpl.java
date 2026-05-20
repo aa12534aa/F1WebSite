@@ -30,6 +30,7 @@ public class ConstructorServiceImpl implements ConstructorService {
         this.constructorMapper = constructorMapper;
     }
 
+    // GET
     @Override
     public Boolean isExisting(Long constructorId) {
         return constructorRepository.existsById(constructorId);
@@ -55,6 +56,7 @@ public class ConstructorServiceImpl implements ConstructorService {
         return constructorRepository.findConstructorsWinsRacesByName("", PageRequest.of(0, 10)).getContent();
     }
 
+    // POST
     @Override
     public ConstructorDto createOne(ConstructorDto constructorDto) {
         ConstructorEntity constructorEntity = constructorMapper.mapFrom(constructorDto);

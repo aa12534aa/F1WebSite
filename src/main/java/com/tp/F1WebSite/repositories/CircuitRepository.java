@@ -1,6 +1,8 @@
 package com.tp.F1WebSite.repositories;
 
 import com.tp.F1WebSite.domain.entities.CircuitEntity;
+import com.tp.F1WebSite.dto.CircuitAllInfoDto;
+import com.tp.F1WebSite.dto.CircuitDriverWinsDto;
 import com.tp.F1WebSite.dto.CircuitRacesDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +20,7 @@ public interface CircuitRepository extends CrudRepository<CircuitEntity, Long>,
 
     @Query(value = """
     SELECT new com.tp.F1WebSite.dto.CircuitRacesDto (
+        circuit.circuitId,
         circuit.name,
         circuit.country,
         COUNT(race.raceId)
@@ -24,7 +28,7 @@ public interface CircuitRepository extends CrudRepository<CircuitEntity, Long>,
     FROM CircuitEntity circuit
     LEFT JOIN circuit.races race
     WHERE LOWER(circuit.name) LIKE LOWER(CONCAT('%', :searchCircuit, '%'))
-    GROUP BY circuit.name, circuit.country
+    GROUP BY circuit.circuitId, circuit.name, circuit.country
     ORDER BY COUNT(race.raceId) DESC
     """,
             countQuery = """
@@ -33,6 +37,36 @@ public interface CircuitRepository extends CrudRepository<CircuitEntity, Long>,
     WHERE LOWER(circuit.name) LIKE LOWER(CONCAT('%', :searchCircuit, '%'))
     """)
     Page<CircuitRacesDto> findCircuitsRacesByName(String searchCircuit, Pageable pageable);
+
+    @Query(value = """
+    SELECT new com.tp.F1WebSite.dto.CircuitDriverWinsDto (
+        driver.driverId,
+        driver.name,
+        driver.nationality,
+        COUNT(CASE WHEN result.position = 1 THEN 1 END)
+        )
+    FROM CircuitEntity circuit
+    LEFT JOIN circuit.races race
+    LEFT JOIN race.results result
+    LEFT JOIN result.driver driver
+    WHERE circuit.circuitId = :circuitId
+    GROUP BY driver.driverId, driver.name, driver.nationality
+    """)
+    List<CircuitDriverWinsDto> findCircuitDriversWins(Long circuitId);
+
+    @Query(value = """
+    SELECT new com.tp.F1WebSite.dto.CircuitAllInfoDto(
+        circuit.name,
+        circuit.country,
+        circuit.url,
+        COUNT(race.raceId)
+        )
+    FROM RaceEntity race
+    JOIN race.circuit circuit
+    WHERE circuit.circuitId = :circuitId
+    GROUP BY circuit.name, circuit.country, circuit.url
+    """)
+    CircuitAllInfoDto findCircuitAllInfo(Long circuitId);
 
     Boolean existsByName(String name);
 

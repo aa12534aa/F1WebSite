@@ -1,12 +1,9 @@
-TRUNCATE TABLE results, qualifying, races, circuits, constructors, drivers
-RESTART IDENTITY CASCADE;
-
-INSERT INTO drivers(name, url)
+INSERT INTO drivers(name, nationality, url)
 VALUES
-    ('Julian Sokołowski', 'http://julsok1'),
-    ('Max Verstappen', 'http://max1'),
-    ('Lewis Hamilton', 'http://lewis1'),
-    ('Charles Leclerc', 'http://charles1');
+    ('Julian Sokołowski', 'Poland', 'http://julsok1'),
+    ('Max Verstappen', 'Netherlands', 'http://max1'),
+    ('Lewis Hamilton', 'England', 'http://lewis1'),
+    ('Charles Leclerc',  'Monaco', 'http://charles1');
 
 INSERT INTO constructors(name)
 VALUES

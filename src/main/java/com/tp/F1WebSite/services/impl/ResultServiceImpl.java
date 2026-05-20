@@ -16,6 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ResultServiceImpl implements ResultService {
 
@@ -38,6 +41,15 @@ public class ResultServiceImpl implements ResultService {
         this.resultMapper = resultMapper;
     }
 
+    // GET
+    @Override
+    public List<ResultDto> findMany(Long raceId) {
+        List<ResultEntity> resultsEntity = resultRepository.findAllByRace_RaceIdOrderByPositionAsc(raceId);
+
+        return resultsEntity.stream().map(resultMapper::mapTo).collect(Collectors.toList());
+    }
+
+    // POST
     @Override
     public ResultDto createOne(Long raceId, ResultCreationDto resultCreationDto) {
 
