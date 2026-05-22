@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import com.tp.F1WebSite.CustomPageImpl;
-import com.tp.F1WebSite.dto.CircuitAllInfoDto;
-import com.tp.F1WebSite.dto.CircuitDriverWinsDto;
-import com.tp.F1WebSite.dto.CircuitRacesDto;
+import com.tp.F1WebSite.domain.dto.CircuitDto;
+import com.tp.F1WebSite.domain.dto.DriverDto;
+import com.tp.F1WebSite.dto.circuit.CircuitAllInfoDto;
+import com.tp.F1WebSite.dto.circuit.CircuitDriverWinsDto;
+import com.tp.F1WebSite.dto.circuit.CircuitRacesDto;
 import com.tp.F1WebSite.repositories.CircuitRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,5 +105,60 @@ public class CircuitsIntegrationTests {
         assertThat(responseBodyBestDrivers.getFirst().getDriverName()).isEqualTo("Julian Sokołowski");
         assertThat(responseBodyBestDrivers.getFirst().getNationality()).isEqualTo("Poland");
         assertThat(responseBodyBestDrivers.getFirst().getNumOfWins()).isEqualTo(1L);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenCircuitDoesNotExist() {
+        ResponseEntity<CircuitAllInfoDto> response =
+                restTemplate.getForEntity("/api/circuits/100",
+                        CircuitAllInfoDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    // POST
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldCreateDriver() {
+        CircuitDto newCircuit = CircuitDto.builder()
+                .name("Spa")
+                .country("Belgium")
+                .url("spa.com")
+                .build();
+
+        ResponseEntity<CircuitDto> response = restTemplate
+                .postForEntity("/api/circuits",
+                        newCircuit,
+                        CircuitDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        CircuitDto responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getCircuitId()).isEqualTo(3L);
+        assertThat(responseBody.getName()).isEqualTo(newCircuit.getName());
+        assertThat(responseBody.getCountry()).isEqualTo(newCircuit.getCountry());
+        assertThat(responseBody.getUrl()).isEqualTo(newCircuit.getUrl());
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnConflictWhenCreatingCircuitThatAlreadyExists() {
+        DriverDto newDriver = DriverDto.builder()
+                .name("Tor Poznan")
+                .nationality("Poland")
+                .url("http://poznantor")
+                .build();
+
+        ResponseEntity<DriverDto> response = restTemplate
+                .postForEntity("/api/circuits",
+                        newDriver,
+                        DriverDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 }

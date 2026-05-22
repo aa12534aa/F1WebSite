@@ -5,7 +5,7 @@ import com.tp.F1WebSite.domain.entities.ConstructorEntity;
 import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.domain.entities.RaceEntity;
 import com.tp.F1WebSite.domain.entities.ResultEntity;
-import com.tp.F1WebSite.dto.ResultCreationDto;
+import com.tp.F1WebSite.dto.race.ResultCreationDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.ConstructorRepository;
 import com.tp.F1WebSite.repositories.DriverRepository;
@@ -13,6 +13,7 @@ import com.tp.F1WebSite.repositories.RaceRepository;
 import com.tp.F1WebSite.repositories.ResultRepository;
 import com.tp.F1WebSite.services.ResultService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -44,6 +45,13 @@ public class ResultServiceImpl implements ResultService {
     // GET
     @Override
     public List<ResultDto> findMany(Long raceId) {
+        if (!raceRepository.existsById(raceId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Race does not exist"
+            );
+        }
+
         List<ResultEntity> resultsEntity = resultRepository.findAllByRace_RaceIdOrderByPositionAsc(raceId);
 
         return resultsEntity.stream().map(resultMapper::mapTo).collect(Collectors.toList());

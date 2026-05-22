@@ -1,10 +1,10 @@
 package com.tp.F1WebSite.repositories;
 
 import com.tp.F1WebSite.domain.entities.DriverEntity;
-import com.tp.F1WebSite.dto.DriverAllInfoDto;
-import com.tp.F1WebSite.dto.DriverCircuitsWins;
-import com.tp.F1WebSite.dto.DriverRaceDto;
-import com.tp.F1WebSite.dto.DriverWinsRacesDto;
+import com.tp.F1WebSite.dto.driver.DriverAllInfoDto;
+import com.tp.F1WebSite.dto.driver.DriverCircuitsWins;
+import com.tp.F1WebSite.dto.driver.DriverRaceDto;
+import com.tp.F1WebSite.dto.driver.DriverWinsRacesDto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,7 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
         PagingAndSortingRepository<DriverEntity, Long> {
 
     @Query(value = """ 
-    SELECT new com.tp.F1WebSite.dto.DriverWinsRacesDto (
+    SELECT new com.tp.F1WebSite.dto.driver.DriverWinsRacesDto (
         driver.driverId,
         driver.name,
         COUNT(CASE WHEN result.position = 1 THEN 1 END),
@@ -41,7 +41,7 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
     Page<DriverWinsRacesDto> findDriversWinsRacesByName(String searchName, Pageable pageable);
 
     @Query("""
-    SELECT new com.tp.F1WebSite.dto.DriverAllInfoDto (
+    SELECT new com.tp.F1WebSite.dto.driver.DriverAllInfoDto (
         driver.name,
         driver.url,
         COUNT(CASE WHEN result.position = 1 THEN 1 END),
@@ -59,7 +59,7 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
     DriverAllInfoDto findDriverAllInfo(Long driverId);
 
     @Query(value = """
-    SELECT new com.tp.F1WebSite.dto.DriverRaceDto (
+    SELECT new com.tp.F1WebSite.dto.driver.DriverRaceDto (
         driver.name,
         constructor.name,
         result.grid,
@@ -96,7 +96,7 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
     Long findNumOfPolePositions(Long driverId);
 
     @Query(value = """
-    SELECT new com.tp.F1WebSite.dto.DriverCircuitsWins (
+    SELECT new com.tp.F1WebSite.dto.driver.DriverCircuitsWins (
         circuit.circuitId,
         circuit.name,
         circuit.country,

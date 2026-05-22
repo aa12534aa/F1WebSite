@@ -1,9 +1,8 @@
 package com.tp.F1WebSite.controllers;
 
-import com.tp.F1WebSite.domain.dto.DriverDto;
-import com.tp.F1WebSite.dto.BestDriversConstructors;
-import com.tp.F1WebSite.dto.ConstructorWinsRacesDto;
-import com.tp.F1WebSite.dto.DriverWinsRacesDto;
+import com.tp.F1WebSite.dto.home.BestDriversConstructors;
+import com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto;
+import com.tp.F1WebSite.dto.driver.DriverWinsRacesDto;
 import com.tp.F1WebSite.services.ConstructorService;
 import com.tp.F1WebSite.services.DriverService;
 import org.springframework.http.HttpStatus;

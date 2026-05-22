@@ -1,0 +1,46 @@
+package com.tp.F1WebSite.dto.driver;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class DriverAllInfoDto {
+
+    private String name;
+
+    private String url;
+
+    private Long firstPlaces;
+
+    private Long secondPlaces;
+
+    private Long thirdPlaces;
+
+    private Double gainedPoints;
+
+    private Long numOfRaces;
+
+    private String nationality;
+
+    private Long numOfPolePosition;
+
+    private List<DriverCircuitsWins> bestCircuits;
+
+    public DriverAllInfoDto(String name, String url, Long firstPlaces, Long secondPlaces, Long thirdPlaces, Double gainedPoints, Long numOfRaces, String nationality) {
+        this.name = name;
+        this.url = url;
+        this.firstPlaces = firstPlaces;
+        this.secondPlaces = secondPlaces;
+        this.thirdPlaces = thirdPlaces;
+        this.gainedPoints = gainedPoints;
+        this.numOfRaces = numOfRaces;
+        this.nationality = nationality;
+    }
+}

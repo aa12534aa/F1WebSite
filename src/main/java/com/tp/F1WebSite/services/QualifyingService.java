@@ -1,7 +1,7 @@
 package com.tp.F1WebSite.services;
 
 import com.tp.F1WebSite.domain.dto.QualifyingDto;
-import com.tp.F1WebSite.dto.QualifyingCreationDto;
+import com.tp.F1WebSite.dto.race.QualifyingCreationDto;
 
 import java.util.List;
 

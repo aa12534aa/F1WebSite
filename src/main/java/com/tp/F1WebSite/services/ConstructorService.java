@@ -1,9 +1,9 @@
 package com.tp.F1WebSite.services;
 
 import com.tp.F1WebSite.domain.dto.ConstructorDto;
-import com.tp.F1WebSite.dto.ConstructorAllInfoDto;
-import com.tp.F1WebSite.dto.ConstructorRaceDto;
-import com.tp.F1WebSite.dto.ConstructorWinsRacesDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorAllInfoDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorRaceDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -1,9 +1,7 @@
 package com.tp.F1WebSite.repositories;
 
 import com.tp.F1WebSite.domain.entities.RaceEntity;
-import com.tp.F1WebSite.dto.CircuitRacesDto;
-import com.tp.F1WebSite.dto.RaceCircuitDto;
-import org.springframework.cglib.core.Local;
+import com.tp.F1WebSite.dto.race.RaceCircuitDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +16,7 @@ public interface RaceRepository extends CrudRepository<RaceEntity, Long>,
         PagingAndSortingRepository<RaceEntity, Long> {
 
     @Query(value = """
-    SELECT new com.tp.F1WebSite.dto.RaceCircuitDto (
+    SELECT new com.tp.F1WebSite.dto.race.RaceCircuitDto (
         race.raceId,
         race.name,
         race.date,

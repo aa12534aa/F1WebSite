@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import com.tp.F1WebSite.CustomPageImpl;
-import com.tp.F1WebSite.dto.ConstructorAllInfoDto;
-import com.tp.F1WebSite.dto.ConstructorRaceDto;
-import com.tp.F1WebSite.dto.ConstructorWinsRacesDto;
-import com.tp.F1WebSite.repositories.ConstructorRepository;
+import com.tp.F1WebSite.domain.dto.ConstructorDto;
+import com.tp.F1WebSite.domain.dto.DriverDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorAllInfoDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorRaceDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto;
+import com.tp.F1WebSite.dto.driver.DriverRaceDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -86,6 +88,17 @@ public class ConstructorIntegrationTests {
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
+    void shouldReturnNotFoundWhenConstructorDoesNotExist() {
+        ResponseEntity<ConstructorDto> response =
+                restTemplate.getForEntity("/api/constructors/100",
+                        ConstructorDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
     void shouldReturnConstructorRacesPage() {
         ResponseEntity<CustomPageImpl<ConstructorRaceDto>> response =
                 restTemplate.exchange("/api/constructors/1/races",
@@ -108,5 +121,54 @@ public class ConstructorIntegrationTests {
             assertThat(race.getRaceName()).isEqualTo("GP Poznan");
             assertThat(race.getCountry()).isEqualTo("Poland");
         });
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenRequestingRacesForNonExistingConstructor() {
+        ResponseEntity<ConstructorDto> response =
+                restTemplate.getForEntity("/api/constructors/100/races",
+                        ConstructorDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    // POST
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldCreateConstructor() {
+        ConstructorDto newConstructor = ConstructorDto.builder()
+                .name("BMW")
+                .build();
+
+        ResponseEntity<ConstructorDto> response = restTemplate
+                .postForEntity("/api/constructors",
+                        newConstructor,
+                        ConstructorDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        ConstructorDto responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getConstructorId()).isEqualTo(3L);
+        assertThat(responseBody.getName()).isEqualTo(newConstructor.getName());
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnConflictWhenCreatingConstructorThatAlreadyExists() {
+        ConstructorDto newConstructor = ConstructorDto.builder()
+                .name("ferrari")
+                .build();
+
+        ResponseEntity<ConstructorDto> response = restTemplate
+                .postForEntity("/api/constructors",
+                        newConstructor,
+                        ConstructorDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 }

@@ -2,9 +2,9 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.dto.ConstructorDto;
 import com.tp.F1WebSite.domain.entities.ConstructorEntity;
-import com.tp.F1WebSite.dto.ConstructorAllInfoDto;
-import com.tp.F1WebSite.dto.ConstructorRaceDto;
-import com.tp.F1WebSite.dto.ConstructorWinsRacesDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorAllInfoDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorRaceDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.ConstructorRepository;
 import com.tp.F1WebSite.services.ConstructorService;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -43,11 +44,27 @@ public class ConstructorServiceImpl implements ConstructorService {
 
     @Override
     public ConstructorAllInfoDto findOneById(Long constructorId) {
+        if (!constructorRepository.existsById(constructorId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Constructor does not exist"
+            );
+        }
+
+
         return constructorRepository.findConstructorAllInfo(constructorId);
     }
 
     @Override
     public Page<ConstructorRaceDto> findOneByIdRaces(Long constructorId, String searchCountry, Pageable pageable) {
+        if (!constructorRepository.existsById(constructorId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Constructor does not exist"
+            );
+        }
+
+
         return constructorRepository.findConstructorAllRaces(constructorId, searchCountry, pageable);
     }
 

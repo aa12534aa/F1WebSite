@@ -2,10 +2,10 @@ package com.tp.F1WebSite.services;
 
 import com.tp.F1WebSite.domain.dto.DriverDto;
 import com.tp.F1WebSite.domain.entities.DriverEntity;
-import com.tp.F1WebSite.dto.DriverAllInfoDto;
-import com.tp.F1WebSite.dto.DriverRaceDto;
-import com.tp.F1WebSite.dto.DriverCircuitsWins;
-import com.tp.F1WebSite.dto.DriverWinsRacesDto;
+import com.tp.F1WebSite.dto.driver.DriverAllInfoDto;
+import com.tp.F1WebSite.dto.driver.DriverRaceDto;
+import com.tp.F1WebSite.dto.driver.DriverCircuitsWins;
+import com.tp.F1WebSite.dto.driver.DriverWinsRacesDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

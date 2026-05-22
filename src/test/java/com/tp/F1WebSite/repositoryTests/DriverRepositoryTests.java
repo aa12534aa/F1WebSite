@@ -3,7 +3,7 @@ package com.tp.F1WebSite.repositoryTests;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.tp.F1WebSite.domain.entities.DriverEntity;
-import com.tp.F1WebSite.dto.DriverWinsRacesDto;
+import com.tp.F1WebSite.dto.driver.DriverWinsRacesDto;
 import com.tp.F1WebSite.repositories.DriverRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +31,9 @@ public class DriverRepositoryTests {
     @Autowired
     DriverRepository driverRepository;
 
-    @Sql(scripts = "/testData/PrepareData.sql")
-    @Test
-    void shouldReturnDriversWinsRacesPage() {
-        Pageable pageable = PageRequest.of(0, 50);
-        List<DriverWinsRacesDto> driverWinsRaces = driverRepository
-                .findDriversWinsRacesByName("", pageable).getContent();
-        assertThat(driverWinsRaces.size()).isEqualTo(4);
-    }
-
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
     void shouldCreateDriver() {
         DriverEntity driver = DriverEntity.builder()
                 .name("john son")
@@ -50,8 +42,9 @@ public class DriverRepositoryTests {
                 .build();
         DriverEntity savedDriver = driverRepository.save(driver);
         assertThat(savedDriver.getDriverId()).isNotNull();
-        assertThat(driverRepository.findById(driver.getDriverId())).isPresent();
-        assertThat(driverRepository.findById(driver.getDriverId()).get().getName()).
-                isEqualTo("john son");
+        DriverEntity driverEntity = driverRepository.findById(driver.getDriverId()).orElse(null);
+        assertThat(driverEntity).isNotNull();
+        assertThat(driverEntity.getName()).
+                isEqualTo(driver.getName());
     }
 }

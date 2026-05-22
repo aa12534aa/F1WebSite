@@ -1,11 +1,9 @@
 package com.tp.F1WebSite.controllers;
 
 import com.tp.F1WebSite.domain.dto.ConstructorDto;
-import com.tp.F1WebSite.domain.entities.ConstructorEntity;
-import com.tp.F1WebSite.dto.ConstructorAllInfoDto;
-import com.tp.F1WebSite.dto.ConstructorRaceDto;
-import com.tp.F1WebSite.dto.ConstructorWinsRacesDto;
-import com.tp.F1WebSite.mappers.Mapper;
+import com.tp.F1WebSite.dto.constructor.ConstructorAllInfoDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorRaceDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto;
 import com.tp.F1WebSite.services.ConstructorService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -14,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/constructors")
@@ -43,10 +39,6 @@ public class ConstructorController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<ConstructorAllInfoDto> getOneConstructor(@PathVariable("id") Long constructorId) {
-        if (!constructorService.isExisting(constructorId)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
         return new ResponseEntity<>(constructorService.findOneById(constructorId), HttpStatus.OK);
     }
 

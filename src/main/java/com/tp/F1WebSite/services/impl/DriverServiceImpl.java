@@ -2,10 +2,10 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.dto.DriverDto;
 import com.tp.F1WebSite.domain.entities.DriverEntity;
-import com.tp.F1WebSite.dto.DriverAllInfoDto;
-import com.tp.F1WebSite.dto.DriverCircuitsWins;
-import com.tp.F1WebSite.dto.DriverRaceDto;
-import com.tp.F1WebSite.dto.DriverWinsRacesDto;
+import com.tp.F1WebSite.dto.driver.DriverAllInfoDto;
+import com.tp.F1WebSite.dto.driver.DriverCircuitsWins;
+import com.tp.F1WebSite.dto.driver.DriverRaceDto;
+import com.tp.F1WebSite.dto.driver.DriverWinsRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.DriverRepository;
 import com.tp.F1WebSite.services.DriverService;
@@ -54,6 +54,13 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverAllInfoDto findOneById(Long driverId) {
+        if (!driverRepository.existsById(driverId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Driver does not exist"
+            );
+        }
+
         DriverAllInfoDto driverAllInfo = driverRepository.findDriverAllInfo(driverId);
 
         Long numOfPolePositions = driverRepository.findNumOfPolePositions(driverId);
@@ -67,6 +74,13 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Page<DriverRaceDto> findOneByIdRaces(Long driverId, String searchCountry, Pageable pageable) {
+        if (!driverRepository.existsById(driverId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Driver does not exist"
+            );
+        }
+
         return driverRepository.findDriverManyRacesByCountry(driverId, searchCountry, pageable);
     }
 

@@ -1,7 +1,7 @@
 package com.tp.F1WebSite.services;
 
 import com.tp.F1WebSite.domain.dto.ResultDto;
-import com.tp.F1WebSite.dto.ResultCreationDto;
+import com.tp.F1WebSite.dto.race.ResultCreationDto;
 
 import java.util.List;
 

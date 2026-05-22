@@ -3,9 +3,9 @@ package com.tp.F1WebSite.integrationTests;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
-import com.tp.F1WebSite.dto.BestDriversConstructors;
-import com.tp.F1WebSite.dto.ConstructorWinsRacesDto;
-import com.tp.F1WebSite.dto.DriverWinsRacesDto;
+import com.tp.F1WebSite.dto.home.BestDriversConstructors;
+import com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto;
+import com.tp.F1WebSite.dto.driver.DriverWinsRacesDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,7 +48,7 @@ public class HomeIntegrationTests {
         List<DriverWinsRacesDto> responseBodyDrivers = responseBody.getBestDrivers();
 
         assertThat(responseBodyDrivers).isNotEmpty();
-        assertThat(responseBodyDrivers).hasSize(4);
+        assertThat(responseBodyDrivers).hasSize(5);
         assertThat(responseBodyDrivers).extracting(
                         DriverWinsRacesDto::getName,
                         DriverWinsRacesDto::getNumOfWins,
@@ -58,7 +58,8 @@ public class HomeIntegrationTests {
                         tuple("Julian Sokołowski", 1L, 2L),
                         tuple("Max Verstappen", 0L, 2L),
                         tuple("Lewis Hamilton", 0L, 2L),
-                        tuple("Charles Leclerc", 1L, 2L)
+                        tuple("Charles Leclerc", 1L, 2L),
+                        tuple("Franco Colapinto", 0L, 0L)
                 );
     }
 

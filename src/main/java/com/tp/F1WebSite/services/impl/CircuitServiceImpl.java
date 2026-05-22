@@ -2,20 +2,20 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.dto.CircuitDto;
 import com.tp.F1WebSite.domain.entities.CircuitEntity;
-import com.tp.F1WebSite.dto.CircuitAllInfoDto;
-import com.tp.F1WebSite.dto.CircuitDriverWinsDto;
-import com.tp.F1WebSite.dto.CircuitRacesDto;
+import com.tp.F1WebSite.dto.circuit.CircuitAllInfoDto;
+import com.tp.F1WebSite.dto.circuit.CircuitDriverWinsDto;
+import com.tp.F1WebSite.dto.circuit.CircuitRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.CircuitRepository;
 import com.tp.F1WebSite.services.CircuitService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CircuitServiceImpl implements CircuitService {
@@ -43,6 +43,13 @@ public class CircuitServiceImpl implements CircuitService {
 
     @Override
     public CircuitAllInfoDto findOneById(Long circuitId) {
+        if (!circuitRepository.existsById(circuitId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Circuit does not exist"
+            );
+        }
+
         CircuitAllInfoDto circuitAllInfo = circuitRepository.findCircuitAllInfo(circuitId);
 
         List<CircuitDriverWinsDto> bestDrivers = findOneByIdBestDrivers(circuitId);

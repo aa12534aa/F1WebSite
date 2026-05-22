@@ -1,9 +1,9 @@
 package com.tp.F1WebSite.services;
 
 import com.tp.F1WebSite.domain.dto.CircuitDto;
-import com.tp.F1WebSite.dto.CircuitAllInfoDto;
-import com.tp.F1WebSite.dto.CircuitDriverWinsDto;
-import com.tp.F1WebSite.dto.CircuitRacesDto;
+import com.tp.F1WebSite.dto.circuit.CircuitAllInfoDto;
+import com.tp.F1WebSite.dto.circuit.CircuitDriverWinsDto;
+import com.tp.F1WebSite.dto.circuit.CircuitRacesDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

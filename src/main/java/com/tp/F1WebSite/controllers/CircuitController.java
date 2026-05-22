@@ -3,11 +3,10 @@ package com.tp.F1WebSite.controllers;
 import com.tp.F1WebSite.domain.dto.CircuitDto;
 import com.tp.F1WebSite.domain.dto.RaceDto;
 import com.tp.F1WebSite.domain.entities.RaceEntity;
-import com.tp.F1WebSite.dto.CircuitAllInfoDto;
-import com.tp.F1WebSite.dto.CircuitRacesDto;
+import com.tp.F1WebSite.dto.circuit.CircuitAllInfoDto;
+import com.tp.F1WebSite.dto.circuit.CircuitRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.services.CircuitService;
-import com.tp.F1WebSite.services.RaceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -41,10 +40,6 @@ public class CircuitController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<CircuitAllInfoDto> getOneCircuit(@PathVariable("id") Long circuitId) {
-        if (!circuitService.isExisting(circuitId)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
         return new ResponseEntity<>(circuitService.findOneById(circuitId), HttpStatus.OK);
     }
 

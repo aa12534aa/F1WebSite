@@ -1,9 +1,9 @@
 package com.tp.F1WebSite.repositories;
 
 import com.tp.F1WebSite.domain.entities.CircuitEntity;
-import com.tp.F1WebSite.dto.CircuitAllInfoDto;
-import com.tp.F1WebSite.dto.CircuitDriverWinsDto;
-import com.tp.F1WebSite.dto.CircuitRacesDto;
+import com.tp.F1WebSite.dto.circuit.CircuitAllInfoDto;
+import com.tp.F1WebSite.dto.circuit.CircuitDriverWinsDto;
+import com.tp.F1WebSite.dto.circuit.CircuitRacesDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +19,7 @@ public interface CircuitRepository extends CrudRepository<CircuitEntity, Long>,
         PagingAndSortingRepository<CircuitEntity, Long> {
 
     @Query(value = """
-    SELECT new com.tp.F1WebSite.dto.CircuitRacesDto (
+    SELECT new com.tp.F1WebSite.dto.circuit.CircuitRacesDto (
         circuit.circuitId,
         circuit.name,
         circuit.country,
@@ -39,7 +39,7 @@ public interface CircuitRepository extends CrudRepository<CircuitEntity, Long>,
     Page<CircuitRacesDto> findCircuitsRacesByName(String searchCircuit, Pageable pageable);
 
     @Query(value = """
-    SELECT new com.tp.F1WebSite.dto.CircuitDriverWinsDto (
+    SELECT new com.tp.F1WebSite.dto.circuit.CircuitDriverWinsDto (
         driver.driverId,
         driver.name,
         driver.nationality,
@@ -55,7 +55,7 @@ public interface CircuitRepository extends CrudRepository<CircuitEntity, Long>,
     List<CircuitDriverWinsDto> findCircuitDriversWins(Long circuitId);
 
     @Query(value = """
-    SELECT new com.tp.F1WebSite.dto.CircuitAllInfoDto(
+    SELECT new com.tp.F1WebSite.dto.circuit.CircuitAllInfoDto(
         circuit.name,
         circuit.country,
         circuit.url,

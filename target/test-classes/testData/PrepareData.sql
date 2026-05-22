@@ -3,7 +3,8 @@ VALUES
     ('Julian Sokołowski', 'Poland', 'http://julsok1'),
     ('Max Verstappen', 'Netherlands', 'http://max1'),
     ('Lewis Hamilton', 'England', 'http://lewis1'),
-    ('Charles Leclerc',  'Monaco', 'http://charles1');
+    ('Charles Leclerc',  'Monaco', 'http://charles1'),
+    ('Franco Colapinto', 'Argentina', 'http://franco');
 
 INSERT INTO constructors(name)
 VALUES
@@ -38,7 +39,6 @@ VALUES
     (1, 2, 2, 2, 2, 18.0),
     (1, 3, 2, 3, 3, 15.0),
     (1, 4, 1, 4, 4, 12.0),
-
 
     (2, 1, 1, 2, 2, 18.0),
     (2, 2, 2, 3, 4, 12.0),

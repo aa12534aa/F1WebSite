@@ -1,9 +1,9 @@
 package com.tp.F1WebSite.repositories;
 
 import com.tp.F1WebSite.domain.entities.ConstructorEntity;
-import com.tp.F1WebSite.dto.ConstructorAllInfoDto;
-import com.tp.F1WebSite.dto.ConstructorRaceDto;
-import com.tp.F1WebSite.dto.ConstructorWinsRacesDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorAllInfoDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorRaceDto;
+import com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +11,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,7 +18,7 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
         PagingAndSortingRepository<ConstructorEntity, Long> {
 
     @Query(value = """
-    SELECT new com.tp.F1WebSite.dto.ConstructorWinsRacesDto (
+    SELECT new com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto (
         constructor.constructorId,
         constructor.name,
         COUNT(CASE WHEN result.position = 1 THEN 1 END),
@@ -39,7 +38,7 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
     Page<ConstructorWinsRacesDto> findConstructorsWinsRacesByName(String searchName, Pageable pageable);
 
     @Query("""
-    SELECT new com.tp.F1WebSite.dto.ConstructorAllInfoDto (
+    SELECT new com.tp.F1WebSite.dto.constructor.ConstructorAllInfoDto (
         constructor.name,
         COUNT(CASE WHEN result.position = 1 THEN 1 END),
         COUNT(CASE WHEN result.position = 2 THEN 1 END),
@@ -55,7 +54,7 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
     ConstructorAllInfoDto findConstructorAllInfo(Long constructorId);
 
     @Query(value = """
-    SELECT new com.tp.F1WebSite.dto.ConstructorRaceDto (
+    SELECT new com.tp.F1WebSite.dto.constructor.ConstructorRaceDto (
         constructor.name,
         driver.name,
         result.grid,

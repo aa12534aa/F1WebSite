@@ -1,8 +1,8 @@
 package com.tp.F1WebSite.services;
 
 import com.tp.F1WebSite.domain.dto.RaceDto;
-import com.tp.F1WebSite.dto.RaceCreationDto;
-import com.tp.F1WebSite.dto.RaceCircuitDto;
+import com.tp.F1WebSite.dto.race.RaceCreationDto;
+import com.tp.F1WebSite.dto.race.RaceCircuitDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

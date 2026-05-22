@@ -4,10 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import com.tp.F1WebSite.CustomPageImpl;
-import com.tp.F1WebSite.dto.DriverAllInfoDto;
-import com.tp.F1WebSite.dto.DriverCircuitsWins;
-import com.tp.F1WebSite.dto.DriverRaceDto;
-import com.tp.F1WebSite.dto.DriverWinsRacesDto;
+import com.tp.F1WebSite.domain.dto.DriverDto;
+import com.tp.F1WebSite.dto.driver.DriverAllInfoDto;
+import com.tp.F1WebSite.dto.driver.DriverCircuitsWins;
+import com.tp.F1WebSite.dto.driver.DriverRaceDto;
+import com.tp.F1WebSite.dto.driver.DriverWinsRacesDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +53,7 @@ public class DriverIntegrationTests {
 
         PageImpl<DriverWinsRacesDto> restPage = response.getBody();
         assertThat(restPage).isNotEmpty();
-        assertThat(restPage.getContent()).hasSize(4);
+        assertThat(restPage.getContent()).hasSize(5);
         assertThat(restPage.getContent()).extracting(
                         DriverWinsRacesDto::getName,
                         DriverWinsRacesDto::getNumOfWins,
@@ -62,7 +63,8 @@ public class DriverIntegrationTests {
                         tuple("Julian Sokołowski", 1L, 2L),
                         tuple("Max Verstappen", 0L, 2L),
                         tuple("Lewis Hamilton", 0L, 2L),
-                        tuple("Charles Leclerc", 1L, 2L)
+                        tuple("Charles Leclerc", 1L, 2L),
+                        tuple("Franco Colapinto", 0L, 0L)
                 );
     }
 
@@ -112,6 +114,17 @@ public class DriverIntegrationTests {
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
+    void shouldReturnNotFoundWhenDriverDoesNotExist() {
+        ResponseEntity<DriverRaceDto> response =
+                restTemplate.getForEntity("/api/drivers/100",
+                        DriverRaceDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
     void shouldReturnDriverRacesPage() {
         ResponseEntity<CustomPageImpl<DriverRaceDto>> response =
                 restTemplate.exchange("/api/drivers/1/races",
@@ -135,5 +148,60 @@ public class DriverIntegrationTests {
             assertThat(race.getGrid()).isEqualTo(1);
             assertThat(race.getTeam()).isEqualTo("ferrari");
         });
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenRequestingRacesForNonExistingDriver() {
+        ResponseEntity<DriverRaceDto> response =
+                restTemplate.getForEntity("/api/drivers/100/races",
+                        DriverRaceDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    // POST
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldCreateDriver() {
+        DriverDto newDriver = DriverDto.builder()
+                .name("Carlito Sanzito")
+                .nationality("Spain")
+                .url("carlito.com")
+                .build();
+
+        ResponseEntity<DriverDto> response = restTemplate
+                .postForEntity("/api/drivers",
+                        newDriver,
+                        DriverDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        DriverDto responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getDriverId()).isEqualTo(6L);
+        assertThat(responseBody.getName()).isEqualTo(newDriver.getName());
+        assertThat(responseBody.getNationality()).isEqualTo(newDriver.getNationality());
+        assertThat(responseBody.getUrl()).isEqualTo(newDriver.getUrl());
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnConflictWhenCreatingDriverThatAlreadyExists() {
+        DriverDto newDriver = DriverDto.builder()
+                .name("Julian Sokołowski")
+                .nationality("Poland")
+                .url("http://julsok1")
+                .build();
+
+        ResponseEntity<DriverDto> response = restTemplate
+                .postForEntity("/api/drivers",
+                        newDriver,
+                        DriverDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 }

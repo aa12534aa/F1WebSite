@@ -5,7 +5,7 @@ import com.tp.F1WebSite.domain.entities.ConstructorEntity;
 import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.domain.entities.QualifyingEntity;
 import com.tp.F1WebSite.domain.entities.RaceEntity;
-import com.tp.F1WebSite.dto.QualifyingCreationDto;
+import com.tp.F1WebSite.dto.race.QualifyingCreationDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.ConstructorRepository;
 import com.tp.F1WebSite.repositories.DriverRepository;
@@ -48,6 +48,13 @@ public class QualifyingServiceImpl implements QualifyingService {
 
     @Override
     public List<QualifyingDto> findMany(Long raceId) {
+        if (!qualifyingRepository.existsById(raceId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Qualifying does not exist"
+            );
+        }
+
         List<QualifyingEntity> qualifyingEntity = qualifyingRepository.findAllByRace_RaceIdOrderByPositionAsc(raceId);
 
         return qualifyingEntity.stream().map(qualifyingMapper::mapTo).collect(Collectors.toList());
