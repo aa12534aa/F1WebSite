@@ -79,7 +79,7 @@ public class HomeIntegrationTests {
         List<ConstructorWinsRacesDto> responseBodyConstructors = responseBody.getBestConstructors();
 
         assertThat(responseBodyConstructors).isNotEmpty();
-        assertThat(responseBodyConstructors).hasSize(2);
+        assertThat(responseBodyConstructors).hasSize(3);
         assertThat(responseBodyConstructors).extracting(
                         ConstructorWinsRacesDto::getName,
                         ConstructorWinsRacesDto::getNumOfWins,
@@ -87,7 +87,8 @@ public class HomeIntegrationTests {
                 )
                 .containsExactlyInAnyOrder(
                         tuple("ferrari", 2L, 4L),
-                        tuple("Mercedes", 0L, 4L)
+                        tuple("Mercedes", 0L, 4L),
+                        tuple("Maclaren", 0L, 0L)
                 );
     }
 }

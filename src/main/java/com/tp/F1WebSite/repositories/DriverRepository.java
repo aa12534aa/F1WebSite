@@ -24,14 +24,17 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
     SELECT new com.tp.F1WebSite.dto.driver.DriverWinsRacesDto (
         driver.driverId,
         driver.name,
-        COUNT(CASE WHEN result.position = 1 THEN 1 END),
-        Count(result.resultId)
+        COUNT(CASE WHEN result.position = 1 AND race.isDeleted = false AND circuit.isDeleted = false AND constructor.isDeleted = false THEN 1 END),
+        COUNT(CASE WHEN race.isDeleted = false AND circuit.isDeleted = false THEN 1 END)
         )
     FROM DriverEntity driver
     LEFT JOIN driver.results result
+    LEFT JOIN result.race race
+    LEFT JOIN race.circuit circuit
+    LEFT JOIN result.constructor constructor
     WHERE LOWER(driver.name) LIKE LOWER(CONCAT('%', :searchName, '%'))
     GROUP BY driver.driverId, driver.name
-    ORDER BY COUNT(CASE WHEN result.position = 1 THEN 1 END) DESC
+    ORDER BY COUNT(CASE WHEN result.position = 1 AND race.isDeleted = false AND circuit.isDeleted = false AND constructor.isDeleted = false THEN 1 END) DESC
     """,
             countQuery = """
     SELECT (COUNT(DISTINCT driver.driverId))
@@ -53,7 +56,10 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
         )
     FROM DriverEntity driver
     LEFT JOIN driver.results result
-    WHERE driver.driverId = :driverId
+    JOIN result.race race
+    JOIN race.circuit circuit
+    JOIN result.constructor constructor
+    WHERE driver.driverId = :driverId AND circuit.isDeleted = false AND constructor.isDeleted = false
     GROUP BY driver.driverId, driver.name, driver.url, driver.nationality
     """)
     DriverAllInfoDto findDriverAllInfo(Long driverId);
@@ -91,7 +97,10 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
     SELECT COUNT(CASE WHEN qualifying.position = 1 THEN 1 END)
     FROM DriverEntity driver
     LEFT JOIN driver.qualifying qualifying
-    WHERE driver.driverId = :driverId
+    JOIN qualifying.race race
+    JOIN race.circuit circuit
+    JOIN qualifying.constructor constructor
+    WHERE driver.driverId = :driverId AND circuit.isDeleted = false AND constructor.isDeleted = false
     """)
     Long findNumOfPolePositions(Long driverId);
 
@@ -100,13 +109,14 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
         circuit.circuitId,
         circuit.name,
         circuit.country,
-        COUNT(CASE WHEN result.position = 1 THEN 1 END)
+        COUNT(CASE WHEN result.position = 1 AND constructor.isDeleted = false THEN 1 END)
         )
     FROM DriverEntity driver
     LEFT JOIN driver.results result
     LEFT JOIN result.race race
     LEFT JOIN race.circuit circuit
-    WHERE driver.driverId = :driverId
+    LEFT JOIN result.constructor constructor
+    WHERE driver.driverId = :driverId AND race.isDeleted = false AND circuit.isDeleted = false
     GROUP BY circuit.circuitId, circuit.name, circuit.country
     """)
     List<DriverCircuitsWins> findDriverCircuitsWins(Long driverId);

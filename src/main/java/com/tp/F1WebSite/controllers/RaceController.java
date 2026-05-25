@@ -81,4 +81,26 @@ public class RaceController {
                                                           @Valid @RequestBody QualifyingCreationDto qualifyingCreationDto) {
         return new ResponseEntity<>(qualifyingService.createOne(raceId, qualifyingCreationDto), HttpStatus.CREATED);
     }
+
+    // DELETE
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteRace(@PathVariable("id") Long raceId) {
+        raceService.deleteOne(raceId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping(path = "/{raceId}/results/{id}")
+    public ResponseEntity<Void> deleteResult(@PathVariable("raceId") Long raceId, @PathVariable("id") Long resultId) {
+        resultService.deleteOne(resultId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping(path = "/{raceId}/qualifying/{id}")
+    public ResponseEntity<Void> deleteQualifying(@PathVariable("raceId") Long raceId, @PathVariable("id") Long qualifyingId) {
+        qualifyingService.deleteOne(qualifyingId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

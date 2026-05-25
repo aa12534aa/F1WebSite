@@ -28,4 +28,6 @@ public interface DriverService {
     List<DriverWinsRacesDto> findBestDrivers();
 
     DriverDto createOne(DriverDto driverDto);
+
+    void deleteOne(Long driverId);
 }

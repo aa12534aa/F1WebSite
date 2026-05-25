@@ -2,11 +2,13 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.dto.CircuitDto;
 import com.tp.F1WebSite.domain.entities.CircuitEntity;
+import com.tp.F1WebSite.domain.entities.RaceEntity;
 import com.tp.F1WebSite.dto.circuit.CircuitAllInfoDto;
 import com.tp.F1WebSite.dto.circuit.CircuitDriverWinsDto;
 import com.tp.F1WebSite.dto.circuit.CircuitRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.CircuitRepository;
+import com.tp.F1WebSite.repositories.RaceRepository;
 import com.tp.F1WebSite.services.CircuitService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +25,13 @@ public class CircuitServiceImpl implements CircuitService {
     private final CircuitRepository circuitRepository;
 
     private final Mapper<CircuitEntity, CircuitDto> circuitMapper;
+    private final RaceRepository raceRepository;
 
     public CircuitServiceImpl(CircuitRepository circuitRepository,
-                              Mapper<CircuitEntity, CircuitDto> circuitMapper) {
+                              Mapper<CircuitEntity, CircuitDto> circuitMapper, RaceRepository raceRepository) {
         this.circuitRepository = circuitRepository;
         this.circuitMapper = circuitMapper;
+        this.raceRepository = raceRepository;
     }
 
     // GET
@@ -92,5 +96,22 @@ public class CircuitServiceImpl implements CircuitService {
         CircuitEntity savedCircuit = circuitRepository.save(circuitEntity);
 
         return circuitMapper.mapTo(savedCircuit);
+    }
+
+    // DELETE
+    @Override
+    public void deleteOne(Long circuitId) {
+        CircuitEntity circuit = circuitRepository.findById(circuitId).
+                orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Circuit does not exist"
+                ));
+
+        if (raceRepository.existsByCircuit_CircuitId(circuitId)) {
+            circuit.setIsDeleted(true);
+            circuitRepository.save(circuit);
+        } else {
+            circuitRepository.delete(circuit);
+        }
     }
 }

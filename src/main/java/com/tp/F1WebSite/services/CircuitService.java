@@ -20,4 +20,6 @@ public interface CircuitService {
     List<CircuitDriverWinsDto> findOneByIdBestDrivers(Long circuitId);
 
     CircuitDto createOne(CircuitDto circuitDto);
+
+    void deleteOne(Long circuitId);
 }

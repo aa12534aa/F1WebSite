@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -39,7 +40,7 @@ public class CircuitsIntegrationTests {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private CircuitRepository circuitRepository;
+    private JdbcTemplate jdbcTemplate;
 
     // GET
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -57,15 +58,16 @@ public class CircuitsIntegrationTests {
 
         PageImpl<CircuitRacesDto> responseBody = response.getBody();
         assertThat(responseBody).isNotEmpty();
-        assertThat(responseBody.getContent()).hasSize(2);
+        assertThat(responseBody.getContent()).hasSize(3);
         assertThat(responseBody.getContent()).extracting(
                         CircuitRacesDto::getName,
                         CircuitRacesDto::getCountry,
                         CircuitRacesDto::getNumOfRaces
                 )
                 .containsExactlyInAnyOrder(
-                        tuple("Tor Poznan", "Poland", 1L),
-                        tuple("Circuit de Barcelona", "Spain", 1L)
+                        tuple("Tor Poznan", "Poland", 2L),
+                        tuple("Circuit de Barcelona", "Spain", 1L),
+                        tuple("SPA", "Belgium", 0L)
                 );
     }
 
@@ -84,7 +86,7 @@ public class CircuitsIntegrationTests {
         assertThat(responseBody.getCircuitName()).isEqualTo("Tor Poznan");
         assertThat(responseBody.getCountry()).isEqualTo("Poland");
         assertThat(responseBody.getUrl()).isEqualTo("http://poznantor");
-        assertThat(responseBody.getNumOfRaces()).isEqualTo(1L);
+        assertThat(responseBody.getNumOfRaces()).isEqualTo(2L);
     }
 
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -124,9 +126,9 @@ public class CircuitsIntegrationTests {
     @Test
     void shouldCreateDriver() {
         CircuitDto newCircuit = CircuitDto.builder()
-                .name("Spa")
-                .country("Belgium")
-                .url("spa.com")
+                .name("Hungaroring")
+                .country("Hungary")
+                .url("http://hungaroring")
                 .build();
 
         ResponseEntity<CircuitDto> response = restTemplate
@@ -138,7 +140,7 @@ public class CircuitsIntegrationTests {
 
         CircuitDto responseBody = response.getBody();
         assertThat(responseBody).isNotNull();
-        assertThat(responseBody.getCircuitId()).isEqualTo(3L);
+        assertThat(responseBody.getCircuitId()).isEqualTo(4L);
         assertThat(responseBody.getName()).isEqualTo(newCircuit.getName());
         assertThat(responseBody.getCountry()).isEqualTo(newCircuit.getCountry());
         assertThat(responseBody.getUrl()).isEqualTo(newCircuit.getUrl());
@@ -160,5 +162,55 @@ public class CircuitsIntegrationTests {
                         DriverDto.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    // DELETE
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldHardDeleteCircuitWhenCircuitHasNoAnyResultsQualifying() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/circuits/3",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM circuits WHERE circuit_id = ?",
+                Integer.class,
+                3L
+        );
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldSoftDeleteDriverWhenDriverHasResultsQualifying() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/circuits/1",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Boolean isDeleted = jdbcTemplate.queryForObject(
+                "SELECT is_deleted FROM circuits WHERE circuit_id = ?",
+                Boolean.class, 1L
+        );
+        assertThat(isDeleted).isTrue();
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenDeletingNonExistingCircuit() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/circuits/100",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

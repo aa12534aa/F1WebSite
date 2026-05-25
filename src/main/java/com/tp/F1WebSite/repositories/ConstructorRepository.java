@@ -21,14 +21,17 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
     SELECT new com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto (
         constructor.constructorId,
         constructor.name,
-        COUNT(CASE WHEN result.position = 1 THEN 1 END),
-        COUNT(result.resultId)
+        COUNT(CASE WHEN result.position = 1 AND race.isDeleted = false AND circuit.isDeleted = false AND driver.isDeleted = false THEN 1 END),
+        COUNT(CASE WHEN race.isDeleted = false AND circuit.isDeleted = false THEN 1 END)
         )
     FROM ConstructorEntity constructor
     LEFT JOIN constructor.results result
+    LEFT JOIN result.race race
+    LEFT JOIN race.circuit circuit
+    LEFT JOIN result.driver driver
     WHERE LOWER(constructor.name) LIKE LOWER(CONCAT('%', :searchName, '%'))
     GROUP BY constructor.constructorId, constructor.name
-    ORDER BY COUNT(CASE WHEN result.position = 1 THEN 1 END) DESC
+    ORDER BY COUNT(CASE WHEN result.position = 1 AND race.isDeleted = false AND circuit.isDeleted = false AND driver.isDeleted = false THEN 1 END) DESC
     """,
     countQuery = """
     SELECT COUNT(DISTINCT constructor.constructorId)
@@ -48,7 +51,10 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
         )
     FROM ConstructorEntity constructor
     LEFT JOIN constructor.results result
-    WHERE constructor.constructorId = :constructorId
+    JOIN result.race race
+    JOIN race.circuit circuit
+    JOIN result.driver driver
+    WHERE constructor.constructorId = :constructorId AND circuit.isDeleted = false AND driver.isDeleted = false
     GROUP BY constructor.constructorId, constructor.name
     """)
     ConstructorAllInfoDto findConstructorAllInfo(Long constructorId);
@@ -68,7 +74,7 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
     JOIN result.race race
     JOIN result.driver driver
     JOIN result.constructor constructor
-    Join race.circuit circuit
+    JOIN race.circuit circuit
     WHERE constructor.constructorId = :constructorId AND LOWER(circuit.country) LIKE LOWER(CONCAT('%', :searchCountry, '%'))
     ORDER BY race.date DESC
     """,

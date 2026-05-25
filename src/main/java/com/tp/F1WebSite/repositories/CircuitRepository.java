@@ -49,7 +49,7 @@ public interface CircuitRepository extends CrudRepository<CircuitEntity, Long>,
     LEFT JOIN circuit.races race
     LEFT JOIN race.results result
     LEFT JOIN result.driver driver
-    WHERE circuit.circuitId = :circuitId
+    WHERE circuit.circuitId = :circuitId AND driver.isDeleted = false
     GROUP BY driver.driverId, driver.name, driver.nationality
     """)
     List<CircuitDriverWinsDto> findCircuitDriversWins(Long circuitId);

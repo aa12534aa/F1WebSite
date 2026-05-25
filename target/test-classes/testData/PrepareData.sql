@@ -9,17 +9,20 @@ VALUES
 INSERT INTO constructors(name)
 VALUES
     ('ferrari'),
-    ('Mercedes');
+    ('Mercedes'),
+    ('Maclaren');
 
 INSERT INTO circuits(name, country, url)
 VALUES
     ('Tor Poznan', 'Poland', 'http://poznantor'),
-    ('Circuit de Barcelona', 'Spain', 'http://catalunatrack');
+    ('Circuit de Barcelona', 'Spain', 'http://catalunatrack'),
+    ('SPA', 'Belgium', 'http://spa');
 
 INSERT INTO races(circuit_id, date, name)
 VALUES
     (1, '2025-10-12', 'GP Poznan'),
-    (2, '2025-11-12', 'GP Barcelona');
+    (2, '2025-11-12', 'GP Barcelona'),
+    (1, '2026-10-12', 'GP Poznan');
 
 INSERT INTO qualifying(race_id, driver_id, constructor_id, position)
 VALUES

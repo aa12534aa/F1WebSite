@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -38,6 +39,9 @@ public class ConstructorIntegrationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     // GET
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -53,7 +57,7 @@ public class ConstructorIntegrationTests {
 
         PageImpl<ConstructorWinsRacesDto> responseBody = response.getBody();
         assertThat(responseBody).isNotEmpty();
-        assertThat(responseBody.getContent()).hasSize(2);
+        assertThat(responseBody.getContent()).hasSize(3);
         assertThat(responseBody.getContent()).extracting(
                         ConstructorWinsRacesDto::getName,
                         ConstructorWinsRacesDto::getNumOfWins,
@@ -61,7 +65,8 @@ public class ConstructorIntegrationTests {
                 )
                 .containsExactlyInAnyOrder(
                         tuple("ferrari", 2L, 4L),
-                        tuple("Mercedes", 0L, 4L)
+                        tuple("Mercedes", 0L, 4L),
+                        tuple("Maclaren", 0L, 0L)
         );
     }
 
@@ -152,7 +157,7 @@ public class ConstructorIntegrationTests {
 
         ConstructorDto responseBody = response.getBody();
         assertThat(responseBody).isNotNull();
-        assertThat(responseBody.getConstructorId()).isEqualTo(3L);
+        assertThat(responseBody.getConstructorId()).isEqualTo(4L);
         assertThat(responseBody.getName()).isEqualTo(newConstructor.getName());
     }
 
@@ -170,5 +175,55 @@ public class ConstructorIntegrationTests {
                         ConstructorDto.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    // DELETE
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldHardDeleteConstructorWhenConstructorHasNoAnyResultsQualifying() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/constructors/3",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM constructors WHERE constructor_id = ?",
+                Integer.class,
+                3L
+        );
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldSoftDeleteConstructorWhenConstructorHasResultsQualifying() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/constructors/1",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Boolean isDeleted = jdbcTemplate.queryForObject(
+                "SELECT is_deleted FROM constructors WHERE constructor_id = ?",
+                Boolean.class, 1L
+        );
+        assertThat(isDeleted).isTrue();
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenDeletingNonExistingConstructor() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/constructors/100",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

@@ -13,7 +13,6 @@ import com.tp.F1WebSite.repositories.RaceRepository;
 import com.tp.F1WebSite.repositories.ResultRepository;
 import com.tp.F1WebSite.services.ResultService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -101,5 +100,18 @@ public class ResultServiceImpl implements ResultService {
                 .build();
         ResultEntity savedResult = resultRepository.save(resultEntity);
         return resultMapper.mapTo(savedResult);
+    }
+
+    // DELETE
+    @Override
+    public void deleteOne(Long resultId) {
+        if (!resultRepository.existsById(resultId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Result does not exist"
+            );
+        }
+
+        resultRepository.deleteById(resultId);
     }
 }

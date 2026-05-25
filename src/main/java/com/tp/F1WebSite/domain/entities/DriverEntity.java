@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "drivers")
+@SQLRestriction("is_deleted = false")
 public class DriverEntity {
 
     @Id
@@ -34,4 +36,7 @@ public class DriverEntity {
 
     @OneToMany(mappedBy = "driver")
     private List<QualifyingEntity> qualifying;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean isDeleted = false;
 }

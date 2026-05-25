@@ -10,4 +10,6 @@ public interface QualifyingService {
     List<QualifyingDto> findMany(Long raceId);
 
     QualifyingDto createOne(Long raceId, QualifyingCreationDto qualifyingCreationDto);
+
+    void deleteOne(Long driverId);
 }

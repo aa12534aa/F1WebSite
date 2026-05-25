@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.tp.F1WebSite.integrationTests.CircuitsIntegrationTests
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.789 s -- in com.tp.F1WebSite.integrationTests.CircuitsIntegrationTests
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.838 s -- in com.tp.F1WebSite.integrationTests.CircuitsIntegrationTests

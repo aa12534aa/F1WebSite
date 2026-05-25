@@ -44,8 +44,6 @@ public class QualifyingServiceImpl implements QualifyingService {
     }
 
     // GET
-
-
     @Override
     public List<QualifyingDto> findMany(Long raceId) {
         if (!qualifyingRepository.existsById(raceId)) {
@@ -101,5 +99,18 @@ public class QualifyingServiceImpl implements QualifyingService {
 
         QualifyingEntity savedQualifying = qualifyingRepository.save(qualifyingEntity);
         return qualifyingMapper.mapTo(savedQualifying);
+    }
+
+    // DELETE
+    @Override
+    public void deleteOne(Long qualifyingId) {
+        if (!qualifyingRepository.existsById(qualifyingId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Race does not exist"
+            );
+        }
+
+        qualifyingRepository.deleteById(qualifyingId);
     }
 }

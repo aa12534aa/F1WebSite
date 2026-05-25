@@ -64,4 +64,12 @@ public class DriverController {
 
         return new ResponseEntity<>(savedDriver, HttpStatus.CREATED);
     }
+
+    // DELETE
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteDriver(@PathVariable("id") Long driverId) {
+        driverService.deleteOne(driverId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

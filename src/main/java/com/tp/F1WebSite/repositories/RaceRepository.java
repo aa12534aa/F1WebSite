@@ -25,15 +25,18 @@ public interface RaceRepository extends CrudRepository<RaceEntity, Long>,
         driver.name,
         constructor.name
         )
-        FROM RaceEntity race
-        LEFT JOIN race.results result ON result.position = 1
-        LEFT JOIN race.circuit circuit
-        LEFT JOIN result.driver driver
-        LEFT JOIN result.constructor constructor
+    FROM RaceEntity race
+    LEFT JOIN race.results result ON result.position = 1
+    LEFT JOIN race.circuit circuit
+    LEFT JOIN result.driver driver
+    LEFT JOIN result.constructor constructor
+    WHERE circuit.isDeleted = false
     GROUP BY race.raceId, race.name, race.date, circuit.name, circuit.country, driver.name, constructor.name
     ORDER BY race.date DESC
     """)
     Page<RaceCircuitDto> findRacesCircuitsByName(String searchName, Pageable pageable);
 
     Boolean existsByDate(LocalDate date);
+
+    Boolean existsByCircuit_CircuitId(Long circuitId);
 }

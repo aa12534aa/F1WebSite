@@ -2,11 +2,14 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.dto.ConstructorDto;
 import com.tp.F1WebSite.domain.entities.ConstructorEntity;
+import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.dto.constructor.ConstructorAllInfoDto;
 import com.tp.F1WebSite.dto.constructor.ConstructorRaceDto;
 import com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.ConstructorRepository;
+import com.tp.F1WebSite.repositories.QualifyingRepository;
+import com.tp.F1WebSite.repositories.ResultRepository;
 import com.tp.F1WebSite.services.ConstructorService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,11 +27,15 @@ public class ConstructorServiceImpl implements ConstructorService {
     private final ConstructorRepository constructorRepository;
 
     private final Mapper<ConstructorEntity, ConstructorDto> constructorMapper;
+    private final ResultRepository resultRepository;
+    private final QualifyingRepository qualifyingRepository;
 
     public ConstructorServiceImpl(ConstructorRepository constructorRepository,
-                                  Mapper<ConstructorEntity, ConstructorDto> constructorMapper) {
+                                  Mapper<ConstructorEntity, ConstructorDto> constructorMapper, ResultRepository resultRepository, QualifyingRepository qualifyingRepository) {
         this.constructorRepository = constructorRepository;
         this.constructorMapper = constructorMapper;
+        this.resultRepository = resultRepository;
+        this.qualifyingRepository = qualifyingRepository;
     }
 
     // GET
@@ -89,5 +96,23 @@ public class ConstructorServiceImpl implements ConstructorService {
         ConstructorEntity savedConstructor = constructorRepository.save(constructorEntity);
 
         return constructorMapper.mapTo(savedConstructor);
+    }
+
+    // DELETE
+    @Override
+    public void deleteOne(Long constructorId) {
+        ConstructorEntity constructor = constructorRepository.findById(constructorId).
+                orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Constructor does not exist"
+                ));
+
+        if (resultRepository.existsByConstructor_ConstructorId(constructorId) ||
+                qualifyingRepository.existsByConstructor_ConstructorId(constructorId)) {
+            constructor.setIsDeleted(true);
+            constructorRepository.save(constructor);
+        } else {
+            constructorRepository.delete(constructor);
+        }
     }
 }

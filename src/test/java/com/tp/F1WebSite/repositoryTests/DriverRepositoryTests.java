@@ -39,6 +39,7 @@ public class DriverRepositoryTests {
                 .name("john son")
                 .nationality("UK")
                 .url("dskjfo")
+                .isDeleted(false)
                 .build();
         DriverEntity savedDriver = driverRepository.save(driver);
         assertThat(savedDriver.getDriverId()).isNotNull();

@@ -5,10 +5,12 @@ import static org.assertj.core.groups.Tuple.tuple;
 
 import com.tp.F1WebSite.CustomPageImpl;
 import com.tp.F1WebSite.domain.dto.DriverDto;
+import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.dto.driver.DriverAllInfoDto;
 import com.tp.F1WebSite.dto.driver.DriverCircuitsWins;
 import com.tp.F1WebSite.dto.driver.DriverRaceDto;
 import com.tp.F1WebSite.dto.driver.DriverWinsRacesDto;
+import com.tp.F1WebSite.repositories.DriverRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -37,6 +40,9 @@ public class DriverIntegrationTests {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     // GET
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -203,5 +209,55 @@ public class DriverIntegrationTests {
                         DriverDto.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    // DELETE
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldHardDeleteDriverWhenDriverHasNoAnyResultsQualifying() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/drivers/5",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM drivers WHERE driver_id = ?",
+                Integer.class,
+                5L
+        );
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldSoftDeleteDriverWhenDriverHasResultsQualifying() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/drivers/1",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Boolean isDeleted = jdbcTemplate.queryForObject(
+                "SELECT is_deleted FROM drivers WHERE driver_id = ?",
+                Boolean.class, 1L
+        );
+        assertThat(isDeleted).isTrue();
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenDeletingNonExistingDriver() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/drivers/100",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

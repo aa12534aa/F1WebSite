@@ -50,4 +50,12 @@ public class CircuitController {
 
         return new ResponseEntity<>(savedCircuit, HttpStatus.CREATED);
     }
+
+    // DELETE
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteCircuit(@PathVariable("id") Long circuitId) {
+        circuitService.deleteOne(circuitId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

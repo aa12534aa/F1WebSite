@@ -4,6 +4,7 @@ import com.tp.F1WebSite.domain.dto.ConstructorDto;
 import com.tp.F1WebSite.dto.constructor.ConstructorAllInfoDto;
 import com.tp.F1WebSite.dto.constructor.ConstructorRaceDto;
 import com.tp.F1WebSite.dto.constructor.ConstructorWinsRacesDto;
+import com.tp.F1WebSite.repositories.ConstructorRepository;
 import com.tp.F1WebSite.services.ConstructorService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -67,5 +68,13 @@ public class ConstructorController {
         ConstructorDto savedConstructor = constructorService.createOne(constructorDto);
 
         return new ResponseEntity<>(savedConstructor, HttpStatus.CREATED);
+    }
+
+    // DELETE
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteConstructor(@PathVariable("id") Long constructorId) {
+        constructorService.deleteOne(constructorId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

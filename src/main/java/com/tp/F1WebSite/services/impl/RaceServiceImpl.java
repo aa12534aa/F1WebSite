@@ -2,12 +2,15 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.dto.RaceDto;
 import com.tp.F1WebSite.domain.entities.CircuitEntity;
+import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.domain.entities.RaceEntity;
 import com.tp.F1WebSite.dto.race.RaceCreationDto;
 import com.tp.F1WebSite.dto.race.RaceCircuitDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.CircuitRepository;
+import com.tp.F1WebSite.repositories.QualifyingRepository;
 import com.tp.F1WebSite.repositories.RaceRepository;
+import com.tp.F1WebSite.repositories.ResultRepository;
 import com.tp.F1WebSite.services.RaceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +26,16 @@ public class RaceServiceImpl implements RaceService {
     private final CircuitRepository circuitRepository;
 
     private final Mapper<RaceEntity, RaceDto> raceMapper;
+    private final ResultRepository resultRepository;
+    private final QualifyingRepository qualifyingRepository;
 
     public RaceServiceImpl(RaceRepository raceRepository, CircuitRepository circuitRepository,
-                           Mapper<RaceEntity, RaceDto> raceMapper) {
+                           Mapper<RaceEntity, RaceDto> raceMapper, ResultRepository resultRepository, QualifyingRepository qualifyingRepository) {
         this.raceRepository = raceRepository;
         this.circuitRepository = circuitRepository;
         this.raceMapper = raceMapper;
+        this.resultRepository = resultRepository;
+        this.qualifyingRepository = qualifyingRepository;
     }
 
     // GET
@@ -71,8 +78,27 @@ public class RaceServiceImpl implements RaceService {
                 .circuit(circuit)
                 .date(raceCreationDto.getDate())
                 .name(raceCreationDto.getName())
+                .isDeleted(false)
                 .build();
         RaceEntity savedRace = raceRepository.save(raceEntity);
         return raceMapper.mapTo(savedRace);
+    }
+
+    // DELETE
+    @Override
+    public void deleteOne(Long raceId) {
+        RaceEntity race = raceRepository.findById(raceId).
+                orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Race does not exist"
+                ));
+
+        if (resultRepository.existsByRace_RaceId(raceId) ||
+                qualifyingRepository.existsByRace_RaceId(raceId)) {
+            race.setIsDeleted(true);
+            raceRepository.save(race);
+        } else {
+            raceRepository.delete(race);
+        }
     }
 }

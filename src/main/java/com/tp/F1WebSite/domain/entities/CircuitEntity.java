@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "circuits")
+@SQLRestriction("is_deleted = false")
 public class CircuitEntity {
 
     @Id
@@ -31,4 +33,7 @@ public class CircuitEntity {
 
     @OneToMany(mappedBy = "circuit")
     private List<RaceEntity> races;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean isDeleted = false;
 }

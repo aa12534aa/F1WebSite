@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "races")
+@SQLRestriction("is_deleted = false")
 public class RaceEntity {
 
     @Id
@@ -33,4 +35,7 @@ public class RaceEntity {
 
     @OneToMany(mappedBy = "race")
     private List<ResultEntity> results;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean isDeleted = false;
 }

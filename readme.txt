@@ -1,10 +1,10 @@
-F1WebSite
-// zrobione
+F1WebSite endpointy
+
+// drivers controller
 GET /api/home:
 -topka kierowców (najwięcej zwycięstw, najwięcej poleposition)
 -topka teamów (najwięcej zwycięstw, najwięcej poleposition)
 
-// zrobione
 GET /api/drivers:
 -page wszystkich kierowców posortowanych po liczbie zwycięstw
 -wyszukiwanie kierowców po imieniu+nazwisku
@@ -12,7 +12,6 @@ GET /api/drivers:
 -każdy kierowca ma przekierowanie do /drivers/{id}
 -każdy kierowca ma liczbę zwycięstw
 
-// zrobione
 GET /api/drivers/{id}:
 -liczba 1, 2, 3 miejsc
 -liczba wyścigów
@@ -20,53 +19,58 @@ GET /api/drivers/{id}:
 -liczba poleposition
 -tory na których kierowca ma najwięcej wygranych
 
-// zrobione
 GET /api/drivers/{id}/races:
 -page ostatnich 10 wyścigów z (miejscem startowym, miejscem końcowym, punktami, rokiem wyścigu, nazwą wyścigu)
 -wyszukiwanie wyścigów po kraju
 
-// zrobione
 POST /api/drivers:
 -tworzenie kierowcy
 
-// zrobione
+DELETE /api/drivers/{id}
+-usuwanie kierowcy (jeżeli ma jakieś wyniki/kwalifikacje soft delete w przeciwnym wypadku hard delete)
+
+
+// constructors controller
 GET /api/constructors:
 -page wszystkich konstruktorów posortowanych po liczbie zwycięstw
 -wyszukiwanie konstruktorów po nazwie
 -każdy konstruktor ma przekierowanie do indywidualnego widoku ze
 -każdy konstruktor ma liczbę zwycięstw
 
-// zrobione
 GET /api/constructors/{id}:
 -liczba 1, 2, 3 miejsc
 -liczba wyścigów
 -łączna liczba punktów
 
-// zrobione
 GET /api/constructors/{id}/races:
 -page wyścigów
 -wyszukiwanie wyścigów po kraju
 
-// zrobione
 POST /api/constructors:
 -tworzenie konstruktora
 
-// zrobione
+DELETE /api/constructors/{id}
+-usuwanie konstruktora (jeżeli ma jakieś wyniki/kwalifikacje soft delete w przeciwnym wypadku hard delete)
+
+
+// circuits controller
 GET /api/circuits:
 -tory z liczbą wyścigów
 
-// zrobione
 GET /api/circuits/{id}:
 -nazwa toru
 -kraj
 -url
 -lista kierowców z największą liczbą wygranych na danym torze
 
-// zrobione
 POST /api/circuits:
 -tworzenie toru
 
-// zrobione
+DELETE /api/circuits/{id}
+-usuwanie toru (jeżeli ma jakiś wyścig soft delete w przeciwnym wypadku hard delete)
+
+
+// races controller
 GET /api/races:
 -page wyścigów
 -nazwa wyścigu
@@ -75,32 +79,36 @@ GET /api/races:
 -imię zwycięzcy
 -nazwa zespołu który wygrał
 
-// zrobione
 GET /api/races/{id}
 -nazwa wyścigu
 -data
 -informacje o torze
 -lista results
 
-// zrobione
 GET /api/races/{id}/results
 -rezultaty kierowców w danym wyscigu
 
-// zrobione
 GET /api/races/{id}/qualifying:
 -kwalfikacje kierowców w danym wyścigu
 
-// zrobione
 POST /api/races:
 -tworzenie wyścigu (na bazie toru)
 
-// zrobione
 POST /api/races/{id}/results
 -tworzenie result (na bazie id wyścigu, kierowcy, konstruktora)
 
-// zrobione
 POST /api/races/{id}/qualifying
 -tworzenie qualifying (na bazie id wyścigu, kierowcy, konstruktora)
+
+DELETE /api/races/{id}
+-usuwanie wyścigu (jeżeli ma jakieś wyniki/kwalifikacje soft delete w przeciwnym wypadku hard delete)
+
+DELETE /api/races/{raceId}/results/{id}
+-usuwanie wyniku zawsze hard delete
+
+DELETE /api/races/{raceId}/qualifying/{id}
+-usuwanie kwalfikacji zawsze hard delete
+
 
 
 struktura bazy danych
@@ -109,22 +117,26 @@ drivers:
 -name
 -nationality
 -url (unique)
+-isDeleted
 
 constructors:
 -id
 -name (unique)
+-isDeleted
 
 circuits:
 -id
 -name (unique)
 -country
 -url
+-isDeleted
 
 races:
 -id
 -circuit_id
 -date
 -name
+-isDeleted
 
 qualifying:
 -id

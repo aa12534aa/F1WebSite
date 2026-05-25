@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tp.F1WebSite.F1WebSiteTests" time="14.716" tests="1" errors="0" skipped="0" failures="0" flakes="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tp.F1WebSite.F1WebSiteTests" time="11.965" tests="1" errors="0" skipped="0" failures="0" flakes="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21.0.11\bin"/>
-    <property name="sun.java.command" value="C:\Users\julia\AppData\Local\Temp\surefire8943512391679225909\surefirebooter-20260521131540381_3.jar C:\Users\julia\AppData\Local\Temp\surefire8943512391679225909 2026-05-21T13-15-40_204-jvmRun1 surefire-20260521131540381_1tmp surefire_0-20260521131540381_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\julia\AppData\Local\Temp\surefire5956020319917813386\surefirebooter-20260525105122866_3.jar C:\Users\julia\AppData\Local\Temp\surefire5956020319917813386 2026-05-25T10-51-22_680-jvmRun1 surefire-20260525105122866_1tmp surefire_0-20260525105122866_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="E:\praca\java\SpringBoot\F1WebSite\target\test-classes;E:\praca\java\SpringBoot\F1WebSite\target\classes;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.5.14\spring-boot-starter-data-jpa-3.5.14.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-starter\3.5.14\spring-boot-starter-3.5.14.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot\3.5.14\spring-boot-3.5.14.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.5.14\spring-boot-starter-logging-3.5.14.jar;C:\Users\julia\.m2\repository\ch\qos\logback\logback-classic\1.5.32\logback-classic-1.5.32.jar;C:\Users\julia\.m2\repository\ch\qos\logback\logback-core\1.5.32\logback-core-1.5.32.jar;C:\Users\julia\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.24.3\log4j-to-slf4j-2.24.3.jar;C:\Users\julia\.m2\repository\org\apache\logging\log4j\log4j-api\2.24.3\log4j-api-2.24.3.jar;C:\Users\julia\.m2\repository\org\slf4j\jul-to-slf4j\2.0.17\jul-to-slf4j-2.0.17.jar;C:\Users\julia\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\julia\.m2\repository\org\yaml\snakeyaml\2.4\snakeyaml-2.4.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.5.14\spring-boot-starter-jdbc-3.5.14.jar;C:\Users\julia\.m2\repository\com\zaxxer\HikariCP\6.3.3\HikariCP-6.3.3.jar;C:\Users\julia\.m2\repository\org\springframework\spring-jdbc\6.2.18\spring-jdbc-6.2.18.jar;C:\Users\julia\.m2\repository\org\hibernate\orm\hibernate-core\6.6.49.Final\hibernate-core-6.6.49.Final.jar;C:\Users\julia\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\julia\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\julia\.m2\repository\org\jboss\logging\jboss-logging\3.6.3.Final\jboss-logging-3.6.3.Final.jar;C:\Users\julia\.m2\repository\org\hibernate\common\hibernate-commons-annotations\7.0.3.Final\hibernate-commons-annotations-7.0.3.Final.jar;C:\Users\julia\.m2\repository\io\smallrye\jandex\3.2.0\jandex-3.2.0.jar;C:\Users\julia\.m2\repository\com\fasterxml\classmate\1.7.3\classmate-1.7.3.jar;C:\Users\julia\.m2\repository\net\bytebuddy\byte-buddy\1.17.8\byte-buddy-1.17.8.jar;C:\Users\julia\.m2\repository\org\glassfish\jaxb\jaxb-runtime\4.0.6\jaxb-runtime-4.0.6.jar;C:\Users\julia\.m2\repository\org\glassfish\jaxb\jaxb-core\4.0.6\jaxb-core-4.0.6.jar;C:\Users\julia\.m2\repository\org\eclipse\angus\angus-activation\2.0.3\angus-activation-2.0.3.jar;C:\Users\julia\.m2\repository\org\glassfish\jaxb\txw2\4.0.6\txw2-4.0.6.jar;C:\Users\julia\.m2\repository\com\sun\istack\istack-commons-runtime\4.1.2\istack-commons-runtime-4.1.2.jar;C:\Users\julia\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\julia\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar;C:\Users\julia\.m2\repository\org\springframework\data\spring-data-jpa\3.5.11\spring-data-jpa-3.5.11.jar;C:\Users\julia\.m2\repository\org\springframework\data\spring-data-commons\3.5.11\spring-data-commons-3.5.11.jar;C:\Users\julia\.m2\repository\org\springframework\spring-orm\6.2.18\spring-orm-6.2.18.jar;C:\Users\julia\.m2\repository\org\springframework\spring-context\6.2.18\spring-context-6.2.18.jar;C:\Users\julia\.m2\repository\org\springframework\spring-aop\6.2.18\spring-aop-6.2.18.jar;C:\Users\julia\.m2\repository\org\springframework\spring-tx\6.2.18\spring-tx-6.2.18.jar;C:\Users\julia\.m2\repository\org\springframework\spring-beans\6.2.18\spring-beans-6.2.18.jar;C:\Users\julia\.m2\repository\org\slf4j\slf4j-api\2.0.17\slf4j-api-2.0.17.jar;C:\Users\julia\.m2\repository\org\springframework\spring-aspects\6.2.18\spring-aspects-6.2.18.jar;C:\Users\julia\.m2\repository\org\aspectj\aspectjweaver\1.9.25.1\aspectjweaver-1.9.25.1.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.5.14\spring-boot-starter-web-3.5.14.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.5.14\spring-boot-starter-json-3.5.14.jar;C:\Users\julia\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.21.2\jackson-databind-2.21.2.jar;C:\Users\julia\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.21\jackson-annotations-2.21.jar;C:\Users\julia\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.21.2\jackson-core-2.21.2.jar;C:\Users\julia\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.21.2\jackson-datatype-jdk8-2.21.2.jar;C:\Users\julia\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.21.2\jackson-datatype-jsr310-2.21.2.jar;C:\Users\julia\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.21.2\jackson-module-parameter-names-2.21.2.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.5.14\spring-boot-starter-tomcat-3.5.14.jar;C:\Users\julia\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.54\tomcat-embed-core-10.1.54.jar;C:\Users\julia\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.54\tomcat-embed-websocket-10.1.54.jar;C:\Users\julia\.m2\repository\org\springframework\spring-web\6.2.18\spring-web-6.2.18.jar;C:\Users\julia\.m2\repository\io\micrometer\micrometer-observation\1.15.11\micrometer-observation-1.15.11.jar;C:\Users\julia\.m2\repository\io\micrometer\micrometer-commons\1.15.11\micrometer-commons-1.15.11.jar;C:\Users\julia\.m2\repository\org\springframework\spring-webmvc\6.2.18\spring-webmvc-6.2.18.jar;C:\Users\julia\.m2\repository\org\springframework\spring-expression\6.2.18\spring-expression-6.2.18.jar;C:\Users\julia\.m2\repository\org\postgresql\postgresql\42.7.10\postgresql-42.7.10.jar;C:\Users\julia\.m2\repository\org\checkerframework\checker-qual\3.52.0\checker-qual-3.52.0.jar;C:\Users\julia\.m2\repository\org\projectlombok\lombok\1.18.46\lombok-1.18.46.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-starter-test\3.5.14\spring-boot-starter-test-3.5.14.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-test\3.5.14\spring-boot-test-3.5.14.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\3.5.14\spring-boot-test-autoconfigure-3.5.14.jar;C:\Users\julia\.m2\repository\com\jayway\jsonpath\json-path\2.9.0\json-path-2.9.0.jar;C:\Users\julia\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.4\jakarta.xml.bind-api-4.0.4.jar;C:\Users\julia\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.4\jakarta.activation-api-2.1.4.jar;C:\Users\julia\.m2\repository\net\minidev\json-smart\2.5.2\json-smart-2.5.2.jar;C:\Users\julia\.m2\repository\net\minidev\accessors-smart\2.5.2\accessors-smart-2.5.2.jar;C:\Users\julia\.m2\repository\org\ow2\asm\asm\9.7.1\asm-9.7.1.jar;C:\Users\julia\.m2\repository\org\assertj\assertj-core\3.27.7\assertj-core-3.27.7.jar;C:\Users\julia\.m2\repository\org\awaitility\awaitility\4.2.2\awaitility-4.2.2.jar;C:\Users\julia\.m2\repository\org\hamcrest\hamcrest\3.0\hamcrest-3.0.jar;C:\Users\julia\.m2\repository\org\junit\jupiter\junit-jupiter\5.12.2\junit-jupiter-5.12.2.jar;C:\Users\julia\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.12.2\junit-jupiter-api-5.12.2.jar;C:\Users\julia\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\julia\.m2\repository\org\junit\platform\junit-platform-commons\1.12.2\junit-platform-commons-1.12.2.jar;C:\Users\julia\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\julia\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.12.2\junit-jupiter-params-5.12.2.jar;C:\Users\julia\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.12.2\junit-jupiter-engine-5.12.2.jar;C:\Users\julia\.m2\repository\org\junit\platform\junit-platform-engine\1.12.2\junit-platform-engine-1.12.2.jar;C:\Users\julia\.m2\repository\org\mockito\mockito-core\5.17.0\mockito-core-5.17.0.jar;C:\Users\julia\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.8\byte-buddy-agent-1.17.8.jar;C:\Users\julia\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\julia\.m2\repository\org\mockito\mockito-junit-jupiter\5.17.0\mockito-junit-jupiter-5.17.0.jar;C:\Users\julia\.m2\repository\org\skyscreamer\jsonassert\1.5.3\jsonassert-1.5.3.jar;C:\Users\julia\.m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;C:\Users\julia\.m2\repository\org\springframework\spring-core\6.2.18\spring-core-6.2.18.jar;C:\Users\julia\.m2\repository\org\springframework\spring-jcl\6.2.18\spring-jcl-6.2.18.jar;C:\Users\julia\.m2\repository\org\springframework\spring-test\6.2.18\spring-test-6.2.18.jar;C:\Users\julia\.m2\repository\org\xmlunit\xmlunit-core\2.10.4\xmlunit-core-2.10.4.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-testcontainers\3.5.14\spring-boot-testcontainers-3.5.14.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.5.14\spring-boot-autoconfigure-3.5.14.jar;C:\Users\julia\.m2\repository\org\testcontainers\testcontainers\1.21.4\testcontainers-1.21.4.jar;C:\Users\julia\.m2\repository\junit\junit\4.13.2\junit-4.13.2.jar;C:\Users\julia\.m2\repository\org\hamcrest\hamcrest-core\3.0\hamcrest-core-3.0.jar;C:\Users\julia\.m2\repository\org\apache\commons\commons-compress\1.24.0\commons-compress-1.24.0.jar;C:\Users\julia\.m2\repository\org\rnorth\duct-tape\duct-tape\1.0.8\duct-tape-1.0.8.jar;C:\Users\julia\.m2\repository\org\jetbrains\annotations\17.0.0\annotations-17.0.0.jar;C:\Users\julia\.m2\repository\com\github\docker-java\docker-java-api\3.4.2\docker-java-api-3.4.2.jar;C:\Users\julia\.m2\repository\com\github\docker-java\docker-java-transport-zerodep\3.4.2\docker-java-transport-zerodep-3.4.2.jar;C:\Users\julia\.m2\repository\com\github\docker-java\docker-java-transport\3.4.2\docker-java-transport-3.4.2.jar;C:\Users\julia\.m2\repository\net\java\dev\jna\jna\5.13.0\jna-5.13.0.jar;C:\Users\julia\.m2\repository\org\testcontainers\junit-jupiter\1.21.4\junit-jupiter-1.21.4.jar;C:\Users\julia\.m2\repository\org\testcontainers\postgresql\1.21.4\postgresql-1.21.4.jar;C:\Users\julia\.m2\repository\org\testcontainers\jdbc\1.21.4\jdbc-1.21.4.jar;C:\Users\julia\.m2\repository\org\testcontainers\database-commons\1.21.4\database-commons-1.21.4.jar;C:\Users\julia\.m2\repository\org\springframework\boot\spring-boot-starter-validation\3.5.14\spring-boot-starter-validation-3.5.14.jar;C:\Users\julia\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.54\tomcat-embed-el-10.1.54.jar;C:\Users\julia\.m2\repository\org\hibernate\validator\hibernate-validator\8.0.3.Final\hibernate-validator-8.0.3.Final.jar;C:\Users\julia\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\julia\.m2\repository\org\modelmapper\modelmapper\3.2.0\modelmapper-3.2.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -33,7 +33,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="FILE_LOG_CHARSET" value="UTF-8"/>
     <property name="java.awt.headless" value="true"/>
-    <property name="surefire.real.class.path" value="C:\Users\julia\AppData\Local\Temp\surefire8943512391679225909\surefirebooter-20260521131540381_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\julia\AppData\Local\Temp\surefire5956020319917813386\surefirebooter-20260525105122866_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.11+9-LTS-211"/>
@@ -52,7 +52,7 @@
     <property name="user.dir" value="E:\praca\java\SpringBoot\F1WebSite"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="PID" value="24556"/>
+    <property name="PID" value="1972"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
     <property name="native.encoding" value="Cp1252"/>
@@ -64,33 +64,33 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="contextLoads" classname="com.tp.F1WebSite.F1WebSiteTests" time="0.44">
-    <system-out><![CDATA[13:15:41.447 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
-13:15:41.454 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
-13:15:41.542 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
-13:15:41.790 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
-13:15:42.155 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with local Npipe socket (npipe:////./pipe/docker_engine)
-13:15:42.156 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
-13:15:42.176 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker: 
+  <testcase name="contextLoads" classname="com.tp.F1WebSite.F1WebSiteTests" time="0.453">
+    <system-out><![CDATA[10:51:23.825 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+10:51:23.832 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+10:51:23.905 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+10:51:24.133 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+10:51:24.460 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with local Npipe socket (npipe:////./pipe/docker_engine)
+10:51:24.462 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+10:51:24.483 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker: 
   Server Version: 29.1.3
   API Version: 1.52
   Operating System: Docker Desktop
   Total Memory: 7862 MB
   Labels: 
     com.docker.desktop.address=npipe://\\.\pipe\docker_cli
-13:15:42.293 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
-13:15:42.382 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
-13:15:42.642 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: ed54a2219dac1db69027716ec68bd9a12ae5d9507404aef0efe3506efae70daf
-13:15:43.128 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.8345786S
-13:15:43.136 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
-13:15:43.136 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
-13:15:43.136 [main] INFO org.testcontainers.DockerClientFactory -- ✔︎ Docker server version should be at least 1.6.0
-13:15:43.137 [main] INFO tc.postgres:16.0 -- Creating container for image: postgres:16.0
-13:15:43.331 [main] INFO tc.postgres:16.0 -- Container postgres:16.0 is starting: adb9b7b7a97255893389027a93099dd95ba2545be1905c5a83f0a91f4893c08a
-13:15:46.125 [main] INFO tc.postgres:16.0 -- Container postgres:16.0 started in PT2.9880933S
-13:15:46.126 [main] INFO tc.postgres:16.0 -- Container is started (JDBC URL: jdbc:postgresql://localhost:51888/test?loggerLevel=OFF)
-13:15:46.210 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.tp.F1WebSite.F1WebSiteTests]: F1WebSiteTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-13:15:46.380 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.tp.F1WebSite.F1WebSite for test class com.tp.F1WebSite.F1WebSiteTests
+10:51:24.597 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+10:51:24.684 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+10:51:24.921 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 02cb13df7dd1d985d5376452bcf5bae62a9fe5301b1fbd9f8177ed2b6004c660
+10:51:25.414 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.8160362S
+10:51:25.422 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+10:51:25.422 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+10:51:25.423 [main] INFO org.testcontainers.DockerClientFactory -- ✔︎ Docker server version should be at least 1.6.0
+10:51:25.424 [main] INFO tc.postgres:16.0 -- Creating container for image: postgres:16.0
+10:51:25.605 [main] INFO tc.postgres:16.0 -- Container postgres:16.0 is starting: 281c9a280a80819f79ab64ce4583c14924234b6b01ed80e196202ef4c0a95cc4
+10:51:27.843 [main] INFO tc.postgres:16.0 -- Container postgres:16.0 started in PT2.4192725S
+10:51:27.844 [main] INFO tc.postgres:16.0 -- Container is started (JDBC URL: jdbc:postgresql://localhost:60726/test?loggerLevel=OFF)
+10:51:27.925 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.tp.F1WebSite.F1WebSiteTests]: F1WebSiteTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+10:51:28.085 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.tp.F1WebSite.F1WebSite for test class com.tp.F1WebSite.F1WebSiteTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -101,18 +101,18 @@
 
  :: Spring Boot ::               (v3.5.14)
 
-2026-05-21T13:15:47.212+02:00  INFO 24556 --- [           main] com.tp.F1WebSite.F1WebSiteTests          : Starting F1WebSiteTests using Java 21.0.11 with PID 24556 (started by julia in E:\praca\java\SpringBoot\F1WebSite)
-2026-05-21T13:15:47.215+02:00  INFO 24556 --- [           main] com.tp.F1WebSite.F1WebSiteTests          : No active profile set, falling back to 1 default profile: "default"
-2026-05-21T13:15:48.616+02:00  INFO 24556 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-21T13:15:48.784+02:00  INFO 24556 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 144 ms. Found 6 JPA repository interfaces.
-2026-05-21T13:15:49.715+02:00  INFO 24556 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-21T13:15:49.810+02:00  INFO 24556 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
-2026-05-21T13:15:49.878+02:00  INFO 24556 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-21T13:15:50.205+02:00  INFO 24556 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-21T13:15:50.245+02:00  INFO 24556 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-05-21T13:15:50.454+02:00  INFO 24556 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7112fa5
-2026-05-21T13:15:50.457+02:00  INFO 24556 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-05-21T13:15:50.528+02:00  INFO 24556 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-05-25T10:51:28.600+02:00  INFO 1972 --- [           main] com.tp.F1WebSite.F1WebSiteTests          : Starting F1WebSiteTests using Java 21.0.11 with PID 1972 (started by julia in E:\praca\java\SpringBoot\F1WebSite)
+2026-05-25T10:51:28.602+02:00  INFO 1972 --- [           main] com.tp.F1WebSite.F1WebSiteTests          : No active profile set, falling back to 1 default profile: "default"
+2026-05-25T10:51:29.592+02:00  INFO 1972 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-25T10:51:29.717+02:00  INFO 1972 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 107 ms. Found 6 JPA repository interfaces.
+2026-05-25T10:51:30.355+02:00  INFO 1972 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-25T10:51:30.414+02:00  INFO 1972 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
+2026-05-25T10:51:30.447+02:00  INFO 1972 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-05-25T10:51:30.778+02:00  INFO 1972 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-25T10:51:30.807+02:00  INFO 1972 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-25T10:51:30.976+02:00  INFO 1972 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@665b441e
+2026-05-25T10:51:30.979+02:00  INFO 1972 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-25T10:51:31.052+02:00  INFO 1972 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 16.0
@@ -120,7 +120,7 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-05-21T13:15:51.738+02:00  INFO 24556 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-25T10:51:32.138+02:00  INFO 1972 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 Hibernate: set client_min_messages = WARNING
 Hibernate: alter table if exists qualifying drop constraint if exists FK3tlgntbnmunwv1abvf4ikdbsu
 Hibernate: alter table if exists qualifying drop constraint if exists FK9qbuqlyc0amua2kic7aa9gmxp
@@ -135,11 +135,11 @@ Hibernate: drop table if exists drivers cascade
 Hibernate: drop table if exists qualifying cascade
 Hibernate: drop table if exists races cascade
 Hibernate: drop table if exists results cascade
-Hibernate: create table circuits (circuit_id bigint generated by default as identity, country varchar(255) not null, name varchar(255) not null unique, url varchar(255) not null, primary key (circuit_id))
-Hibernate: create table constructors (constructor_id bigint generated by default as identity, name varchar(255) not null unique, primary key (constructor_id))
-Hibernate: create table drivers (driver_id bigint generated by default as identity, name varchar(255) not null, nationality varchar(255) not null, url varchar(255) not null unique, primary key (driver_id))
+Hibernate: create table circuits (is_deleted boolean default false not null, circuit_id bigint generated by default as identity, country varchar(255) not null, name varchar(255) not null unique, url varchar(255) not null, primary key (circuit_id))
+Hibernate: create table constructors (is_deleted boolean default false not null, constructor_id bigint generated by default as identity, name varchar(255) not null unique, primary key (constructor_id))
+Hibernate: create table drivers (is_deleted boolean default false not null, driver_id bigint generated by default as identity, name varchar(255) not null, nationality varchar(255) not null, url varchar(255) not null unique, primary key (driver_id))
 Hibernate: create table qualifying (position integer not null, constructor_id bigint not null, driver_id bigint not null, qualify_id bigint generated by default as identity, race_id bigint not null, primary key (qualify_id), unique (race_id, driver_id))
-Hibernate: create table races (date date not null unique, circuit_id bigint not null, race_id bigint generated by default as identity, name varchar(255) not null, primary key (race_id))
+Hibernate: create table races (date date not null unique, is_deleted boolean default false not null, circuit_id bigint not null, race_id bigint generated by default as identity, name varchar(255) not null, primary key (race_id))
 Hibernate: create table results (grid integer not null, points float(53) not null, position integer not null, constructor_id bigint not null, driver_id bigint not null, race_id bigint not null, result_id bigint generated by default as identity, primary key (result_id), unique (race_id, driver_id))
 Hibernate: alter table if exists qualifying add constraint FK3tlgntbnmunwv1abvf4ikdbsu foreign key (constructor_id) references constructors
 Hibernate: alter table if exists qualifying add constraint FK9qbuqlyc0amua2kic7aa9gmxp foreign key (driver_id) references drivers
@@ -148,10 +148,10 @@ Hibernate: alter table if exists races add constraint FKsmryk5wkwqwa2wukhuv7amoa
 Hibernate: alter table if exists results add constraint FK6tt9vhfeslwig1esl9mgx7qjt foreign key (constructor_id) references constructors
 Hibernate: alter table if exists results add constraint FK4b5gduwvw7n5e1nv2jyltbxr7 foreign key (driver_id) references drivers
 Hibernate: alter table if exists results add constraint FKm4pdqogr8t0q0239vytwxdxgw foreign key (race_id) references races
-2026-05-21T13:15:51.817+02:00  INFO 24556 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-21T13:15:52.225+02:00  INFO 24556 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-05-21T13:15:53.792+02:00  WARN 24556 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-21T13:15:54.338+02:00  INFO 24556 --- [           main] com.tp.F1WebSite.F1WebSiteTests          : Started F1WebSiteTests in 7.719 seconds (process running for 13.817)
+2026-05-25T10:51:32.204+02:00  INFO 1972 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-25T10:51:32.585+02:00  INFO 1972 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-25T10:51:33.895+02:00  WARN 1972 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-25T10:51:34.353+02:00  INFO 1972 --- [           main] com.tp.F1WebSite.F1WebSiteTests          : Started F1WebSiteTests in 6.09 seconds (process running for 11.354)
 ]]></system-out>
     <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
 WARNING: A Java agent has been loaded dynamically (C:\Users\julia\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.8\byte-buddy-agent-1.17.8.jar)

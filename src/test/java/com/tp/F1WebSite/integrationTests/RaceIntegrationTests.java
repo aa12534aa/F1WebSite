@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -38,6 +39,9 @@ public class RaceIntegrationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     // GET
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -54,7 +58,7 @@ public class RaceIntegrationTests {
 
         PageImpl<RaceCircuitDto> responseBody = response.getBody();
         assertThat(responseBody).isNotEmpty();
-        assertThat(responseBody.getContent()).hasSize(2);
+        assertThat(responseBody.getContent()).hasSize(3);
         assertThat(responseBody.getContent()).extracting(
                         RaceCircuitDto::getRaceName,
                         RaceCircuitDto::getCircuitName,
@@ -64,7 +68,8 @@ public class RaceIntegrationTests {
                 )
                 .containsExactlyInAnyOrder(
                         tuple("GP Poznan", "Tor Poznan", "Poland", "Julian Sokołowski", "ferrari"),
-                        tuple("GP Barcelona", "Circuit de Barcelona", "Spain", "Charles Leclerc", "ferrari")
+                        tuple("GP Barcelona", "Circuit de Barcelona", "Spain", "Charles Leclerc", "ferrari"),
+                        tuple("GP Poznan", "Tor Poznan", "Poland", null, null)
                 );
     }
 
@@ -234,7 +239,7 @@ public class RaceIntegrationTests {
 
         RaceDto responseBody = response.getBody();
         assertThat(responseBody).isNotNull();
-        assertThat(responseBody.getRaceId()).isEqualTo(3L);
+        assertThat(responseBody.getRaceId()).isEqualTo(4L);
         assertThat(responseBody.getName()).isEqualTo(newRace.getName());
         assertThat(responseBody.getDate()).isEqualTo(newRace.getDate());
         assertThat(responseBody.getCircuit()).extracting(
@@ -496,6 +501,116 @@ public class RaceIntegrationTests {
                 .postForEntity("/api/races/1/qualifying",
                         newQualifying,
                         QualifyingDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    // DELETE
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldHardDeleteRaceWhenRaceHasNoAnyResultsQualifying() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/races/3",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM races WHERE race_id = ?",
+                Integer.class,
+                3L
+        );
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldSoftDeleteRaceWhenRaceHasResultsQualifying() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/races/1",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Boolean isDeleted = jdbcTemplate.queryForObject(
+                "SELECT is_deleted FROM races WHERE race_id = ?",
+                Boolean.class, 1L
+        );
+        assertThat(isDeleted).isTrue();
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenDeletingNonExistingRace() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/races/100",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldHardDeleteResult() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/races/1/results/1",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM results WHERE result_id = ?",
+                Integer.class, 1L
+        );
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenDeletingNonExistingResult() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/1/races/results/100",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldHardDeleteQualifying() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/races/1/qualifying/1",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM qualifying WHERE qualify_id = ?",
+                Integer.class, 1L
+        );
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenDeletingNonExistingQualifying() {
+        ResponseEntity<String> response = restTemplate.exchange("/api/1/races/results/100",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<String>() {});
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }

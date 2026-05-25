@@ -8,6 +8,8 @@ import com.tp.F1WebSite.dto.driver.DriverRaceDto;
 import com.tp.F1WebSite.dto.driver.DriverWinsRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.repositories.DriverRepository;
+import com.tp.F1WebSite.repositories.QualifyingRepository;
+import com.tp.F1WebSite.repositories.ResultRepository;
 import com.tp.F1WebSite.services.DriverService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,11 +28,15 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
 
     private final Mapper<DriverEntity, DriverDto> driverMapper;
+    private final ResultRepository resultRepository;
+    private final QualifyingRepository qualifyingRepository;
 
     public DriverServiceImpl(DriverRepository driverRepository,
-                             Mapper<DriverEntity, DriverDto> driverMapper) {
+                             Mapper<DriverEntity, DriverDto> driverMapper, ResultRepository resultRepository, QualifyingRepository qualifyingRepository) {
         this.driverRepository = driverRepository;
         this.driverMapper = driverMapper;
+        this.resultRepository = resultRepository;
+        this.qualifyingRepository = qualifyingRepository;
     }
 
     // GET
@@ -122,5 +128,23 @@ public class DriverServiceImpl implements DriverService {
         DriverEntity savedDriver = driverRepository.save(driverEntity);
 
         return driverMapper.mapTo(savedDriver);
+    }
+
+    // DELETE
+    @Override
+    public void deleteOne(Long driverId) {
+        DriverEntity driver = driverRepository.findById(driverId).
+                orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Driver does not exist"
+                ));
+
+        if (resultRepository.existsByDriver_DriverId(driverId) ||
+                qualifyingRepository.existsByDriver_DriverId(driverId)) {
+            driver.setIsDeleted(true);
+            driverRepository.save(driver);
+        } else {
+            driverRepository.delete(driver);
+        }
     }
 }

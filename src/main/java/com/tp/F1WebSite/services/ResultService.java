@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface ResultService {
 
+    List<ResultDto> findMany(Long raceId);
+
     ResultDto createOne(Long raceId, ResultCreationDto resultCreationDto);
 
-    List<ResultDto> findMany(Long raceId);
+    void deleteOne(Long driverId);
 }

@@ -22,4 +22,6 @@ public interface ConstructorService {
     List<ConstructorWinsRacesDto> findBestConstructors();
 
     ConstructorDto createOne(ConstructorDto constructorDto);
+
+    void deleteOne(Long constructorId);
 }
