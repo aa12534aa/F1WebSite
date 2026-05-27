@@ -30,4 +30,6 @@ public interface ResultRepository extends CrudRepository<ResultEntity, Long> {
     Boolean existsByConstructor_ConstructorId(Long constructorConstructorId);
 
     Boolean existsByRace_RaceId(Long raceId);
+
+    Boolean existsByDriver_Url(String driverUrl);
 }

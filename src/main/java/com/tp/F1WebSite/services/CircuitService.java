@@ -22,4 +22,6 @@ public interface CircuitService {
     CircuitDto createOne(CircuitDto circuitDto);
 
     void deleteOne(Long circuitId);
+
+    CircuitDto updateOne(Long circuitId, CircuitDto circuitDto);
 }

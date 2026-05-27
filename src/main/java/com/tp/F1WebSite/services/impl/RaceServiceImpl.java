@@ -101,4 +101,41 @@ public class RaceServiceImpl implements RaceService {
             raceRepository.delete(race);
         }
     }
+
+    // PUT
+    @Override
+    public RaceDto updateOne(Long raceId, RaceCreationDto raceCreationDto) {
+        RaceEntity raceEntity = raceRepository.findById(raceId).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Race does not exist"
+                )
+        );
+
+        if (!raceEntity.getDate().equals(raceCreationDto.getDate()) &&
+                raceRepository.existsByDate(raceCreationDto.getDate())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Race already exists"
+            );
+        }
+
+        CircuitEntity circuitEntity = circuitRepository.findByName(raceCreationDto.getCircuitName()).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Circuit does not exist"
+                )
+        );
+
+        RaceEntity raceToUpdate = RaceEntity.builder()
+                .raceId(raceId)
+                .circuit(circuitEntity)
+                .date(raceCreationDto.getDate())
+                .name(raceCreationDto.getName())
+                .isDeleted(false)
+                .build();
+
+        RaceEntity updatedRace = raceRepository.save(raceToUpdate);
+        return raceMapper.mapTo(updatedRace);
+    }
 }

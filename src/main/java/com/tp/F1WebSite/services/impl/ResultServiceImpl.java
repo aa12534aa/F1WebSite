@@ -59,7 +59,6 @@ public class ResultServiceImpl implements ResultService {
     // POST
     @Override
     public ResultDto createOne(Long raceId, ResultCreationDto resultCreationDto) {
-
         if (resultRepository.existsByRace_RaceIdAndDriver_Url(raceId, resultCreationDto.getDriverUrl())) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
@@ -113,5 +112,60 @@ public class ResultServiceImpl implements ResultService {
         }
 
         resultRepository.deleteById(resultId);
+    }
+
+    // PUT
+    @Override
+    public ResultDto updateOne(Long raceId, Long resultId, ResultCreationDto resultCreationDto) {
+        ResultEntity resultEntity = resultRepository.findById(resultId).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Result does not exist"
+                )
+        );
+
+        if (!resultEntity.getDriver().getUrl().equals(resultCreationDto.getDriverUrl()) &&
+                resultRepository.existsByDriver_Url(resultCreationDto.getDriverUrl())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Result already exists"
+            );
+        }
+
+        RaceEntity raceEntity = raceRepository.findById(raceId).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Race does not exist"
+                )
+        );
+
+        DriverEntity driverEntity = driverRepository
+                .findByUrl(resultCreationDto.getDriverUrl()).orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Driver does not exist"
+                        )
+                );
+
+        ConstructorEntity constructorEntity = constructorRepository
+                .findByName(resultCreationDto.getConstructorName()).orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Constructor does not exist"
+                        )
+                );
+
+        ResultEntity resultToUpdate = ResultEntity.builder()
+                .resultId(resultId)
+                .race(raceEntity)
+                .driver(driverEntity)
+                .constructor(constructorEntity)
+                .grid(resultCreationDto.getGrid())
+                .position(resultCreationDto.getPosition())
+                .points(resultCreationDto.getPoints())
+                .build();
+
+        ResultEntity updatedResult = resultRepository.save(resultToUpdate);
+        return resultMapper.mapTo(updatedResult);
     }
 }

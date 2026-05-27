@@ -91,16 +91,45 @@ public class RaceController {
     }
 
     @DeleteMapping(path = "/{raceId}/results/{id}")
-    public ResponseEntity<Void> deleteResult(@PathVariable("raceId") Long raceId, @PathVariable("id") Long resultId) {
+    public ResponseEntity<Void> deleteResult(@PathVariable("raceId") Long raceId,
+                                             @PathVariable("id") Long resultId) {
         resultService.deleteOne(resultId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping(path = "/{raceId}/qualifying/{id}")
-    public ResponseEntity<Void> deleteQualifying(@PathVariable("raceId") Long raceId, @PathVariable("id") Long qualifyingId) {
+    public ResponseEntity<Void> deleteQualifying(@PathVariable("raceId") Long raceId,
+                                                 @PathVariable("id") Long qualifyingId) {
         qualifyingService.deleteOne(qualifyingId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    // PUT
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<RaceDto> updateRace(@PathVariable("id") Long raceId,
+                                              @Valid @RequestBody RaceCreationDto raceCreationDto) {
+        RaceDto updatedRace = raceService.updateOne(raceId, raceCreationDto);
+
+        return new ResponseEntity<>(updatedRace, HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/{raceId}/result/{id}")
+    public ResponseEntity<ResultDto> updateResult(@PathVariable("raceId") Long raceId,
+                                                  @PathVariable("id") Long resultId,
+                                              @Valid @RequestBody ResultCreationDto resultCreationDto) {
+        ResultDto updateResult = resultService.updateOne(raceId, resultId, resultCreationDto);
+
+        return new ResponseEntity<>(updateResult, HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/{raceId}/qualifying/{id}")
+    public ResponseEntity<QualifyingDto> updateQualifying(@PathVariable("raceId") Long raceId,
+                                                  @PathVariable("id") Long qualifyingId,
+                                                  @Valid @RequestBody QualifyingCreationDto qualifyingCreationDto) {
+        QualifyingDto updatedQualifying = qualifyingService.updateOne(raceId, qualifyingId, qualifyingCreationDto);
+
+        return new ResponseEntity<>(updatedQualifying, HttpStatus.OK);
     }
 }

@@ -24,4 +24,6 @@ public interface ConstructorService {
     ConstructorDto createOne(ConstructorDto constructorDto);
 
     void deleteOne(Long constructorId);
+
+    ConstructorDto updateOne(Long constructorId, ConstructorDto constructorDto);
 }

@@ -117,8 +117,7 @@ public class DriverServiceImpl implements DriverService {
     public DriverDto createOne(DriverDto driverDto) {
         DriverEntity driverEntity = driverMapper.mapFrom(driverDto);
 
-        Boolean exists = driverRepository.existsByUrl(driverEntity.getUrl());
-        if (exists) {
+        if (driverRepository.existsByUrl(driverEntity.getUrl())) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Driver already exists"
@@ -146,5 +145,30 @@ public class DriverServiceImpl implements DriverService {
         } else {
             driverRepository.delete(driver);
         }
+    }
+
+    // PUT
+    @Override
+    public DriverDto updateOne(Long driverId, DriverDto driverDto) {
+        DriverEntity driverEntity = driverRepository.findById(driverId).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Driver does not exist"
+                )
+        );
+
+        if (!driverEntity.getUrl().equals(driverDto.getUrl()) &&
+                driverRepository.existsByUrl(driverDto.getUrl())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Driver already exists"
+            );
+        }
+
+        DriverEntity driverToUpdate = driverMapper.mapFrom(driverDto);
+        driverToUpdate.setDriverId(driverId);
+
+        DriverEntity updatedDriver = driverRepository.save(driverToUpdate);
+        return driverMapper.mapTo(updatedDriver);
     }
 }

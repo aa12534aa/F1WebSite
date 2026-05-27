@@ -77,4 +77,13 @@ public class ConstructorController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    // PUT
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<ConstructorDto> updateConstructor(@PathVariable("id") Long constructorId,
+                                                            @Valid @RequestBody ConstructorDto constructorDto) {
+        ConstructorDto updatedConstructor = constructorService.updateOne(constructorId, constructorDto);
+
+        return new ResponseEntity<>(updatedConstructor, HttpStatus.OK);
+    }
 }

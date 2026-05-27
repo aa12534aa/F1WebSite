@@ -7,6 +7,7 @@ import com.tp.F1WebSite.dto.circuit.CircuitAllInfoDto;
 import com.tp.F1WebSite.dto.circuit.CircuitRacesDto;
 import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.services.CircuitService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -57,5 +58,14 @@ public class CircuitController {
         circuitService.deleteOne(circuitId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    // PUT
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<CircuitDto> updateCircuit(@PathVariable("id") Long circuitId,
+                                                    @Valid @RequestBody CircuitDto circuitDto) {
+        CircuitDto updatedCircuit = circuitService.updateOne(circuitId, circuitDto);
+
+        return new ResponseEntity<>(updatedCircuit, HttpStatus.OK);
     }
 }

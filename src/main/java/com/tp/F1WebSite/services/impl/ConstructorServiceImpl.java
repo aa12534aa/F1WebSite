@@ -115,4 +115,29 @@ public class ConstructorServiceImpl implements ConstructorService {
             constructorRepository.delete(constructor);
         }
     }
+
+    // PUT
+    @Override
+    public ConstructorDto updateOne(Long constructorId, ConstructorDto constructorDto) {
+        ConstructorEntity constructorEntity = constructorRepository.findById(constructorId).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Constructor does not exist"
+                )
+        );
+
+        if (!constructorEntity.getName().equals(constructorDto.getName()) &&
+                constructorRepository.existsByName(constructorDto.getName())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Driver already exists"
+            );
+        }
+
+        ConstructorEntity constructorToUpdate = constructorMapper.mapFrom(constructorDto);
+        constructorToUpdate.setConstructorId(constructorId);
+
+        ConstructorEntity updatedConstructor = constructorRepository.save(constructorToUpdate);
+        return constructorMapper.mapTo(updatedConstructor);
+    }
 }

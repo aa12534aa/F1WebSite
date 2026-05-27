@@ -12,4 +12,6 @@ public interface ResultService {
     ResultDto createOne(Long raceId, ResultCreationDto resultCreationDto);
 
     void deleteOne(Long driverId);
+
+    ResultDto updateOne(Long raceId, Long resultId, ResultCreationDto resultCreationDto);
 }

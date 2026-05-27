@@ -72,4 +72,13 @@ public class DriverController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    // PUT
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<DriverDto> updateDriver(@PathVariable("id") Long driverId,
+                                                  @Valid @RequestBody DriverDto driverDto) {
+        DriverDto updatedDriver = driverService.updateOne(driverId, driverDto);
+
+        return new ResponseEntity<>(updatedDriver, HttpStatus.OK);
+    }
 }

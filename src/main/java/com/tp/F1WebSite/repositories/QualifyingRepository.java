@@ -30,4 +30,6 @@ public interface QualifyingRepository extends CrudRepository<QualifyingEntity, L
     Boolean existsByConstructor_ConstructorId(Long constructorConstructorId);
 
     Boolean existsByRace_RaceId(Long raceId);
+
+    Boolean existsByDriver_Url(String driverUrl);
 }

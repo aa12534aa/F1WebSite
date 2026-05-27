@@ -114,4 +114,29 @@ public class CircuitServiceImpl implements CircuitService {
             circuitRepository.delete(circuit);
         }
     }
+
+    // PUT
+    @Override
+    public CircuitDto updateOne(Long circuitId, CircuitDto circuitDto) {
+        CircuitEntity circuitEntity = circuitRepository.findById(circuitId).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Circuit does not exist"
+                )
+        );
+
+        if (!circuitEntity.getName().equals(circuitDto.getName()) &&
+                circuitRepository.existsByName(circuitDto.getName())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Circuit already exists"
+            );
+        }
+
+        CircuitEntity circuitToUpdate = circuitMapper.mapFrom(circuitDto);
+        circuitToUpdate.setCircuitId(circuitId);
+
+        CircuitEntity updatedCircuit = circuitRepository.save(circuitToUpdate);
+        return circuitMapper.mapTo(updatedCircuit);
+    }
 }

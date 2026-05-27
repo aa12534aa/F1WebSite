@@ -12,4 +12,6 @@ public interface QualifyingService {
     QualifyingDto createOne(Long raceId, QualifyingCreationDto qualifyingCreationDto);
 
     void deleteOne(Long driverId);
+
+    QualifyingDto updateOne(Long raceId, Long qualifyingId, QualifyingCreationDto qualifyingCreationDto);
 }

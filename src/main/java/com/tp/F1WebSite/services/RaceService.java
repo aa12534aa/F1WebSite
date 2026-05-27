@@ -17,4 +17,6 @@ public interface RaceService {
     RaceDto createOne(RaceCreationDto raceCreationDto);
 
     void deleteOne(Long raceId);
+
+    RaceDto updateOne(Long raceId, RaceCreationDto raceCreationDto);
 }

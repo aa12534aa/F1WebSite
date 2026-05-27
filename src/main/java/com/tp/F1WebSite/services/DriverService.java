@@ -30,4 +30,6 @@ public interface DriverService {
     DriverDto createOne(DriverDto driverDto);
 
     void deleteOne(Long driverId);
+
+    DriverDto updateOne(Long driverId, DriverDto driverDto);
 }

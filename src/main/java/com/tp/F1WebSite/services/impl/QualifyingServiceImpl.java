@@ -113,4 +113,55 @@ public class QualifyingServiceImpl implements QualifyingService {
 
         qualifyingRepository.deleteById(qualifyingId);
     }
+
+    // PUT
+    @Override
+    public QualifyingDto updateOne(Long raceId, Long qualifyingId, QualifyingCreationDto qualifyingCreationDto) {
+        QualifyingEntity qualifyingEntity = qualifyingRepository.findById(qualifyingId).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Qualifying does not exist"
+                )
+        );
+
+        if (!qualifyingEntity.getDriver().getUrl().equals(qualifyingCreationDto.getDriverUrl()) &&
+                qualifyingRepository.existsByDriver_Url(qualifyingCreationDto.getDriverUrl())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Qualifying already exists"
+            );
+        }
+
+        RaceEntity raceEntity = raceRepository.findById(raceId).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Race does not exist"
+                )
+        );
+
+        DriverEntity driverEntity = driverRepository.findByUrl(qualifyingCreationDto.getDriverUrl()).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Driver does not exist"
+                )
+        );
+
+        ConstructorEntity constructorEntity = constructorRepository.findByName(qualifyingCreationDto.getConstructorName()).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Constructor does not exist"
+                )
+        );
+
+        QualifyingEntity qualifyingToUpdate = QualifyingEntity.builder()
+                .qualifyId(qualifyingId)
+                .race(raceEntity)
+                .driver(driverEntity)
+                .constructor(constructorEntity)
+                .position(qualifyingCreationDto.getPosition())
+                .build();
+
+        QualifyingEntity updatedQualifying = qualifyingRepository.save(qualifyingToUpdate);
+        return qualifyingMapper.mapTo(updatedQualifying);
+    }
 }
