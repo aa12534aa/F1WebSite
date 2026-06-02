@@ -29,6 +29,9 @@ POST /api/drivers:
 DELETE /api/drivers/{id}
 -usuwanie kierowcy (jeżeli ma jakieś wyniki/kwalifikacje soft delete w przeciwnym wypadku hard delete)
 
+PUT /api/drivers/{id}
+-całkowite aktualizowanie istniejącego kierowcy
+
 
 // constructors controller
 GET /api/constructors:
@@ -52,6 +55,9 @@ POST /api/constructors:
 DELETE /api/constructors/{id}
 -usuwanie konstruktora (jeżeli ma jakieś wyniki/kwalifikacje soft delete w przeciwnym wypadku hard delete)
 
+PUT /api/constructors/{id}
+-całkowite aktualizowanie istniejącego konstruktora
+
 
 // circuits controller
 GET /api/circuits:
@@ -68,6 +74,9 @@ POST /api/circuits:
 
 DELETE /api/circuits/{id}
 -usuwanie toru (jeżeli ma jakiś wyścig soft delete w przeciwnym wypadku hard delete)
+
+PUT /api/circuits/{id}
+-całkowite aktualizowanie istniejącego toru
 
 
 // races controller
@@ -108,6 +117,15 @@ DELETE /api/races/{raceId}/results/{id}
 
 DELETE /api/races/{raceId}/qualifying/{id}
 -usuwanie kwalfikacji zawsze hard delete
+
+PUT /api/race/{id}
+-całkowite aktualizowanie istniejącego wyścigu
+
+PUT /api/race/{raceId}/results/{id}
+-całkowite aktualizowanie istniejącego wyniku
+
+PUT /api/race/{raceId}/qualifying/{id}
+-całkowite aktualizowanie istniejącego wyniku kwalifikacji
 
 
 

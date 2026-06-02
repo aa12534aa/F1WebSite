@@ -10,7 +10,7 @@ INSERT INTO constructors(name)
 VALUES
     ('ferrari'),
     ('Mercedes'),
-    ('Maclaren');
+    ('Mclaren');
 
 INSERT INTO circuits(name, country, url)
 VALUES

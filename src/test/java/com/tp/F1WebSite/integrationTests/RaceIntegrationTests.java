@@ -16,6 +16,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -387,7 +388,7 @@ public class RaceIntegrationTests {
     void shouldReturnNotFoundWhenCreatingResultWithConstructorThatDoesntExist() {
         ResultCreationDto newResult = ResultCreationDto.builder()
                 .driverUrl("http://franco")
-                .constructorName("maclaren")
+                .constructorName("mclaren")
                 .grid(5)
                 .position(5)
                 .points(10.0)
@@ -493,7 +494,7 @@ public class RaceIntegrationTests {
     void shouldReturnNotFoundWhenCreatingQualifyingWithConstructorThatDoesntExist() {
         QualifyingCreationDto newQualifying = QualifyingCreationDto.builder()
                 .driverUrl("http://franco")
-                .constructorName("maclaren")
+                .constructorName("mclaren")
                 .position(5)
                 .build();
 
@@ -611,6 +612,418 @@ public class RaceIntegrationTests {
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<String>() {});
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    // PUT
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldUpdateRace() {
+        RaceCreationDto updatedRace = RaceCreationDto.builder()
+                .circuitName("SPA")
+                .date(LocalDate.of(2025, 10, 13))
+                .name("GP Belgium")
+                .build();
+
+        HttpEntity<RaceCreationDto> request = new HttpEntity<>(updatedRace);
+
+        ResponseEntity<RaceDto> response = restTemplate.exchange("/api/races/1",
+                HttpMethod.PUT,
+                request,
+                RaceDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        RaceDto responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getRaceId()).isEqualTo(1L);
+        assertThat(responseBody.getName()).isEqualTo(updatedRace.getName());
+        assertThat(responseBody.getDate()).isEqualTo(updatedRace.getDate());
+        assertThat(responseBody.getCircuit()).extracting(
+                        CircuitDto::getCircuitId,
+                        CircuitDto::getName,
+                        CircuitDto::getCountry,
+                        CircuitDto::getUrl
+                )
+                .containsExactlyInAnyOrder(3L, "SPA", "Belgium", "http://spa");
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingNotExistingRace() {
+        RaceCreationDto updatedRace = RaceCreationDto.builder()
+                .circuitName("SPA")
+                .date(LocalDate.of(2025, 10, 13))
+                .name("GP Belgium")
+                .build();
+
+        HttpEntity<RaceCreationDto> request = new HttpEntity<>(updatedRace);
+
+        ResponseEntity<RaceDto> response = restTemplate.exchange("/api/races/100",
+                HttpMethod.PUT,
+                request,
+                RaceDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnConflictWhenUpdatingRaceDateEqualToSomeoneElse() {
+        RaceCreationDto updatedRace = RaceCreationDto.builder()
+                .circuitName("SPA")
+                .date(LocalDate.of(2025, 11, 12))
+                .name("GP Belgium")
+                .build();
+
+        HttpEntity<RaceCreationDto> request = new HttpEntity<>(updatedRace);
+
+        ResponseEntity<RaceDto> response = restTemplate.exchange("/api/races/1",
+                HttpMethod.PUT,
+                request,
+                RaceDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingRaceWithNotExistingCircuit() {
+        RaceCreationDto updatedRace = RaceCreationDto.builder()
+                .circuitName("Hungaroring")
+                .date(LocalDate.of(2025, 10, 13))
+                .name("GP Belgium")
+                .build();
+
+        HttpEntity<RaceCreationDto> request = new HttpEntity<>(updatedRace);
+
+        ResponseEntity<RaceDto> response = restTemplate.exchange("/api/races/1",
+                HttpMethod.PUT,
+                request,
+                RaceDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldUpdateResult() {
+        ResultCreationDto updatedResult = ResultCreationDto.builder()
+                .driverUrl("http://franco")
+                .constructorName("Mercedes")
+                .grid(3)
+                .position(2)
+                .points(18.0)
+                .build();
+
+        HttpEntity<ResultCreationDto> request = new HttpEntity<>(updatedResult);
+
+        ResponseEntity<ResultDto> response = restTemplate.exchange("/api/races/1/results/1",
+                HttpMethod.PUT,
+                request,
+                ResultDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        ResultDto responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getResultId()).isEqualTo(1L);
+        assertThat(responseBody.getGrid()).isEqualTo(updatedResult.getGrid());
+        assertThat(responseBody.getPosition()).isEqualTo(updatedResult.getPosition());
+        assertThat(responseBody.getPoints()).isEqualTo(updatedResult.getPoints());
+        assertThat(responseBody.getDriver()).extracting(
+                        DriverDto::getDriverId,
+                        DriverDto::getName,
+                        DriverDto::getNationality,
+                        DriverDto::getUrl
+                )
+                .containsExactlyInAnyOrder(5L, "Franco Colapinto", "Argentina", updatedResult.getDriverUrl());
+        assertThat(responseBody.getConstructor()).extracting(
+                        ConstructorDto::getConstructorId,
+                        ConstructorDto::getName
+                )
+                .containsExactlyInAnyOrder(2L, updatedResult.getConstructorName());
+
+        CircuitDto circuit = CircuitDto.builder()
+                .circuitId(1L)
+                .name("Tor Poznan")
+                .country("Poland")
+                .url("http://poznantor")
+                .build();
+
+        assertThat(responseBody.getRace()).extracting(
+                        RaceDto::getRaceId,
+                        RaceDto::getName,
+                        RaceDto::getDate,
+                        RaceDto::getCircuit
+                )
+                .containsExactlyInAnyOrder(1L, "GP Poznan", LocalDate.of(2025, 10, 12), circuit);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingNotExistingResult() {
+        ResultCreationDto updatedResult = ResultCreationDto.builder()
+                .driverUrl("http://julsok1")
+                .constructorName("Mercedes")
+                .grid(3)
+                .position(2)
+                .points(18.0)
+                .build();
+
+        HttpEntity<ResultCreationDto> request = new HttpEntity<>(updatedResult);
+
+        ResponseEntity<ResultDto> response = restTemplate.exchange("/api/races/1/results/100",
+                HttpMethod.PUT,
+                request,
+                ResultDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnConflictWhenUpdatingResultDriverUrlEqualToSomeoneElse() {
+        ResultCreationDto updatedResult = ResultCreationDto.builder()
+                .driverUrl("http://max1")
+                .constructorName("Mercedes")
+                .grid(3)
+                .position(2)
+                .points(18.0)
+                .build();
+
+        HttpEntity<ResultCreationDto> request = new HttpEntity<>(updatedResult);
+
+        ResponseEntity<ResultDto> response = restTemplate.exchange("/api/races/1/results/1",
+                HttpMethod.PUT,
+                request,
+                ResultDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingResultWithNotExistingRace() {
+        ResultCreationDto updatedResult = ResultCreationDto.builder()
+                .driverUrl("http://julsok1")
+                .constructorName("Mercedes")
+                .grid(3)
+                .position(2)
+                .points(18.0)
+                .build();
+
+        HttpEntity<ResultCreationDto> request = new HttpEntity<>(updatedResult);
+
+        ResponseEntity<ResultDto> response = restTemplate.exchange("/api/races/100/results/1",
+                HttpMethod.PUT,
+                request,
+                ResultDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingResultWithNotExistingDriver() {
+        ResultCreationDto updatedResult = ResultCreationDto.builder()
+                .driverUrl("http://julsok67")
+                .constructorName("Mercedes")
+                .grid(3)
+                .position(2)
+                .points(18.0)
+                .build();
+
+        HttpEntity<ResultCreationDto> request = new HttpEntity<>(updatedResult);
+
+        ResponseEntity<ResultDto> response = restTemplate.exchange("/api/races/1/results/1",
+                HttpMethod.PUT,
+                request,
+                ResultDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingResultWithNotExistingConstructor() {
+        ResultCreationDto updatedResult = ResultCreationDto.builder()
+                .driverUrl("http://julsok1")
+                .constructorName("Alpine")
+                .grid(3)
+                .position(2)
+                .points(18.0)
+                .build();
+
+        HttpEntity<ResultCreationDto> request = new HttpEntity<>(updatedResult);
+
+        ResponseEntity<ResultDto> response = restTemplate.exchange("/api/races/1/results/1",
+                HttpMethod.PUT,
+                request,
+                ResultDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldUpdateQualifying() {
+        QualifyingCreationDto updatedQualifying = QualifyingCreationDto.builder()
+                .driverUrl("http://franco")
+                .constructorName("Mercedes")
+                .position(3)
+                .build();
+
+        HttpEntity<QualifyingCreationDto> request = new HttpEntity<>(updatedQualifying);
+
+        ResponseEntity<QualifyingDto> response = restTemplate.exchange("/api/races/1/qualifying/1",
+                HttpMethod.PUT,
+                request,
+                QualifyingDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        QualifyingDto responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getQualifyingId()).isEqualTo(1L);
+        assertThat(responseBody.getPosition()).isEqualTo(updatedQualifying.getPosition());
+        assertThat(responseBody.getDriver()).extracting(
+                        DriverDto::getDriverId,
+                        DriverDto::getName,
+                        DriverDto::getNationality,
+                        DriverDto::getUrl
+                )
+                .containsExactlyInAnyOrder(5L, "Franco Colapinto", "Argentina", updatedQualifying.getDriverUrl());
+        assertThat(responseBody.getConstructor()).extracting(
+                        ConstructorDto::getConstructorId,
+                        ConstructorDto::getName
+                )
+                .containsExactlyInAnyOrder(2L, updatedQualifying.getConstructorName());
+
+        CircuitDto circuit = CircuitDto.builder()
+                .circuitId(1L)
+                .name("Tor Poznan")
+                .country("Poland")
+                .url("http://poznantor")
+                .build();
+
+        assertThat(responseBody.getRace()).extracting(
+                        RaceDto::getRaceId,
+                        RaceDto::getName,
+                        RaceDto::getDate,
+                        RaceDto::getCircuit
+                )
+                .containsExactlyInAnyOrder(1L, "GP Poznan", LocalDate.of(2025, 10, 12), circuit);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingNotExistingQualifying() {
+        QualifyingCreationDto updatedQualifying = QualifyingCreationDto.builder()
+                .driverUrl("http://franco")
+                .constructorName("Mercedes")
+                .position(3)
+                .build();
+
+        HttpEntity<QualifyingCreationDto> request = new HttpEntity<>(updatedQualifying);
+
+        ResponseEntity<QualifyingDto> response = restTemplate.exchange("/api/races/1/qualifying/100",
+                HttpMethod.PUT,
+                request,
+                QualifyingDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnConflictWhenUpdatingQualifyingDriverUrlEqualToSomeoneElse() {
+        QualifyingCreationDto updatedQualifying = QualifyingCreationDto.builder()
+                .driverUrl("http://max1")
+                .constructorName("Mercedes")
+                .position(3)
+                .build();
+
+        HttpEntity<QualifyingCreationDto> request = new HttpEntity<>(updatedQualifying);
+
+        ResponseEntity<QualifyingDto> response = restTemplate.exchange("/api/races/1/qualifying/1",
+                HttpMethod.PUT,
+                request,
+                QualifyingDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingQualifyingWithNotExistingRace() {
+        QualifyingCreationDto updatedQualifying = QualifyingCreationDto.builder()
+                .driverUrl("http://franco")
+                .constructorName("Mercedes")
+                .position(3)
+                .build();
+
+        HttpEntity<QualifyingCreationDto> request = new HttpEntity<>(updatedQualifying);
+
+        ResponseEntity<QualifyingDto> response = restTemplate.exchange("/api/races/100/qualifying/1",
+                HttpMethod.PUT,
+                request,
+                QualifyingDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingQualifyingWithNotExistingDriver() {
+        QualifyingCreationDto updatedQualifying = QualifyingCreationDto.builder()
+                .driverUrl("http://franco67")
+                .constructorName("Mercedes")
+                .position(3)
+                .build();
+
+        HttpEntity<QualifyingCreationDto> request = new HttpEntity<>(updatedQualifying);
+
+        ResponseEntity<QualifyingDto> response = restTemplate.exchange("/api/races/1/qualifying/1",
+                HttpMethod.PUT,
+                request,
+                QualifyingDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingQualifyingWithNotExistingConstructor() {
+        QualifyingCreationDto updatedQualifying = QualifyingCreationDto.builder()
+                .driverUrl("http://franco")
+                .constructorName("Alpine")
+                .position(3)
+                .build();
+
+        HttpEntity<QualifyingCreationDto> request = new HttpEntity<>(updatedQualifying);
+
+        ResponseEntity<QualifyingDto> response = restTemplate.exchange("/api/races/1/qualifying/1",
+                HttpMethod.PUT,
+                request,
+                QualifyingDto.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }

@@ -79,6 +79,6 @@ public class DriverController {
                                                   @Valid @RequestBody DriverDto driverDto) {
         DriverDto updatedDriver = driverService.updateOne(driverId, driverDto);
 
-        return new ResponseEntity<>(updatedDriver, HttpStatus.OK);
+        return new ResponseEntity<>(updatedDriver, HttpStatus.CREATED);
     }
 }

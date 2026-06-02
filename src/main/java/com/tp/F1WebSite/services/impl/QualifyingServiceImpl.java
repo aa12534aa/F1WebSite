@@ -125,7 +125,7 @@ public class QualifyingServiceImpl implements QualifyingService {
         );
 
         if (!qualifyingEntity.getDriver().getUrl().equals(qualifyingCreationDto.getDriverUrl()) &&
-                qualifyingRepository.existsByDriver_Url(qualifyingCreationDto.getDriverUrl())) {
+                qualifyingRepository.existsByDriver_UrlAndRace_RaceId(qualifyingCreationDto.getDriverUrl(), qualifyingId)) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Qualifying already exists"

@@ -88,7 +88,7 @@ public class HomeIntegrationTests {
                 .containsExactlyInAnyOrder(
                         tuple("ferrari", 2L, 4L),
                         tuple("Mercedes", 0L, 4L),
-                        tuple("Maclaren", 0L, 0L)
+                        tuple("Mclaren", 0L, 0L)
                 );
     }
 }

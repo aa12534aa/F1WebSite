@@ -125,7 +125,7 @@ public class ResultServiceImpl implements ResultService {
         );
 
         if (!resultEntity.getDriver().getUrl().equals(resultCreationDto.getDriverUrl()) &&
-                resultRepository.existsByDriver_Url(resultCreationDto.getDriverUrl())) {
+                resultRepository.existsByDriver_UrlAndRace_RaceId(resultCreationDto.getDriverUrl(), raceId)) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Result already exists"

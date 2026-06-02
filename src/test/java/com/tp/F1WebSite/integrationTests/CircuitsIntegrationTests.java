@@ -5,6 +5,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 
 import com.tp.F1WebSite.CustomPageImpl;
 import com.tp.F1WebSite.domain.dto.CircuitDto;
+import com.tp.F1WebSite.domain.dto.ConstructorDto;
 import com.tp.F1WebSite.domain.dto.DriverDto;
 import com.tp.F1WebSite.dto.circuit.CircuitAllInfoDto;
 import com.tp.F1WebSite.dto.circuit.CircuitDriverWinsDto;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -212,5 +214,73 @@ public class CircuitsIntegrationTests {
                 new ParameterizedTypeReference<String>() {});
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    // PUT
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldUpdateCircuit() {
+        CircuitDto updatedCircuit = CircuitDto.builder()
+                .name("Tor Przezmierowo")
+                .country("Poland")
+                .url("http://torpoznan")
+                .build();
+
+        HttpEntity<CircuitDto> request = new HttpEntity<>(updatedCircuit);
+
+        ResponseEntity<CircuitDto> response = restTemplate.exchange("/api/circuits/1",
+                HttpMethod.PUT,
+                request,
+                CircuitDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        CircuitDto responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getCircuitId()).isEqualTo(1L);
+        assertThat(responseBody.getName()).isEqualTo(updatedCircuit.getName());
+        assertThat(responseBody.getCountry()).isEqualTo(updatedCircuit.getCountry());
+        assertThat(responseBody.getUrl()).isEqualTo(updatedCircuit.getUrl());
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingNotExistingCircuit() {
+        CircuitDto updatedCircuit = CircuitDto.builder()
+                .name("Tor Poznan")
+                .country("Poland")
+                .url("http://torpoznan")
+                .build();
+
+        HttpEntity<CircuitDto> request = new HttpEntity<>(updatedCircuit);
+
+        ResponseEntity<CircuitDto> response = restTemplate.exchange("/api/circuits/100",
+                HttpMethod.PUT,
+                request,
+                CircuitDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnConflictWhenUpdatingCircuitNameEqualToSomeoneElse() {
+        CircuitDto updatedCircuit = CircuitDto.builder()
+                .name("SPA")
+                .country("Poland")
+                .url("http://torpoznan")
+                .build();
+
+        HttpEntity<CircuitDto> request = new HttpEntity<>(updatedCircuit);
+
+        ResponseEntity<CircuitDto> response = restTemplate.exchange("/api/circuits/1",
+                HttpMethod.PUT,
+                request,
+                CircuitDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 }

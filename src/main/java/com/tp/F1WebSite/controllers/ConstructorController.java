@@ -84,6 +84,6 @@ public class ConstructorController {
                                                             @Valid @RequestBody ConstructorDto constructorDto) {
         ConstructorDto updatedConstructor = constructorService.updateOne(constructorId, constructorDto);
 
-        return new ResponseEntity<>(updatedConstructor, HttpStatus.OK);
+        return new ResponseEntity<>(updatedConstructor, HttpStatus.CREATED);
     }
 }

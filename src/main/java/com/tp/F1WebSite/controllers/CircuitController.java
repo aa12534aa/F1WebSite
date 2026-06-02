@@ -66,6 +66,6 @@ public class CircuitController {
                                                     @Valid @RequestBody CircuitDto circuitDto) {
         CircuitDto updatedCircuit = circuitService.updateOne(circuitId, circuitDto);
 
-        return new ResponseEntity<>(updatedCircuit, HttpStatus.OK);
+        return new ResponseEntity<>(updatedCircuit, HttpStatus.CREATED);
     }
 }

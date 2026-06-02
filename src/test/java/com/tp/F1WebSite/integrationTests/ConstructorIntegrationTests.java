@@ -17,6 +17,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +67,7 @@ public class ConstructorIntegrationTests {
                 .containsExactlyInAnyOrder(
                         tuple("ferrari", 2L, 4L),
                         tuple("Mercedes", 0L, 4L),
-                        tuple("Maclaren", 0L, 0L)
+                        tuple("Mclaren", 0L, 0L)
         );
     }
 
@@ -225,5 +226,65 @@ public class ConstructorIntegrationTests {
                 new ParameterizedTypeReference<String>() {});
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    // PUT
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldUpdateConstructor() {
+        ConstructorDto updatedConstructor = ConstructorDto.builder()
+                .name("Alpine")
+                .build();
+
+        HttpEntity<ConstructorDto> request = new HttpEntity<>(updatedConstructor);
+
+        ResponseEntity<ConstructorDto> response = restTemplate.exchange("/api/constructors/1",
+                HttpMethod.PUT,
+                request,
+                ConstructorDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        ConstructorDto responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getConstructorId()).isEqualTo(1L);
+        assertThat(responseBody.getName()).isEqualTo(updatedConstructor.getName());
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingNotExistingConstructor() {
+        ConstructorDto updatedConstructor = ConstructorDto.builder()
+                .name("Alpine")
+                .build();
+
+        HttpEntity<ConstructorDto> request = new HttpEntity<>(updatedConstructor);
+
+        ResponseEntity<ConstructorDto> response = restTemplate.exchange("/api/constructors/100",
+                HttpMethod.PUT,
+                request,
+                ConstructorDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnConflictWhenUpdatingConstructorNameEqualToSomeoneElse() {
+        ConstructorDto updatedConstructor = ConstructorDto.builder()
+                .name("Mercedes")
+                .build();
+
+        HttpEntity<ConstructorDto> request = new HttpEntity<>(updatedConstructor);
+
+        ResponseEntity<ConstructorDto> response = restTemplate.exchange("/api/constructors/1",
+                HttpMethod.PUT,
+                request,
+                ConstructorDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 }

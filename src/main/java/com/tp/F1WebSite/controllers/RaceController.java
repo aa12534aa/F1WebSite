@@ -112,16 +112,16 @@ public class RaceController {
                                               @Valid @RequestBody RaceCreationDto raceCreationDto) {
         RaceDto updatedRace = raceService.updateOne(raceId, raceCreationDto);
 
-        return new ResponseEntity<>(updatedRace, HttpStatus.OK);
+        return new ResponseEntity<>(updatedRace, HttpStatus.CREATED);
     }
 
-    @PutMapping(path = "/{raceId}/result/{id}")
+    @PutMapping(path = "/{raceId}/results/{id}")
     public ResponseEntity<ResultDto> updateResult(@PathVariable("raceId") Long raceId,
                                                   @PathVariable("id") Long resultId,
                                               @Valid @RequestBody ResultCreationDto resultCreationDto) {
         ResultDto updateResult = resultService.updateOne(raceId, resultId, resultCreationDto);
 
-        return new ResponseEntity<>(updateResult, HttpStatus.OK);
+        return new ResponseEntity<>(updateResult, HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/{raceId}/qualifying/{id}")
@@ -130,6 +130,6 @@ public class RaceController {
                                                   @Valid @RequestBody QualifyingCreationDto qualifyingCreationDto) {
         QualifyingDto updatedQualifying = qualifyingService.updateOne(raceId, qualifyingId, qualifyingCreationDto);
 
-        return new ResponseEntity<>(updatedQualifying, HttpStatus.OK);
+        return new ResponseEntity<>(updatedQualifying, HttpStatus.CREATED);
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -259,5 +260,73 @@ public class DriverIntegrationTests {
                 new ParameterizedTypeReference<String>() {});
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    // PUT
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldUpdateDriver() {
+        DriverDto updatedDriver = DriverDto.builder()
+                .name("Julian Sokolowski")
+                .nationality("Poland")
+                .url("http://julsok")
+                .build();
+        HttpEntity<DriverDto> request = new HttpEntity<>(updatedDriver);
+
+        ResponseEntity<DriverDto> response = restTemplate.exchange("/api/drivers/1",
+                HttpMethod.PUT,
+                request,
+                DriverDto.class
+                );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        DriverDto responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getDriverId()).isEqualTo(1L);
+        assertThat(responseBody.getName()).isEqualTo(updatedDriver.getName());
+        assertThat(responseBody.getNationality()).isEqualTo(updatedDriver.getNationality());
+        assertThat(responseBody.getUrl()).isEqualTo(updatedDriver.getUrl());
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnNotFoundWhenUpdatingNotExistingDriver() {
+        DriverDto updatedDriver = DriverDto.builder()
+                .name("Julian Sokolowski")
+                .nationality("Poland")
+                .url("http://julsok1")
+                .build();
+        HttpEntity<DriverDto> request = new HttpEntity<>(updatedDriver);
+
+        ResponseEntity<DriverDto> response = restTemplate.exchange("/api/drivers/100",
+                HttpMethod.PUT,
+                request,
+                DriverDto.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnConflictWhenUpdatingDriverUrlEqualToSomeoneElse() {
+        DriverDto updatedDriver = DriverDto.builder()
+                .name("Julian Sokolowski")
+                .nationality("Poland")
+                .url("http://max1")
+                .build();
+        HttpEntity<DriverDto> request = new HttpEntity<>(updatedDriver);
+
+        ResponseEntity<DriverDto> response = restTemplate.exchange("/api/drivers/1",
+                HttpMethod.PUT,
+                request,
+                DriverDto.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 }
