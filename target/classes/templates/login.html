@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
+        .login-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 300px; }
+        h2 { text-align: center; margin-bottom: 20px; color: #333; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; color: #666; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        #message { margin-top: 15px; text-align: center; font-weight: bold; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+        <div class="input-group">
+            <label for="username">Email</label>
+            <input type="text" id="username" required placeholder="Enter your email">
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" required placeholder="Enter your password">
+        </div>
+        <button type="submit">Sign In</button>
+    </form>
+    <div id="message"></div>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const usernameInput = document.getElementById('username').value;
+        const passwordInput = document.getElementById('password').value;
+        const messageDiv = document.getElementById('message');
+
+        messageDiv.innerText = "Logging in...";
+
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: usernameInput, password: passwordInput })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('token', data.accessToken);
+                window.location.href = "/home.html";
+            } else {
+                messageDiv.innerText = "Invalid email or password.";
+                messageDiv.className = "error";
+            }
+        } catch (error) {
+            messageDiv.innerText = "Server connection error!";
+            messageDiv.className = "error";
+        }
+    });
+</script>
+</body>
+</html>

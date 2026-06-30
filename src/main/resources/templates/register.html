@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
+        .register-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 320px; }
+        h2 { text-align: center; margin-bottom: 20px; color: #333; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; color: #666; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #218838; }
+        .login-link { text-align: center; margin-top: 15px; font-size: 14px; }
+        #message { margin-top: 15px; text-align: center; font-weight: bold; }
+        .error { color: red; } .success { color: green; }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <h2>Registration</h2>
+    <form id="registerForm">
+        <div class="input-group">
+            <label for="firstname">First Name</label>
+            <input type="text" id="firstname" required placeholder="Enter first name">
+        </div>
+        <div class="input-group">
+            <label for="lastname">Last Name</label>
+            <input type="text" id="lastname" required placeholder="Enter last name">
+        </div>
+        <div class="input-group">
+            <label for="username">Email</label>
+            <input type="email" id="username" required placeholder="Enter your email">
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" required placeholder="Create a password">
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <div id="message"></div>
+    <div class="login-link">Already have an account? <a href="login">Sign in</a></div>
+</div>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const registerData = {
+            firstname: document.getElementById('firstname').value,
+            lastname: document.getElementById('lastname').value,
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(registerData)
+            });
+
+            if (response.ok) {
+                document.getElementById('message').innerText = "Account created successfully!";
+                document.getElementById('message').className = "success";
+                document.getElementById('registerForm').reset();
+            } else {
+                document.getElementById('message').innerText = "Registration failed. Email might be taken.";
+                document.getElementById('message').className = "error";
+            }
+        } catch (error) {
+            document.getElementById('message').innerText = "Cannot connect to server!";
+            document.getElementById('message').className = "error";
+        }
+    });
+</script>
+</body>
+</html>

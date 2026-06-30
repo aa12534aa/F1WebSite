@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>F1 Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
+        nav { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: bold; }
+        .logout-btn { background: transparent; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+        .card-header { background: #f9fafb; padding: 15px; font-weight: bold; border-bottom: 1px solid #e5e7eb; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 20px; border-bottom: 1px solid #f3f4f6; text-align: left; }
+        th { color: #6b7280; font-size: 12px; text-transform: uppercase; }
+        .text-right { text-align: right; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">F1 Data<span>.</span></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+</nav>
+
+<div class="container">
+    <h1>All-Time Statistics</h1>
+    <div id="status-message">Loading data...</div>
+    <div class="grid" id="data-container" style="display: none;">
+        <div class="card">
+            <div class="card-header">Top 10 Drivers</div>
+            <table>
+                <thead><tr><th>#</th><th>Name</th><th class="text-right">Wins</th><th class="text-right">Races</th></tr></thead>
+                <tbody id="drivers-body"></tbody>
+            </table>
+        </div>
+        <div class="card">
+            <div class="card-header">Top 10 Constructors</div>
+            <table>
+                <thead><tr><th>#</th><th>Team</th><th class="text-right">Wins</th><th class="text-right">Races</th></tr></thead>
+                <tbody id="constructors-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function logout() { localStorage.removeItem('token'); window.location.href = '/login.html'; }
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        const token = localStorage.getItem('token');
+        if (!token) { window.location.href = '/login.html'; return; }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/home', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                data.bestDrivers.forEach((d, i) => {
+                    document.getElementById('drivers-body').innerHTML +=
+                        `<tr><td>${i+1}</td><td>${d.name}</td><td class="text-right">${d.numOfWins}</td><td class="text-right">${d.numOfRaces}</td></tr>`;
+                });
+                data.bestConstructors.forEach((c, i) => {
+                    document.getElementById('constructors-body').innerHTML +=
+                        `<tr><td>${i+1}</td><td>${c.name}</td><td class="text-right">${c.numOfWins}</td><td class="text-right">${c.numOfRaces}</td></tr>`;
+                });
+                document.getElementById('status-message').style.display = 'none';
+                document.getElementById('data-container').style.display = 'grid';
+            }
+        } catch (e) { document.getElementById('status-message').innerText = "Error loading data."; }
+    });
+</script>
+</body>
+</html>

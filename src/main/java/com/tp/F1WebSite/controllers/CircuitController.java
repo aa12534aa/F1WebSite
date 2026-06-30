@@ -21,7 +21,7 @@ public class CircuitController {
     private final CircuitService circuitService;
 
 
-    public CircuitController(CircuitService circuitService, Mapper<RaceEntity, RaceDto> raceMapper) {
+    public CircuitController(CircuitService circuitService) {
         this.circuitService = circuitService;
     }
 
