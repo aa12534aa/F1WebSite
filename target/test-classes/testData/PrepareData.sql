@@ -1,3 +1,8 @@
+INSERT INTO users (id, firstname, lastname, email, password, role)
+VALUES
+    (1, 'jan', 'kowalski', 'jan.kowalski@f1.pl', '...', 'ROLE_USER'),
+    (2, 'john', 'kovalenko', 'employee@f1.pl', '...', 'ROLE_EMPLOYEE');
+
 INSERT INTO drivers(name, nationality, url)
 VALUES
     ('Julian Sokołowski', 'Poland', 'http://julsok1'),

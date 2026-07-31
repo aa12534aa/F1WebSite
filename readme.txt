@@ -1,173 +1,185 @@
-F1WebSite endpointy
+# JSGrandPrixHub Endpoints
 
-// drivers controller
+# Drivers Controller
+
 GET /api/home:
--topka kierowców (najwięcej zwycięstw, najwięcej poleposition)
--topka teamów (najwięcej zwycięstw, najwięcej poleposition)
+- top drivers (most wins, most pole positions)
+- top constructors (most wins, most pole positions)
 
 GET /api/drivers:
--page wszystkich kierowców posortowanych po liczbie zwycięstw
--wyszukiwanie kierowców po imieniu+nazwisku
--wyszukiwanie poszczególnego kierowcy
--każdy kierowca ma przekierowanie do /drivers/{id}
--każdy kierowca ma liczbę zwycięstw
+- paginated list of all drivers sorted by win count
+- search drivers by first and last name
+- fetch individual driver details
+- redirect to /drivers/{id} for each driver
+- total win count for each driver
 
 GET /api/drivers/{id}:
--liczba 1, 2, 3 miejsc
--liczba wyścigów
--łączna liczba punktów
--liczba poleposition
--tory na których kierowca ma najwięcej wygranych
+- count of 1st, 2nd, and 3rd place finishes
+- total race count
+- total points accumulated
+- total pole position count
+- circuits where the driver has the most victories
 
 GET /api/drivers/{id}/races:
--page ostatnich 10 wyścigów z (miejscem startowym, miejscem końcowym, punktami, rokiem wyścigu, nazwą wyścigu)
--wyszukiwanie wyścigów po kraju
+- paginated list of the 10 most recent races (starting position, finishing position, points, race year, race name)
+- search races by country
 
 POST /api/drivers:
--tworzenie kierowcy
+- create a new driver
 
-DELETE /api/drivers/{id}
--usuwanie kierowcy (jeżeli ma jakieś wyniki/kwalifikacje soft delete w przeciwnym wypadku hard delete)
+DELETE /api/drivers/{id}:
+- delete driver (soft delete if associated with any results/qualifying data; hard delete otherwise)
 
-PUT /api/drivers/{id}
--całkowite aktualizowanie istniejącego kierowcy
+PUT /api/drivers/{id}:
+- full update of an existing driver
 
 
-// constructors controller
+# Constructors Controller
+
 GET /api/constructors:
--page wszystkich konstruktorów posortowanych po liczbie zwycięstw
--wyszukiwanie konstruktorów po nazwie
--każdy konstruktor ma przekierowanie do indywidualnego widoku ze
--każdy konstruktor ma liczbę zwycięstw
+- paginated list of all constructors sorted by win count
+- search constructors by name
+- redirect to individual constructor view for each constructor
+- total win count for each constructor
 
 GET /api/constructors/{id}:
--liczba 1, 2, 3 miejsc
--liczba wyścigów
--łączna liczba punktów
+- count of 1st, 2nd, and 3rd place finishes
+- total race count
+- total points accumulated
 
 GET /api/constructors/{id}/races:
--page wyścigów
--wyszukiwanie wyścigów po kraju
+- paginated list of races
+- search races by country
 
 POST /api/constructors:
--tworzenie konstruktora
+- create a new constructor
 
-DELETE /api/constructors/{id}
--usuwanie konstruktora (jeżeli ma jakieś wyniki/kwalifikacje soft delete w przeciwnym wypadku hard delete)
+DELETE /api/constructors/{id}:
+- delete constructor (soft delete if associated with any results/qualifying data; hard delete otherwise)
 
-PUT /api/constructors/{id}
--całkowite aktualizowanie istniejącego konstruktora
+PUT /api/constructors/{id}:
+- full update of an existing constructor
 
 
-// circuits controller
+# Circuits Controller
+
 GET /api/circuits:
--tory z liczbą wyścigów
+- circuits with total hosted race counts
 
 GET /api/circuits/{id}:
--nazwa toru
--kraj
--url
--lista kierowców z największą liczbą wygranych na danym torze
+- circuit name
+- country
+- url
+- list of drivers with the most wins at the circuit
 
 POST /api/circuits:
--tworzenie toru
+- create a new circuit
 
-DELETE /api/circuits/{id}
--usuwanie toru (jeżeli ma jakiś wyścig soft delete w przeciwnym wypadku hard delete)
+DELETE /api/circuits/{id}:
+- delete circuit (soft delete if associated with any race; hard delete otherwise)
 
-PUT /api/circuits/{id}
--całkowite aktualizowanie istniejącego toru
+PUT /api/circuits/{id}:
+- full update of an existing circuit
 
 
-// races controller
+# Races Controller
+
 GET /api/races:
--page wyścigów
--nazwa wyścigu
--data
--nazwa toru i kraj
--imię zwycięzcy
--nazwa zespołu który wygrał
+- paginated list of races
+- race name
+- date
+- circuit name and country
+- winner's name
+- winning team name
 
-GET /api/races/{id}
--nazwa wyścigu
--data
--informacje o torze
--lista results
+GET /api/races/{id}:
+- race name
+- date
+- circuit information
+- list of results
 
-GET /api/races/{id}/results
--rezultaty kierowców w danym wyscigu
+GET /api/races/{id}/results:
+- driver results for a specific race
 
 GET /api/races/{id}/qualifying:
--kwalfikacje kierowców w danym wyścigu
+- driver qualifying results for a specific race
 
 POST /api/races:
--tworzenie wyścigu (na bazie toru)
+- create a new race (based on circuit)
 
-POST /api/races/{id}/results
--tworzenie result (na bazie id wyścigu, kierowcy, konstruktora)
+POST /api/races/{id}/results:
+- create a result (based on race ID, driver, constructor)
 
-POST /api/races/{id}/qualifying
--tworzenie qualifying (na bazie id wyścigu, kierowcy, konstruktora)
+POST /api/races/{id}/qualifying:
+- create a qualifying result (based on race ID, driver, constructor)
 
-DELETE /api/races/{id}
--usuwanie wyścigu (jeżeli ma jakieś wyniki/kwalifikacje soft delete w przeciwnym wypadku hard delete)
+DELETE /api/races/{id}:
+- delete race (soft delete if associated with any results/qualifying data; hard delete otherwise)
 
-DELETE /api/races/{raceId}/results/{id}
--usuwanie wyniku zawsze hard delete
+DELETE /api/races/{raceId}/results/{id}:
+- delete result (always hard delete)
 
-DELETE /api/races/{raceId}/qualifying/{id}
--usuwanie kwalfikacji zawsze hard delete
+DELETE /api/races/{raceId}/qualifying/{id}:
+- delete qualifying result (always hard delete)
 
-PUT /api/race/{id}
--całkowite aktualizowanie istniejącego wyścigu
+PUT /api/race/{id}:
+- full update of an existing race
 
-PUT /api/race/{raceId}/results/{id}
--całkowite aktualizowanie istniejącego wyniku
+PUT /api/race/{raceId}/results/{id}:
+- full update of an existing result
 
-PUT /api/race/{raceId}/qualifying/{id}
--całkowite aktualizowanie istniejącego wyniku kwalifikacji
+PUT /api/race/{raceId}/qualifying/{id}:
+- full update of an existing qualifying result
 
 
+# Database Schema
 
-struktura bazy danych
 drivers:
--id
--name
--nationality
--url (unique)
--isDeleted
+- id
+- name
+- nationality
+- url (unique)
+- isDeleted
 
 constructors:
--id
--name (unique)
--isDeleted
+- id
+- name (unique)
+- isDeleted
 
 circuits:
--id
--name (unique)
--country
--url
--isDeleted
+- id
+- name (unique)
+- country
+- url
+- isDeleted
 
 races:
--id
--circuit_id
--date
--name
--isDeleted
+- id
+- circuit_id
+- date
+- name
+- isDeleted
 
 qualifying:
--id
--race_id
--driver_id
--constructor_id
--position
+- id
+- race_id
+- driver_id
+- constructor_id
+- position
 
 results:
+- id
+- race_id
+- driver_id
+- constructor_id
+- grid
+- position
+- points
+
+users:
 -id
--race_id
--driver_id
--constructor_id
--grid
--position
--points
+-firstname
+-lastname
+-email
+-password
+-role

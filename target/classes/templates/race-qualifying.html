@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Qualifying</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
+        nav { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-left { display: flex; align-items: center; gap: 30px; }
+        .logo { font-size: 20px; font-weight: bold; text-decoration: none; color: #000; }
+        .logo span { color: #e10600; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #e10600; }
+        .logout-btn { background: transparent; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .back-link { text-decoration: none; color: #6b7280; font-size: 14px; display: inline-block; margin-bottom: 15px; }
+        .back-link:hover { color: #000; }
+
+        .header-section { margin-bottom: 25px; }
+        .page-title { margin: 0 0 10px 0; font-size: 28px; color: #111827; }
+
+        .card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 20px; border-bottom: 1px solid #f3f4f6; text-align: left; }
+        th { color: #6b7280; font-size: 12px; text-transform: uppercase; background: #f9fafb; }
+        .text-center { text-align: center; }
+
+        #status-message { font-size: 16px; color: #4b5563; }
+        .driver-link, .constructor-link { color: #e10600; text-decoration: none; font-weight: bold; }
+        .driver-link:hover, .constructor-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-left">
+        <a href="/home" class="logo">JSGrandPrixHub</a>
+        <div class="nav-links">
+            <a href="/home">Dashboard</a>
+            <a href="/drivers">Drivers</a>
+            <a href="/constructors">Constructors</a>
+            <a href="/circuits">Circuits</a>
+            <a href="/races" class="active">Races</a>
+        </div>
+    </div>
+    <button id="auth-btn" class="logout-btn" onclick="handleAuthAction()">Logout</button>
+</nav>
+
+<div class="container">
+    <a href="#" id="back-link" class="back-link">&larr; Back to Race Details</a>
+
+    <div class="header-section">
+        <h1 class="page-title"><span id="race-name">Race</span> - Qualifying</h1>
+    </div>
+
+    <div id="status-message">Loading qualifying data...</div>
+
+    <div id="data-container" style="display: none;">
+        <div class="card">
+            <table>
+                <thead>
+                <tr>
+                    <th class="text-center">Pos</th>
+                    <th>Driver</th>
+                    <th>Nationality</th>
+                    <th>Constructor</th>
+                </tr>
+                </thead>
+                <tbody id="qualifying-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const raceId = [[${raceId}]];
+
+    function handleAuthAction() { localStorage.removeItem('token'); window.location.href = '/login'; }
+
+    function updateAuthButton() {
+        const authBtn = document.getElementById('auth-btn');
+        const token = localStorage.getItem('token');
+        authBtn.innerText = token ? 'Logout' : 'Login';
+    }
+
+    async function loadQualifying() {
+        updateAuthButton();
+
+        const token = localStorage.getItem('token');
+        const headers = {};
+        if (token) {
+            headers['Authorization'] = 'Bearer ' + token;
+        }
+
+        document.getElementById('back-link').href = `/races/${raceId}`;
+
+        try {
+            const [raceRes, qualyRes] = await Promise.all([
+                fetch(`/api/races/${raceId}`, { headers }),
+                fetch(`/api/races/${raceId}/qualifying`, { headers })
+            ]);
+
+            if (qualyRes.status === 401 || qualyRes.status === 403) { logout(); return; }
+
+            if (raceRes.ok) {
+                const raceData = await raceRes.json();
+                document.getElementById('race-name').innerText = raceData.name;
+            }
+
+            if (qualyRes.ok) {
+                const qualyData = await qualyRes.json();
+                const qualyHtml = qualyData.map(qual => `
+                    <tr>
+                        <td class="text-center"><strong>${qual.position || '-'}</strong></td>
+                        <td>
+                            <a href="/drivers/${qual.driver.driverId}" class="driver-link">${qual.driver.name}</a>
+                        </td>
+                        <td>${qual.driver.nationality}</td>
+                        <td>
+                            <a href="/constructors/${qual.constructor.constructorId}" class="constructor-link">${qual.constructor.name}</a>
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('qualifying-body').innerHTML = qualyHtml || `<tr><td colspan="4" class="text-center">No qualifying data available.</td></tr>`;
+
+                document.getElementById('status-message').style.display = 'none';
+                document.getElementById('data-container').style.display = 'block';
+            } else {
+                throw new Error("Failed to load qualifying data");
+            }
+
+        } catch (e) {
+            console.error(e);
+            document.getElementById('status-message').innerText = "Error loading data.";
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadQualifying);
+</script>
+</body>
+</html>

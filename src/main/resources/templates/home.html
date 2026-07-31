@@ -6,73 +6,138 @@
     <style>
         body { font-family: Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
         nav { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 20px; font-weight: bold; }
+        .nav-left { display: flex; align-items: center; gap: 30px; }
+        .logo { font-size: 20px; font-weight: bold; text-decoration: none; color: #000; }
+        .logo span { color: #e10600; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #e10600; }
         .logout-btn { background: transparent; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
-        .card-header { background: #f9fafb; padding: 15px; font-weight: bold; border-bottom: 1px solid #e5e7eb; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 20px; border-bottom: 1px solid #f3f4f6; text-align: left; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card h2 { margin-top: 0; font-size: 18px; color: #111827; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; border-bottom: 1px solid #f3f4f6; text-align: left; }
         th { color: #6b7280; font-size: 12px; text-transform: uppercase; }
         .text-right { text-align: right; }
+        .driver-link { color: #e10600; text-decoration: none; font-weight: bold; }
+        .driver-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo">F1 Data<span>.</span></div>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <div class="nav-left">
+        <a href="/home" class="logo">JSGrandPrixHub</a>
+        <div class="nav-links">
+            <a href="/home" class="active">Dashboard</a>
+            <a href="/drivers">Drivers</a>
+            <a href="/constructors">Constructors</a>
+            <a href="/circuits">Circuits</a>
+            <a href="/races">Races</a>
+        </div>
+    </div>
+    <button id="auth-btn" class="logout-btn" onclick="handleAuthAction()">Logout</button>
 </nav>
 
 <div class="container">
-    <h1>All-Time Statistics</h1>
-    <div id="status-message">Loading data...</div>
-    <div class="grid" id="data-container" style="display: none;">
+    <h1 style="margin-bottom: 30px;">Dashboard</h1>
+    <div id="status-message">Loading dashboard...</div>
+
+    <div class="dashboard-grid" id="dashboard-content" style="display: none;">
+        <!-- Top Drivers -->
         <div class="card">
-            <div class="card-header">Top 10 Drivers</div>
+            <h2>Top 10 Drivers by Wins</h2>
             <table>
-                <thead><tr><th>#</th><th>Name</th><th class="text-right">Wins</th><th class="text-right">Races</th></tr></thead>
-                <tbody id="drivers-body"></tbody>
+                <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th class="text-right">Wins</th>
+                    <th class="text-right">Races</th>
+                </tr>
+                </thead>
+                <tbody id="top-drivers-body"></tbody>
             </table>
         </div>
+
+        <!-- Top Constructors -->
         <div class="card">
-            <div class="card-header">Top 10 Constructors</div>
+            <h2>Top 10 Constructors by Wins</h2>
             <table>
-                <thead><tr><th>#</th><th>Team</th><th class="text-right">Wins</th><th class="text-right">Races</th></tr></thead>
-                <tbody id="constructors-body"></tbody>
+                <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th class="text-right">Wins</th>
+                    <th class="text-right">Races</th>
+                </tr>
+                </thead>
+                <tbody id="top-constructors-body"></tbody>
             </table>
         </div>
     </div>
 </div>
 
 <script>
-    function logout() { localStorage.removeItem('token'); window.location.href = '/login'; }
+    function handleAuthAction() { localStorage.removeItem('token'); window.location.href = '/login'; }
 
-    document.addEventListener('DOMContentLoaded', async function() {
+    function updateAuthButton() {
+        const authBtn = document.getElementById('auth-btn');
         const token = localStorage.getItem('token');
-        if (!token) { window.location.href = '/login'; return; }
+        authBtn.innerText = token ? 'Logout' : 'Login';
+    }
+
+    async function loadDashboard() {
+        updateAuthButton();
+
+        const token = localStorage.getItem('token');
+        const headers = {};
+        if (token) {
+            headers['Authorization'] = 'Bearer ' + token;
+        }
 
         try {
-            const response = await fetch('http://localhost:8080/api/home', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
+            const response = await fetch('/api/home', { headers });
 
-            if (response.ok) {
-                const data = await response.json();
-                data.bestDrivers.forEach((d, i) => {
-                    document.getElementById('drivers-body').innerHTML +=
-                        `<tr><td>${i+1}</td><td>${d.name}</td><td class="text-right">${d.numOfWins}</td><td class="text-right">${d.numOfRaces}</td></tr>`;
-                });
-                data.bestConstructors.forEach((c, i) => {
-                    document.getElementById('constructors-body').innerHTML +=
-                        `<tr><td>${i+1}</td><td>${c.name}</td><td class="text-right">${c.numOfWins}</td><td class="text-right">${c.numOfRaces}</td></tr>`;
-                });
-                document.getElementById('status-message').style.display = 'none';
-                document.getElementById('data-container').style.display = 'grid';
-            }
-        } catch (e) { document.getElementById('status-message').innerText = "Error loading data."; }
-    });
+            if (!response.ok) throw new Error("Failed to load home data");
+
+            const data = await response.json();
+
+            // Mapowanie dla Top Drivers (z bezpośrednim linkiem do profilu kierowcy)
+            const driversHtml = data.bestDrivers.map((driver, index) => `
+                <tr>
+                    <td><strong>${index + 1}</strong></td>
+                    <td><a href="/drivers/${driver.driverId}" class="driver-link">${driver.name}</a></td>
+                    <td class="text-right">${driver.numOfWins}</td>
+                    <td class="text-right">${driver.numOfRaces}</td>
+                </tr>
+            `).join('');
+
+            // Mapowanie dla Top Constructors (bez linków, bo tam jeszcze nie robiliśmy podstron detali)
+            const constructorsHtml = data.bestConstructors.map((constructor, index) => `
+                <tr>
+                    <td><strong>${index + 1}</strong></td>
+                    <td><a href="/constructors/${constructor.constructorId}" class="driver-link">${constructor.name}</a></td>
+                    <td class="text-right">${constructor.numOfWins}</td>
+                    <td class="text-right">${constructor.numOfRaces}</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('top-drivers-body').innerHTML = driversHtml;
+            document.getElementById('top-constructors-body').innerHTML = constructorsHtml;
+
+            document.getElementById('status-message').style.display = 'none';
+            document.getElementById('dashboard-content').style.display = 'grid';
+
+        } catch (e) {
+            console.error(e);
+            document.getElementById('status-message').innerText = "Error loading dashboard data.";
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadDashboard);
 </script>
 </body>
 </html>

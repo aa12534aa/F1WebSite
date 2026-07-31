@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <title>Login Page</title>
     <style>
-        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* Styl paska nawigacji */
+        nav { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-left { display: flex; align-items: center; gap: 30px; }
+        .logo { font-size: 20px; font-weight: bold; text-decoration: none; color: #000; }
+        .logo span { color: #e10600; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #e10600; }
+
+        /* Kontener do wyśrodkowania formularza na reszcie strony */
+        .main-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px 0; }
         .login-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 300px; }
+
         h2 { text-align: center; margin-bottom: 20px; color: #333; }
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; margin-bottom: 5px; color: #666; }
@@ -14,24 +27,48 @@
         button:hover { background-color: #0056b3; }
         #message { margin-top: 15px; text-align: center; font-weight: bold; }
         .error { color: red; }
+
+        .register-link { text-align: center; margin-top: 20px; font-size: 14px; color: #666; }
+        .register-link a { color: #007bff; text-decoration: none; font-weight: bold; }
+        .register-link a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
-<div class="login-container">
-    <h2>Login</h2>
-    <form id="loginForm">
-        <div class="input-group">
-            <label for="username">Email</label>
-            <input type="text" id="username" required placeholder="Enter your email">
+<nav>
+    <div class="nav-left">
+        <a href="/home" class="logo">JSGrandPrixHub</a>
+        <div class="nav-links">
+            <a href="/home">Dashboard</a>
+            <a href="/drivers">Drivers</a>
+            <a href="/constructors">Constructors</a>
+            <a href="/circuits">Circuits</a>
+            <a href="/races">Races</a>
         </div>
-        <div class="input-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" required placeholder="Enter your password">
+    </div>
+</nav>
+
+<div class="main-wrapper">
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Email</label>
+                <input type="text" id="username" required placeholder="Enter your email">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="Enter your password">
+            </div>
+            <button type="submit">Sign In</button>
+        </form>
+
+        <div class="register-link">
+            Don't have an account? <a href="/register">Register here</a>
         </div>
-        <button type="submit">Sign In</button>
-    </form>
-    <div id="message"></div>
+
+        <div id="message"></div>
+    </div>
 </div>
 
 <script>
@@ -44,7 +81,7 @@
         messageDiv.innerText = "Logging in...";
 
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
+            const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: usernameInput, password: passwordInput })

@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <title>Register Page</title>
     <style>
-        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* Styl paska nawigacji */
+        nav { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-left { display: flex; align-items: center; gap: 30px; }
+        .logo { font-size: 20px; font-weight: bold; text-decoration: none; color: #000; }
+        .logo span { color: #e10600; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #e10600; }
+
+        /* Kontener do wyśrodkowania formularza na reszcie strony */
+        .main-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px 0; }
         .register-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 320px; }
+
         h2 { text-align: center; margin-bottom: 20px; color: #333; }
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; margin-bottom: 5px; color: #666; }
@@ -13,35 +26,53 @@
         button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
         button:hover { background-color: #218838; }
         .login-link { text-align: center; margin-top: 15px; font-size: 14px; }
+        .login-link a { color: #007bff; text-decoration: none; font-weight: bold; }
+        .login-link a:hover { text-decoration: underline; }
         #message { margin-top: 15px; text-align: center; font-weight: bold; }
-        .error { color: red; } .success { color: green; }
+        .error { color: red; }
+        .success { color: green; }
     </style>
 </head>
 <body>
 
-<div class="register-container">
-    <h2>Registration</h2>
-    <form id="registerForm">
-        <div class="input-group">
-            <label for="firstname">First Name</label>
-            <input type="text" id="firstname" required placeholder="Enter first name">
+<nav>
+    <div class="nav-left">
+        <a href="/home" class="logo">JSGrandPrixHub</a>
+        <div class="nav-links">
+            <a href="/home">Dashboard</a>
+            <a href="/drivers">Drivers</a>
+            <a href="/constructors">Constructors</a>
+            <a href="/circuits">Circuits</a>
+            <a href="/races">Races</a>
         </div>
-        <div class="input-group">
-            <label for="lastname">Last Name</label>
-            <input type="text" id="lastname" required placeholder="Enter last name">
-        </div>
-        <div class="input-group">
-            <label for="username">Email</label>
-            <input type="email" id="username" required placeholder="Enter your email">
-        </div>
-        <div class="input-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" required placeholder="Create a password">
-        </div>
-        <button type="submit">Register</button>
-    </form>
-    <div id="message"></div>
-    <div class="login-link">Already have an account? <a href="login">Sign in</a></div>
+    </div>
+</nav>
+
+<div class="main-wrapper">
+    <div class="register-container">
+        <h2>Registration</h2>
+        <form id="registerForm">
+            <div class="input-group">
+                <label for="firstname">First Name</label>
+                <input type="text" id="firstname" required placeholder="Enter first name">
+            </div>
+            <div class="input-group">
+                <label for="lastname">Last Name</label>
+                <input type="text" id="lastname" required placeholder="Enter last name">
+            </div>
+            <div class="input-group">
+                <label for="username">Email</label>
+                <input type="email" id="username" required placeholder="Enter your email">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="Create a password">
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <div id="message"></div>
+        <div class="login-link">Already have an account? <a href="/login">Sign in</a></div>
+    </div>
 </div>
 
 <script>
@@ -55,7 +86,7 @@
         };
 
         try {
-            const response = await fetch('http://localhost:8080/api/auth/register', {
+            const response = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(registerData)

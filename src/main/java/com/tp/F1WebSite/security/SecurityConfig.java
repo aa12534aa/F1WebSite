@@ -4,13 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -42,15 +39,13 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/auth/**", "/error", "/favicon.ico").permitAll()
-                        .requestMatchers("/login", "/register", "/home", "/home.html").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/api/**").hasRole("EMPLOYEE")
-                        .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("EMPLOYEE")
-                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("EMPLOYEE")
+                        .requestMatchers("/api/auth/**", "/error", "/favicon.ico", "/login", "/register").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "EMPLOYEE")
-
+                        .requestMatchers(HttpMethod.POST, "/**").hasRole("EMPLOYEE")
+                        .requestMatchers(HttpMethod.PUT, "/**").hasRole("EMPLOYEE")
+                        .requestMatchers(HttpMethod.DELETE, "/**").hasRole("EMPLOYEE")
                         .anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>F1 Drivers</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
+        nav { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-left { display: flex; align-items: center; gap: 30px; }
+        .logo { font-size: 20px; font-weight: bold; text-decoration: none; color: #000; }
+        .logo span { color: #e10600; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #e10600; }
+        .logout-btn { background: transparent; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+        .logout-btn:hover { background: #f3f4f6; }
+
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+
+        /* Styl dla sekcji nagłówka z wyszukiwarką */
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header-section h1 { margin: 0; }
+        .search-container { display: flex; gap: 10px; }
+        .search-input { padding: 10px 15px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; width: 250px; }
+        .search-input:focus { outline: none; border-color: #e10600; box-shadow: 0 0 0 2px rgba(225, 6, 0, 0.1); }
+        .search-btn { background: #e10600; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .search-btn:hover { background: #b80500; }
+
+        .card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 20px; border-bottom: 1px solid #f3f4f6; text-align: left; }
+        th { color: #6b7280; font-size: 12px; text-transform: uppercase; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+
+        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #f9fafb; border-top: 1px solid #e5e7eb; }
+        .page-btn { background: white; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .page-btn:disabled { color: #9ca3af; background: #f3f4f6; cursor: not-allowed; border-color: #e5e7eb; }
+        .page-info { font-size: 14px; color: #374151; }
+
+        #status-message { font-size: 16px; color: #4b5563; }
+        .driver-link { color: #e10600; text-decoration: none; font-weight: bold; }
+        .driver-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-left">
+        <a href="/home" class="logo">JSGrandPrixHub</a>
+        <div class="nav-links">
+            <a href="/home">Dashboard</a>
+            <a href="/drivers" class="active">Drivers</a>
+            <a href="/constructors">Constructors</a>
+            <a href="/circuits">Circuits</a>
+            <a href="/races">Races</a>
+        </div>
+    </div>
+    <button id="auth-btn" class="logout-btn" onclick="handleAuthAction()">Logout</button>
+</nav>
+
+<div class="container">
+    <div class="header-section">
+        <h1>F1 Drivers Registry</h1>
+        <div class="search-container">
+            <input type="text" id="search-input" class="search-input" placeholder="Search by name..." onkeypress="handleKeyPress(event)">
+            <button class="search-btn" onclick="executeSearch()">Search</button>
+        </div>
+    </div>
+
+    <div id="status-message">Loading drivers data...</div>
+
+    <div class="card" id="data-container" style="display: none;">
+        <table>
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th class="text-right">Wins</th>
+                <th class="text-right">Races</th>
+                <th class="text-right">Action</th>
+            </tr>
+            </thead>
+            <tbody id="all-drivers-body"></tbody>
+        </table>
+
+        <div class="pagination">
+            <button class="page-btn" id="prev-btn" onclick="changePage(-1)">Previous</button>
+            <div class="page-info" id="page-info">Page 1 of 1</div>
+            <button class="page-btn" id="next-btn" onclick="changePage(1)">Next</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentPage = 0;
+    const pageSize = 50;
+    let currentSearchQuery = ""; // Przechowuje aktualne zapytanie, by działało z paginacją
+
+    function handleAuthAction() { localStorage.removeItem('token'); window.location.href = '/login'; }
+
+    function updateAuthButton() {
+        const authBtn = document.getElementById('auth-btn');
+        const token = localStorage.getItem('token');
+        authBtn.innerText = token ? 'Logout' : 'Login';
+    }
+
+    // Uruchomienie wyszukiwania po wciśnięciu Enter
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            executeSearch();
+        }
+    }
+
+    // Pobranie wartości z inputa i zresetowanie paginacji do pierwszej strony
+    function executeSearch() {
+        currentSearchQuery = document.getElementById('search-input').value.trim();
+        document.getElementById('status-message').style.display = 'block';
+        document.getElementById('status-message').innerText = 'Searching...';
+        document.getElementById('data-container').style.display = 'none';
+        loadDrivers(0);
+    }
+
+    async function loadDrivers(page) {
+        updateAuthButton();
+
+        const token = localStorage.getItem('token');
+        const headers = {};
+        if (token) {
+            headers['Authorization'] = 'Bearer ' + token;
+        }
+
+        try {
+            // Budowanie dynamicznego URLa
+            let url = `/api/drivers?page=${page}&size=${pageSize}`;
+            if (currentSearchQuery) {
+                // Używamy encodeURIComponent na wypadek spacji lub znaków specjalnych
+                url += `&searchName=${encodeURIComponent(currentSearchQuery)}`;
+            }
+
+            const response = await fetch(url, { headers });
+
+            if (response.status === 401 || response.status === 403) { logout(); return; }
+            if (!response.ok) throw new Error("Failed to load drivers");
+
+            const data = await response.json();
+            currentPage = data.number;
+            const baseRank = currentPage * pageSize;
+
+            // Obsługa braku wyników wyszukiwania
+            if (data.content.length === 0) {
+                document.getElementById('all-drivers-body').innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center" style="padding: 20px; color: #6b7280;">
+                            No drivers found matching "${currentSearchQuery}".
+                        </td>
+                    </tr>`;
+                document.getElementById('page-info').innerText = `Page 0 of 0`;
+                document.getElementById('prev-btn').disabled = true;
+                document.getElementById('next-btn').disabled = true;
+            } else {
+                const driversHtml = data.content.map((driver, index) => `
+                    <tr>
+                        <td><strong>${baseRank + index + 1}</strong></td>
+                        <td><a href="/drivers/${driver.driverId}" class="driver-link">${driver.name}</a></td>
+                        <td class="text-right">${driver.numOfWins}</td>
+                        <td class="text-right">${driver.numOfRaces}</td>
+                        <td class="text-right">
+                            <button class="page-btn" onclick="window.location.href='/drivers/${driver.driverId}'">Profile</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('all-drivers-body').innerHTML = driversHtml;
+                document.getElementById('page-info').innerText = `Page ${currentPage + 1} of ${data.totalPages}`;
+                document.getElementById('prev-btn').disabled = data.first;
+                document.getElementById('next-btn').disabled = data.last;
+            }
+
+            document.getElementById('status-message').style.display = 'none';
+            document.getElementById('data-container').style.display = 'block';
+
+        } catch (e) {
+            console.error(e);
+            document.getElementById('status-message').innerText = "Error loading data.";
+            document.getElementById('status-message').style.display = 'block';
+            document.getElementById('data-container').style.display = 'none';
+        }
+    }
+
+    function changePage(direction) {
+        loadDrivers(currentPage + direction);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => loadDrivers(0));
+</script>
+</body>
+</html>

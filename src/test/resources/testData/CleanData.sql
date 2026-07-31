@@ -1,2 +1,2 @@
-TRUNCATE TABLE results, qualifying, races, circuits, constructors, drivers
+TRUNCATE TABLE results, qualifying, races, circuits, constructors, drivers, users
 RESTART IDENTITY CASCADE;

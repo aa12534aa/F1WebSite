@@ -27,11 +27,11 @@ public class CircuitController {
 
     // GET
     @GetMapping(path = "")
-    public Page<CircuitRacesDto> getManyTracks(@RequestParam(required = false) String searchCircuit, Pageable pageable) {
+    public Page<CircuitRacesDto> getManyTracks(@RequestParam(required = false) String searchName, Pageable pageable) {
         Page<CircuitRacesDto> tracks;
 
-        if (searchCircuit != null && !searchCircuit.isEmpty()) {
-            tracks = circuitService.findManyByName(searchCircuit, pageable);
+        if (searchName != null && !searchName.isEmpty()) {
+            tracks = circuitService.findManyByName(searchName, pageable);
         } else {
             tracks = circuitService.findManyByName("", pageable);
         }

@@ -30,9 +30,13 @@ public interface RaceRepository extends CrudRepository<RaceEntity, Long>,
     LEFT JOIN race.circuit circuit
     LEFT JOIN result.driver driver
     LEFT JOIN result.constructor constructor
-    WHERE circuit.isDeleted = false
+    WHERE circuit.isDeleted = false AND (LOWER(race.name) LIKE LOWER(CONCAT('%', :searchName, '%')) OR 	to_char(race.date, 'YYYY-MM-DD') LIKE CONCAT('%', :searchName, '%'))
     GROUP BY race.raceId, race.name, race.date, circuit.name, circuit.country, driver.name, constructor.name
     ORDER BY race.date DESC
+    """, countQuery = """
+    SELECT (COUNT(DISTINCT race.raceId))
+    FROM RaceEntity race
+    WHERE circuit.isDeleted = false AND (LOWER(race.name) LIKE LOWER(CONCAT('%', :searchName, '%')) OR 	to_char(race.date, 'YYYY-MM-DD') LIKE CONCAT('%', :searchName, '%'))
     """)
     Page<RaceCircuitDto> findRacesCircuitsByName(String searchName, Pageable pageable);
 
