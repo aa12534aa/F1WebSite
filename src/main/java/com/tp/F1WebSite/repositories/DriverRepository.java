@@ -66,6 +66,8 @@ public interface DriverRepository extends JpaRepository<DriverEntity, Long>,
 
     @Query(value = """
     SELECT new com.tp.F1WebSite.dto.driver.DriverRaceDto (
+        constructor.constructorId,
+        race.raceId,
         driver.name,
         constructor.name,
         result.grid,

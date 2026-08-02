@@ -61,6 +61,8 @@ public interface ConstructorRepository extends CrudRepository<ConstructorEntity,
 
     @Query(value = """
     SELECT new com.tp.F1WebSite.dto.constructor.ConstructorRaceDto (
+        driver.driverId,
+        race.raceId,
         constructor.name,
         driver.name,
         result.grid,

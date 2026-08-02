@@ -13,6 +13,10 @@ import java.time.LocalDate;
 @Builder
 public class DriverRaceDto {
 
+    private Long constructorId;
+
+    private Long raceId;
+
     private String name;
 
     private String team;

@@ -507,42 +507,68 @@
             backLink.href = `/drivers/${driverId}`;
         }
 
-        try {
-            const data = await fetchJson(`/api/drivers/${driverId}/races?page=0&size=50`);
-            const content = Array.isArray(data.content) ? data.content : [];
-            if (content.length > 0) {
-                setText('page-title', `Race History: ${content[0].name}`);
-            }
+        const state = {
+            currentPage: 0
+        };
 
-            setHtml('races-body', content.map((race) => {
-                const positionDisplay = renderPosition(race.position);
-                const circuitLabel = race.country || '-';
-                return `
-                    <tr>
-                        <td>${escapeHtml(race.date)}</td>
-                        <td><a href="/races/${race.raceId}" class="race-link">${escapeHtml(race.raceName)}</a></td>
-                        <td>${escapeHtml(circuitLabel)}</td>
-                        <td><a href="/constructors/${race.constructorId}" class="constructor-link">${escapeHtml(race.team)}</a></td>
-                        <td class="text-center">${escapeHtml(race.grid)}</td>
-                        <td class="text-center"><strong>${positionDisplay}</strong></td>
-                        <td class="text-center">+${race.points}</td>
-                    </tr>
-                `;
-            }).join(''));
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
 
-            setText('page-info', `Page ${((data.number ?? 0) + 1)} of ${data.totalPages}`);
-            const prevButton = document.getElementById('prev-btn');
-            const nextButton = document.getElementById('next-btn');
-            if (prevButton) {
-                prevButton.disabled = !!data.first;
+        async function loadPage(page) {
+            try {
+                const data = await fetchJson(`/api/drivers/${driverId}/races?page=${page}&size=50`);
+                const content = Array.isArray(data.content) ? data.content : [];
+                state.currentPage = typeof data.number === 'number' ? data.number : page;
+
+                if (content.length > 0) {
+                    setText('page-title', `Race History: ${content[0].name}`);
+                }
+
+                setHtml('races-body', content.map((race) => {
+                    const positionDisplay = renderPosition(race.position);
+                    const circuitLabel = race.country || '-';
+
+                    return `
+                        <tr>
+                            <td>${escapeHtml(race.date || '-')}</td>
+                            <td><a href="/races/${race.raceId}" class="race-link">${escapeHtml(race.raceName || '-')}</a></td>
+                            <td>${escapeHtml(circuitLabel)}</td>
+                            <td><a href="/constructors/${race.constructorId}" class="constructor-link">${escapeHtml(race.team || '-')}</a></td>
+                            <td class="text-center">${escapeHtml(race.grid)}</td>
+                            <td class="text-center"><strong>${positionDisplay}</strong></td>
+                            <td class="text-center">+${race.points}</td>
+                        </tr>
+                    `;
+                }).join(''));
+
+                setText('page-info', `Page ${state.currentPage + 1} of ${data.totalPages}`);
+                if (prevButton) {
+                    prevButton.disabled = !!data.first || state.currentPage <= 0;
+                }
+                if (nextButton) {
+                    nextButton.disabled = !!data.last;
+                }
+            } catch (error) {
+                console.error(error);
+                setHtml('races-body', '<tr><td colspan="7" class="empty-state">Error loading data or unauthorized context.</td></tr>');
             }
-            if (nextButton) {
-                nextButton.disabled = !!data.last;
-            }
-        } catch (error) {
-            console.error(error);
-            setHtml('races-body', '<tr><td colspan="7" class="empty-state">Error loading data or unauthorized context.</td></tr>');
         }
+
+        if (prevButton) {
+            prevButton.addEventListener('click', () => {
+                if (state.currentPage > 0) {
+                    loadPage(state.currentPage - 1);
+                }
+            });
+        }
+
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                loadPage(state.currentPage + 1);
+            });
+        }
+
+        loadPage(0);
     }
 
     async function initConstructorRacesPage() {
@@ -554,43 +580,68 @@
             backLink.href = `/constructors/${constructorId}`;
         }
 
-        try {
-            const data = await fetchJson(`/api/constructors/${constructorId}/races?page=0&size=50`);
-            const content = Array.isArray(data.content) ? data.content : [];
-            if (content.length > 0 && content[0].teamName) {
-                setText('page-title', `Race History: ${content[0].teamName}`);
-            }
+        const state = {
+            currentPage: 0
+        };
 
-            setHtml('races-body', content.map((race) => {
-                const driverName = race.driverName || race.driver || 'Unknown Driver';
-                const circuitLabel = race.country || '-';
-                const position = renderPosition(race.position);
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
 
-                return `
-                    <tr>
-                        <td>${escapeHtml(race.date || '-')}</td>
-                        <td><a href="/races/${race.raceId}" class="race-link">${escapeHtml(race.raceName || '-')}</a></td>
-                        <td>${escapeHtml(circuitLabel)}</td>
-                        <td><a href="/drivers/${race.driverId}" class="driver-link">${escapeHtml(driverName)}</a></td>
-                        <td class="text-center"><strong>${position}</strong></td>
-                        <td class="text-center">+${race.points !== undefined ? race.points : '0'}</td>
-                    </tr>
-                `;
-            }).join(''));
+        async function loadPage(page) {
+            try {
+                const data = await fetchJson(`/api/constructors/${constructorId}/races?page=${page}&size=50`);
+                const content = Array.isArray(data.content) ? data.content : [];
+                state.currentPage = typeof data.number === 'number' ? data.number : page;
 
-            setText('page-info', `Page ${((data.number ?? 0) + 1)} of ${data.totalPages}`);
-            const prevButton = document.getElementById('prev-btn');
-            const nextButton = document.getElementById('next-btn');
-            if (prevButton) {
-                prevButton.disabled = !!data.first;
+                if (content.length > 0 && content[0].teamName) {
+                    setText('page-title', `Race History: ${content[0].teamName}`);
+                }
+
+                setHtml('races-body', content.map((race) => {
+                    const driverName = race.driverName || race.driver || 'Unknown Driver';
+                    const circuitLabel = race.country || '-';
+                    const position = renderPosition(race.position);
+
+                    return `
+                        <tr>
+                            <td>${escapeHtml(race.date || '-')}</td>
+                            <td><a href="/races/${race.raceId}" class="race-link">${escapeHtml(race.raceName || '-')}</a></td>
+                            <td>${escapeHtml(circuitLabel)}</td>
+                            <td><a href="/drivers/${race.driverId}" class="driver-link">${escapeHtml(driverName)}</a></td>
+                            <td class="text-center"><strong>${position}</strong></td>
+                            <td class="text-center">+${race.points !== undefined ? race.points : '0'}</td>
+                        </tr>
+                    `;
+                }).join(''));
+
+                setText('page-info', `Page ${state.currentPage + 1} of ${data.totalPages}`);
+                if (prevButton) {
+                    prevButton.disabled = !!data.first || state.currentPage <= 0;
+                }
+                if (nextButton) {
+                    nextButton.disabled = !!data.last;
+                }
+            } catch (error) {
+                console.error(error);
+                setHtml('races-body', '<tr><td colspan="6" class="empty-state">Error loading data or unauthorized context.</td></tr>');
             }
-            if (nextButton) {
-                nextButton.disabled = !!data.last;
-            }
-        } catch (error) {
-            console.error(error);
-            setHtml('races-body', '<tr><td colspan="6" class="empty-state">Error loading data or unauthorized context.</td></tr>');
         }
+
+        if (prevButton) {
+            prevButton.addEventListener('click', () => {
+                if (state.currentPage > 0) {
+                    loadPage(state.currentPage - 1);
+                }
+            });
+        }
+
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                loadPage(state.currentPage + 1);
+            });
+        }
+
+        loadPage(0);
     }
 
     async function initRaceResultsPage() {
