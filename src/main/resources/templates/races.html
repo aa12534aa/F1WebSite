@@ -3,74 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>F1 Races</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
-        nav { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-left { display: flex; align-items: center; gap: 30px; }
-        .logo { font-size: 20px; font-weight: bold; text-decoration: none; color: #000; }
-        .logo span { color: #e10600; }
-        .nav-links { display: flex; gap: 20px; }
-        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; }
-        .nav-links a:hover, .nav-links a.active { color: #e10600; }
-        .logout-btn { background: transparent; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-        .logout-btn:hover { background: #f3f4f6; }
-
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-
-        /* Styl dla sekcji nagłówka z wyszukiwarką */
-        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header-section h1 { margin: 0; }
-        .search-container { display: flex; gap: 10px; }
-        .search-input { padding: 10px 15px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; width: 250px; }
-        .search-input:focus { outline: none; border-color: #e10600; box-shadow: 0 0 0 2px rgba(225, 6, 0, 0.1); }
-        .search-btn { background: #e10600; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        .search-btn:hover { background: #b80500; }
-
-        .card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 20px; border-bottom: 1px solid #f3f4f6; text-align: left; }
-        th { color: #6b7280; font-size: 12px; text-transform: uppercase; }
-        .text-right { text-align: right; }
-        .text-center { text-align: center; }
-
-        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #f9fafb; border-top: 1px solid #e5e7eb; }
-        .page-btn { background: white; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; }
-        .page-btn:disabled { color: #9ca3af; background: #f3f4f6; cursor: not-allowed; border-color: #e5e7eb; }
-        .page-info { font-size: 14px; color: #374151; }
-
-        #status-message { font-size: 16px; color: #4b5563; }
-        .race-link { color: #e10600; text-decoration: none; font-weight: bold; }
-        .race-link:hover { text-decoration: underline; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+    <script defer th:src="@{/js/site.js}"></script>
 </head>
-<body>
+<body data-page="races">
 
-<nav>
-    <div class="nav-left">
-        <a href="/home" class="logo">JSGrandPrixHub</a>
-        <div class="nav-links">
-            <a href="/home">Dashboard</a>
-            <a href="/drivers">Drivers</a>
-            <a href="/constructors">Constructors</a>
-            <a href="/circuits">Circuits</a>
-            <a href="/races" class="active">Races</a>
-        </div>
-    </div>
-    <button id="auth-btn" class="logout-btn" onclick="handleAuthAction()">Logout</button>
-</nav>
+<th:block th:replace="~{fragments/navbar :: navbar('races')}"></th:block>
 
 <div class="container">
     <div class="header-section">
         <h1>F1 Races Registry</h1>
         <div class="search-container">
-            <input type="text" id="search-input" class="search-input" placeholder="Search by race name or date..." onkeypress="handleKeyPress(event)">
-            <button class="search-btn" onclick="executeSearch()">Search</button>
+            <input type="text" id="search-input" class="search-input" placeholder="Search by race name or date...">
+            <button id="search-btn" class="search-btn" type="button">Search</button>
         </div>
     </div>
 
     <div id="status-message">Loading races data...</div>
 
-    <div class="card" id="data-container" style="display: none;">
+    <div class="card" id="data-container" hidden>
         <table>
             <thead>
             <tr>
@@ -87,110 +38,11 @@
         </table>
 
         <div class="pagination">
-            <button class="page-btn" id="prev-btn" onclick="changePage(-1)">Previous</button>
+            <button class="page-btn" id="prev-btn" type="button">Previous</button>
             <div class="page-info" id="page-info">Page 1 of 1</div>
-            <button class="page-btn" id="next-btn" onclick="changePage(1)">Next</button>
+            <button class="page-btn" id="next-btn" type="button">Next</button>
         </div>
     </div>
 </div>
-
-<script>
-    let currentPage = 0;
-    const pageSize = 50;
-    let currentSearchQuery = "";
-
-    function handleAuthAction() { localStorage.removeItem('token'); window.location.href = '/login'; }
-
-    function updateAuthButton() {
-        const authBtn = document.getElementById('auth-btn');
-        const token = localStorage.getItem('token');
-        authBtn.innerText = token ? 'Logout' : 'Login';
-    }
-
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            executeSearch();
-        }
-    }
-
-    function executeSearch() {
-        currentSearchQuery = document.getElementById('search-input').value.trim();
-        document.getElementById('status-message').style.display = 'block';
-        document.getElementById('status-message').innerText = 'Searching...';
-        document.getElementById('data-container').style.display = 'none';
-        loadRaces(0);
-    }
-
-    async function loadRaces(page) {
-        updateAuthButton();
-
-        const token = localStorage.getItem('token');
-        const headers = {};
-        if (token) {
-            headers['Authorization'] = 'Bearer ' + token;
-        }
-
-        try {
-            let url = `/api/races?page=${page}&size=${pageSize}`;
-            if (currentSearchQuery) {
-                url += `&searchName=${encodeURIComponent(currentSearchQuery)}`;
-            }
-
-            const response = await fetch(url, { headers });
-
-            if (response.status === 401 || response.status === 403) { logout(); return; }
-            if (!response.ok) throw new Error("Failed to load races");
-
-            const data = await response.json();
-            currentPage = data.number;
-
-            if (data.content.length === 0) {
-                document.getElementById('all-races-body').innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-center" style="padding: 20px; color: #6b7280;">
-                            No races found matching "${currentSearchQuery}".
-                        </td>
-                    </tr>`;
-                document.getElementById('page-info').innerText = `Page 0 of 0`;
-                document.getElementById('prev-btn').disabled = true;
-                document.getElementById('next-btn').disabled = true;
-            } else {
-                const racesHtml = data.content.map((race) => `
-                    <tr>
-                        <td style="white-space: nowrap;">${race.date || '-'}</td>
-                        <td><a href="/races/${race.raceId}" class="race-link">${race.raceName}</a></td>
-                        <td>${race.circuitName || '-'}</td>
-                        <td>${race.country || '-'}</td>
-                        <td>${race.winnerName || '-'}</td>
-                        <td>${race.constructorName || '-'}</td>
-                        <td class="text-right">
-                            <button class="page-btn" onclick="window.location.href='/races/${race.raceId}'">Details</button>
-                        </td>
-                    </tr>
-                `).join('');
-
-                document.getElementById('all-races-body').innerHTML = racesHtml;
-                document.getElementById('page-info').innerText = `Page ${currentPage + 1} of ${data.totalPages}`;
-                document.getElementById('prev-btn').disabled = data.first;
-                document.getElementById('next-btn').disabled = data.last;
-            }
-
-            document.getElementById('status-message').style.display = 'none';
-            document.getElementById('data-container').style.display = 'block';
-
-        } catch (e) {
-            console.error(e);
-            document.getElementById('status-message').innerText = "Error loading data.";
-            document.getElementById('status-message').style.display = 'block';
-            document.getElementById('data-container').style.display = 'none';
-        }
-    }
-
-    function changePage(direction) {
-        loadRaces(currentPage + direction);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => loadRaces(0));
-</script>
 </body>
 </html>

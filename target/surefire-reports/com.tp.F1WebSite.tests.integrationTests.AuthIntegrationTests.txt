@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+Test set: com.tp.F1WebSite.tests.integrationTests.AuthIntegrationTests
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 5.221 s <<< FAILURE! -- in com.tp.F1WebSite.tests.integrationTests.AuthIntegrationTests
+com.tp.F1WebSite.tests.integrationTests.AuthIntegrationTests.shouldReturn401ForUnauthorizedUser -- Time elapsed: 0.098 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+
+expected: 401 UNAUTHORIZED
+ but was: 200 OK
+	at com.tp.F1WebSite.tests.integrationTests.AuthIntegrationTests.shouldReturn401ForUnauthorizedUser(AuthIntegrationTests.java:70)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

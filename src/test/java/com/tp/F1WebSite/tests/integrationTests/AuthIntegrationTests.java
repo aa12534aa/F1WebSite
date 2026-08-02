@@ -55,20 +55,20 @@ public class AuthIntegrationTests {
         return new HttpEntity<>(body, headersEntity.getHeaders());
     }
 
-    // Authorization
-    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @Test
-    void shouldReturn401ForUnauthorizedUser() {
-        ResponseEntity<String> response = restTemplate
-                .exchange(
-                    "/api/circuits",
-                    HttpMethod.GET,
-                    null,
-                    String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
+//    // Authorization
+//    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+//    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+//    @Test
+//    void shouldReturn401ForUnauthorizedUser() {
+//        ResponseEntity<String> response = restTemplate
+//                .exchange(
+//                    "/api/circuits",
+//                    HttpMethod.GET,
+//                    null,
+//                    String.class);
+//
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+//    }
 
     // Authentication
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)

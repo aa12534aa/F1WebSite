@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="navbar" th:fragment="navbar(activePage)">
+    <div class="navbar__left">
+        <a href="/home" class="logo">F1StatsHub</a>
+        <nav class="nav-links" aria-label="Primary navigation">
+            <a href="/home" th:classappend="${activePage == 'home'} ? ' active' : ''">Dashboard</a>
+            <a href="/drivers" th:classappend="${activePage == 'drivers'} ? ' active' : ''">Drivers</a>
+            <a href="/constructors" th:classappend="${activePage == 'constructors'} ? ' active' : ''">Constructors</a>
+            <a href="/circuits" th:classappend="${activePage == 'circuits'} ? ' active' : ''">Circuits</a>
+            <a href="/races" th:classappend="${activePage == 'races'} ? ' active' : ''">Races</a>
+        </nav>
+    </div>
+    <button type="button" id="auth-btn" class="nav-auth">Logout</button>
+</header>
+</body>
+</html>

@@ -3,47 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Constructor Race History</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
-        nav { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-left { display: flex; align-items: center; gap: 30px; }
-        .logo { font-size: 20px; font-weight: bold; text-decoration: none; color: #000; }
-        .logo span { color: #e10600; }
-        .nav-links { display: flex; gap: 20px; }
-        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; }
-        .nav-links a:hover, .nav-links a.active { color: #e10600; }
-        .logout-btn { background: transparent; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-        .header-section { margin-bottom: 20px; }
-        .back-link { text-decoration: none; color: #6b7280; font-size: 14px; display: inline-block; margin-bottom: 10px; }
-        .back-link:hover { color: #000; }
-        .card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 20px; border-bottom: 1px solid #f3f4f6; text-align: left; }
-        th { color: #6b7280; font-size: 12px; text-transform: uppercase; }
-        .text-right { text-align: right; }
-        .text-center { text-align: center; }
-        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #f9fafb; border-top: 1px solid #e5e7eb; }
-        .page-btn { background: white; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; }
-        .page-btn:disabled { color: #9ca3af; background: #f3f4f6; cursor: not-allowed; border-color: #e5e7eb; }
-        .page-info { font-size: 14px; color: #374151; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+    <script defer th:src="@{/js/site.js}"></script>
 </head>
-<body>
+<body data-page="constructor-races" th:attr="data-constructor-id=${constructorId}">
 
-<nav>
-    <div class="nav-left">
-        <a href="/home" class="logo">JSGrandPrixHub</a>
-        <div class="nav-links">
-            <a href="/home">Dashboard</a>
-            <a href="/drivers">Drivers</a>
-            <a href="/constructors" class="active">Constructors</a>
-            <a href="/circuits">Circuits</a>
-            <a href="/races">Races</a>
-        </div>
-    </div>
-    <button id="auth-btn" class="logout-btn" onclick="handleAuthAction()">Logout</button>
-</nav>
+<th:block th:replace="~{fragments/navbar :: navbar('constructors')}"></th:block>
 
 <div class="container">
     <div class="header-section">
@@ -69,85 +34,12 @@
         </table>
 
         <div class="pagination">
-            <button class="page-btn" id="prev-btn" onclick="changePage(-1)">Previous</button>
+            <button class="page-btn" id="prev-btn" type="button">Previous</button>
             <div class="page-info" id="page-info">Page 1 of 1</div>
-            <button class="page-btn" id="next-btn" onclick="changePage(1)">Next</button>
+            <button class="page-btn" id="next-btn" type="button">Next</button>
         </div>
     </div>
 </div>
 
-<script th:inline="javascript">
-    const constructorId = [[${constructorId}]];
-    let currentPage = 0;
-    const pageSize = 50;
-
-    function handleAuthAction() { localStorage.removeItem('token'); window.location.href = '/login'; }
-
-    function updateAuthButton() {
-        const authBtn = document.getElementById('auth-btn');
-        const token = localStorage.getItem('token');
-        authBtn.innerText = token ? 'Logout' : 'Login';
-    }
-
-    async function loadRaceHistory(page) {
-        updateAuthButton();
-
-        const token = localStorage.getItem('token');
-        const headers = {};
-        if (token) {
-            headers['Authorization'] = 'Bearer ' + token;
-        }
-
-        document.getElementById('profile-back-link').href = `/constructors/${constructorId}`;
-
-        try {
-            const response = await fetch(`/api/constructors/${constructorId}/races?page=${page}&size=${pageSize}`, { headers });
-
-            if (response.status === 401 || response.status === 403) { logout(); return; }
-            if (!response.ok) throw new Error("Failed to pull race data");
-
-            const data = await response.json();
-            currentPage = data.number;
-
-            if(data.content.length > 0 && data.content[0].teamName) {
-                document.getElementById('page-title').innerText = `Race History: ${data.content[0].teamName}`;
-            }
-
-            const racesHtml = data.content.map(race => {
-                // Dostosuj 'race.driverName' oraz 'race.position' do nazw pól w swoim DTO
-                const driverName = race.driverName || race.driver || 'Unknown Driver';
-                const position = race.position || '-';
-
-                return `
-                    <tr>
-                        <td>${race.date || '-'}</td>
-                        <td><strong>${race.raceName || '-'}</strong></td>
-                        <td>${race.country || '-'}</td>
-                        <td>${driverName}</td>
-                        <td class="text-center"><strong>${position}</strong></td>
-                        <td class="text-right" style="font-weight: 500; color: #e10600;">
-                            +${race.points !== undefined ? race.points : '0'}
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-            document.getElementById('races-body').innerHTML = racesHtml;
-
-            document.getElementById('page-info').innerText = `Page ${currentPage + 1} of ${data.totalPages}`;
-            document.getElementById('prev-btn').disabled = data.first;
-            document.getElementById('next-btn').disabled = data.last;
-
-        } catch (e) {
-            document.getElementById('races-body').innerHTML = `<tr><td colspan="6" style="color: red; text-align: center;">Error loading data or unauthorized context.</td></tr>`;
-        }
-    }
-
-    function changePage(direction) {
-        loadRaceHistory(currentPage + direction);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => loadRaceHistory(0));
-</script>
 </body>
 </html>

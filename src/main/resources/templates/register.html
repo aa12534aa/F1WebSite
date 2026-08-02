@@ -3,50 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Register Page</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
-
-        /* Styl paska nawigacji */
-        nav { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-left { display: flex; align-items: center; gap: 30px; }
-        .logo { font-size: 20px; font-weight: bold; text-decoration: none; color: #000; }
-        .logo span { color: #e10600; }
-        .nav-links { display: flex; gap: 20px; }
-        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; }
-        .nav-links a:hover, .nav-links a.active { color: #e10600; }
-
-        /* Kontener do wyśrodkowania formularza na reszcie strony */
-        .main-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px 0; }
-        .register-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 320px; }
-
-        h2 { text-align: center; margin-bottom: 20px; color: #333; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 5px; color: #666; }
-        .input-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #218838; }
-        .login-link { text-align: center; margin-top: 15px; font-size: 14px; }
-        .login-link a { color: #007bff; text-decoration: none; font-weight: bold; }
-        .login-link a:hover { text-decoration: underline; }
-        #message { margin-top: 15px; text-align: center; font-weight: bold; }
-        .error { color: red; }
-        .success { color: green; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+    <script defer th:src="@{/js/site.js}"></script>
 </head>
-<body>
+<body data-page="register" class="auth-page">
 
-<nav>
-    <div class="nav-left">
-        <a href="/home" class="logo">JSGrandPrixHub</a>
-        <div class="nav-links">
-            <a href="/home">Dashboard</a>
-            <a href="/drivers">Drivers</a>
-            <a href="/constructors">Constructors</a>
-            <a href="/circuits">Circuits</a>
-            <a href="/races">Races</a>
-        </div>
-    </div>
-</nav>
+<th:block th:replace="~{fragments/navbar :: navbar('register')}"></th:block>
 
 <div class="main-wrapper">
     <div class="register-container">
@@ -68,43 +30,11 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" required placeholder="Create a password">
             </div>
-            <button type="submit">Register</button>
+            <button type="submit" class="auth-submit">Register</button>
         </form>
-        <div id="message"></div>
+        <div id="message" class="message"></div>
         <div class="login-link">Already have an account? <a href="/login">Sign in</a></div>
     </div>
 </div>
-
-<script>
-    document.getElementById('registerForm').addEventListener('submit', async function(event) {
-        event.preventDefault();
-        const registerData = {
-            firstname: document.getElementById('firstname').value,
-            lastname: document.getElementById('lastname').value,
-            username: document.getElementById('username').value,
-            password: document.getElementById('password').value
-        };
-
-        try {
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(registerData)
-            });
-
-            if (response.ok) {
-                document.getElementById('message').innerText = "Account created successfully!";
-                document.getElementById('message').className = "success";
-                document.getElementById('registerForm').reset();
-            } else {
-                document.getElementById('message').innerText = "Registration failed. Email might be taken.";
-                document.getElementById('message').className = "error";
-            }
-        } catch (error) {
-            document.getElementById('message').innerText = "Cannot connect to server!";
-            document.getElementById('message').className = "error";
-        }
-    });
-</script>
 </body>
 </html>

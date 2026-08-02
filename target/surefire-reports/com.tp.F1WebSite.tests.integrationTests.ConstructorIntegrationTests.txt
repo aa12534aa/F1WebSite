@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.tp.F1WebSite.tests.integrationTests.ConstructorIntegrationTests
+-------------------------------------------------------------------------------
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.241 s -- in com.tp.F1WebSite.tests.integrationTests.ConstructorIntegrationTests

@@ -3,59 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Race Details</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
-        nav { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-left { display: flex; align-items: center; gap: 30px; }
-        .logo { font-size: 20px; font-weight: bold; text-decoration: none; color: #000; }
-        .logo span { color: #e10600; }
-        .nav-links { display: flex; gap: 20px; }
-        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; }
-        .nav-links a:hover, .nav-links a.active { color: #e10600; }
-        .logout-btn { background: transparent; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-        .logout-btn:hover { background: #f3f4f6; }
-
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-
-        .back-link { text-decoration: none; color: #6b7280; font-size: 14px; display: inline-block; margin-bottom: 15px; }
-        .back-link:hover { color: #000; }
-
-        .race-header { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 25px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .race-title { margin: 0 0 10px 0; font-size: 28px; color: #111827; }
-        .race-meta { color: #6b7280; font-size: 16px; margin: 0 0 5px 0; }
-        .race-meta strong { color: #374151; }
-        .circuit-link { color: #e10600; text-decoration: none; font-weight: bold; }
-        .circuit-link:hover { text-decoration: underline; }
-
-        .action-buttons { margin-top: 20px; display: flex; gap: 15px; }
-        .action-btn { background: #e10600; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; }
-        .action-btn:hover { background: #b90500; }
-
-        #status-message { font-size: 16px; color: #4b5563; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+    <script defer th:src="@{/js/site.js}"></script>
 </head>
-<body>
+<body data-page="race-details" th:attr="data-race-id=${raceId}">
 
-<nav>
-    <div class="nav-left">
-        <a href="/home" class="logo">JSGrandPrixHub</a>
-        <div class="nav-links">
-            <a href="/home">Dashboard</a>
-            <a href="/drivers">Drivers</a>
-            <a href="/constructors">Constructors</a>
-            <a href="/circuits">Circuits</a>
-            <a href="/races" class="active">Races</a>
-        </div>
-    </div>
-    <button id="auth-btn" class="logout-btn" onclick="handleAuthAction()">Logout</button>
-</nav>
+<th:block th:replace="~{fragments/navbar :: navbar('races')}"></th:block>
 
 <div class="container">
     <a href="/races" class="back-link">&larr; Back to Races</a>
 
     <div id="status-message">Loading race details...</div>
 
-    <div id="data-container" style="display: none;">
+    <div id="data-container" hidden>
         <div class="race-header">
             <h1 class="race-title" id="race-name">Loading...</h1>
             <p class="race-meta">Date: <strong id="race-date"></strong></p>
@@ -72,58 +32,5 @@
     </div>
 </div>
 
-<script th:inline="javascript">
-    const raceId = [[${raceId}]];
-
-    function handleAuthAction() { localStorage.removeItem('token'); window.location.href = '/login'; }
-
-    function updateAuthButton() {
-        const authBtn = document.getElementById('auth-btn');
-        const token = localStorage.getItem('token');
-        authBtn.innerText = token ? 'Logout' : 'Login';
-    }
-
-    async function loadRaceData() {
-        updateAuthButton();
-
-        const token = localStorage.getItem('token');
-        const headers = {};
-        if (token) {
-            headers['Authorization'] = 'Bearer ' + token;
-        }
-
-        // Ustawiamy odnośniki do nowych podstron w HTML
-        document.getElementById('btn-results').href = `/races/${raceId}/results`;
-        document.getElementById('btn-qualifying').href = `/races/${raceId}/qualifying`;
-
-        try {
-            const response = await fetch(`/api/races/${raceId}`, { headers });
-
-            if (response.status === 401 || response.status === 403) { logout(); return; }
-            if (!response.ok) throw new Error("Failed to load race data");
-
-            const raceData = await response.json();
-
-            document.getElementById('race-name').innerText = raceData.name;
-            document.getElementById('race-date').innerText = raceData.date || 'Unknown date';
-
-            if (raceData.circuit) {
-                const circuitEl = document.getElementById('race-circuit');
-                circuitEl.innerText = raceData.circuit.name;
-                circuitEl.href = `/circuits/${raceData.circuit.circuitId}`;
-                document.getElementById('race-country').innerText = raceData.circuit.country;
-            }
-
-            document.getElementById('status-message').style.display = 'none';
-            document.getElementById('data-container').style.display = 'block';
-
-        } catch (e) {
-            console.error(e);
-            document.getElementById('status-message').innerText = "Error loading data.";
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', loadRaceData);
-</script>
 </body>
 </html>
