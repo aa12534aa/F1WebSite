@@ -1,6 +1,6 @@
-### F1StatsHub Endpoints
+# F1StatsHub Endpoints
 
-### Drivers Controller
+# Drivers Controller
 
 GET /api/home:
 - top drivers (most wins, most pole positions)
@@ -34,7 +34,7 @@ PUT /api/drivers/{id}:
 - full update of an existing driver
 
 
-### Constructors Controller
+# Constructors Controller
 
 GET /api/constructors:
 - paginated list of all constructors sorted by win count
@@ -61,7 +61,7 @@ PUT /api/constructors/{id}:
 - full update of an existing constructor
 
 
-### Circuits Controller
+# Circuits Controller
 
 GET /api/circuits:
 - circuits with total hosted race counts
@@ -82,7 +82,7 @@ PUT /api/circuits/{id}:
 - full update of an existing circuit
 
 
-### Races Controller
+# Races Controller
 
 GET /api/races:
 - paginated list of races
@@ -132,7 +132,7 @@ PUT /api/race/{raceId}/qualifying/{id}:
 - full update of an existing qualifying result
 
 
-### Database Schema
+# Database Schema
 
 drivers:
 - id
