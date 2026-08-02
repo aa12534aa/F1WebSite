@@ -21,7 +21,6 @@ circuitId,name,country,url
 20,Nürburgring,Germany,http://en.wikipedia.org/wiki/N%C3%BCrburgring
 21,Autodromo Enzo e Dino Ferrari,Italy,http://en.wikipedia.org/wiki/Autodromo_Enzo_e_Dino_Ferrari
 22,Suzuka Circuit,Japan,http://en.wikipedia.org/wiki/Suzuka_Circuit
-80,Las Vegas Strip Street Circuit,United States,https://en.wikipedia.org/wiki/Las_Vegas_Grand_Prix#Circuit
 24,Yas Marina Circuit,UAE,http://en.wikipedia.org/wiki/Yas_Marina_Circuit
 25,Autódromo Juan y Oscar Gálvez,Argentina,http://en.wikipedia.org/wiki/Aut%C3%B3dromo_Oscar_Alfredo_G%C3%A1lvez
 26,Circuito de Jerez,Spain,http://en.wikipedia.org/wiki/Circuito_Permanente_de_Jerez
@@ -76,3 +75,5 @@ circuitId,name,country,url
 77,Jeddah Corniche Circuit,Saudi Arabia,http://en.wikipedia.org/wiki/Jeddah_Street_Circuit
 78,Losail International Circuit,Qatar,http://en.wikipedia.org/wiki/Losail_International_Circuit
 79,Miami International Autodrome,USA,http://en.wikipedia.org/wiki/Miami_International_Autodrome
+80,Las Vegas Strip Street Circuit,United States,https://en.wikipedia.org/wiki/Las_Vegas_Grand_Prix#Circuit
+81,Madring,Spain,https://en.wikipedia.org/wiki/Madring

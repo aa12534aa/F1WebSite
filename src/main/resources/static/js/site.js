@@ -523,9 +523,9 @@
                         <td><a href="/races/${race.raceId}" class="race-link">${escapeHtml(race.raceName)}</a></td>
                         <td>${escapeHtml(circuitLabel)}</td>
                         <td><a href="/constructors/${race.constructorId}" class="constructor-link">${escapeHtml(race.team)}</a></td>
-                        <td>${escapeHtml(race.grid)}</td>
-                        <td class="text-right">${positionDisplay}</td>
-                        <td class="text-right">+${race.points}</td>
+                        <td class="text-center">${escapeHtml(race.grid)}</td>
+                        <td class="text-center"><strong>${positionDisplay}</strong></td>
+                        <td class="text-center">+${race.points}</td>
                     </tr>
                 `;
             }).join(''));
@@ -573,7 +573,7 @@
                         <td>${escapeHtml(circuitLabel)}</td>
                         <td><a href="/drivers/${race.driverId}" class="driver-link">${escapeHtml(driverName)}</a></td>
                         <td class="text-center"><strong>${position}</strong></td>
-                        <td class="text-right">+${race.points !== undefined ? race.points : '0'}</td>
+                        <td class="text-center">+${race.points !== undefined ? race.points : '0'}</td>
                     </tr>
                 `;
             }).join(''));

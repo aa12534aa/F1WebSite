@@ -22,7 +22,7 @@ circuits_columns = ['circuitId', 'name', 'country', 'url']
 data = {}
 
 for file in files:
-    data[file] = pd.read_csv(f'E:\\praca\\java\\SpringBoot\\F1WebSite\\f1data\\data\\{file}.csv', encoding='utf-8')
+    data[file] = pd.read_csv(f'E:\\praca\\java\\SpringBoot\\F1StatsHub\\f1data\\data\\{file}.csv', encoding='utf-8')
     
 cleared_data = {}
 cleared_data['races'] = data['races'][race_columns]
@@ -34,6 +34,7 @@ cleared_data['circuits'] = data['circuits'][circuits_columns]
 
 cleared_data['drivers']['name'] = cleared_data['drivers']['forename'] + ' ' + cleared_data['drivers']['surname']
 cleared_data['drivers'].drop(['forename', 'surname'], axis='columns', inplace=True)
+cleared_data['results'] = cleared_data['results'].drop_duplicates(subset=['raceId', 'driverId'], keep='first')
 
 for file in files:
-    cleared_data[file].to_csv(f'E:\\praca\\java\\SpringBoot\\F1WebSite\\f1data\\cleared_data\\cleared_{file}.csv', index=False, encoding='utf-8')
+    cleared_data[file].to_csv(f'E:\\praca\\java\\SpringBoot\\F1StatsHub\\f1data\\cleared_data\\cleared_{file}.csv', index=False, encoding='utf-8')
