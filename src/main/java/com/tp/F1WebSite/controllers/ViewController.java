@@ -18,7 +18,7 @@ public class ViewController {
         return "register";
     }
 
-    @GetMapping(path = "/home")
+    @GetMapping({"/", "/home"})
     public String home() {
         return "home";
     }
