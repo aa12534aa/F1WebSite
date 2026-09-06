@@ -12,6 +12,8 @@ public interface RaceService {
 
     Page<RaceCircuitDto> findManyByName(String searchName, Pageable pageable);
 
+    Page<RaceCircuitDto> findManyByNameAndSprint(String searchName, Boolean sprint, Pageable pageable);
+
     RaceDto findOneById(Long raceId);
 
     RaceDto createOne(RaceCreationDto raceCreationDto);

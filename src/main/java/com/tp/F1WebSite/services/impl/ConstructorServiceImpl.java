@@ -83,7 +83,15 @@ public class ConstructorServiceImpl implements ConstructorService {
     // POST
     @Override
     public ConstructorDto createOne(ConstructorDto constructorDto) {
+        if (constructorDto == null || constructorDto.getName() == null || constructorDto.getName().isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Constructor name is required"
+            );
+        }
+
         ConstructorEntity constructorEntity = constructorMapper.mapFrom(constructorDto);
+        constructorEntity.setName(constructorEntity.getName().trim());
 
         Boolean exists = constructorRepository.existsByName(constructorEntity.getName());
         if (exists) {

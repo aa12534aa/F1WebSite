@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sprint Results</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+    <script defer th:src="@{/js/site.js}"></script>
+</head>
+<body data-page="race-sprint-results" th:attr="data-race-id=${raceId}">
+
+<th:block th:replace="~{fragments/navbar :: navbar('races')}"></th:block>
+
+<div class="container">
+    <a href="#" id="back-link" class="back-link">&larr; Back to Race Details</a>
+
+    <div class="header-section">
+        <h1 class="page-title"><span id="race-name">Race</span> - Sprint Results</h1>
+        <button id="create-sprint-result-btn" class="btn-primary" type="button" data-open-create="sprintResults" th:attr="data-race-id=${raceId}" data-employee-action="true" hidden>Create Sprint Result</button>
+    </div>
+
+    <div id="status-message">Loading sprint results...</div>
+
+    <div id="data-container" hidden>
+        <div class="card">
+            <table>
+                <thead>
+                <tr>
+                    <th class="text-center">Pos</th>
+                    <th class="text-center">Grid</th>
+                    <th>Driver</th>
+                    <th>Nationality</th>
+                    <th>Constructor</th>
+                    <th class="text-right">Points</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="sprint-results-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -37,6 +37,9 @@ public class DriverEntity {
     @OneToMany(mappedBy = "driver")
     private List<QualifyingEntity> qualifying;
 
+    @OneToMany(mappedBy = "driver")
+    private List<SprintResultEntity> sprintResults;
+
     @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 }

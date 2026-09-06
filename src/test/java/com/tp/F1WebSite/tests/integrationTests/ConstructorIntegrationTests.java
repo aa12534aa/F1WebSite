@@ -211,6 +211,23 @@ public class ConstructorIntegrationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 
+    @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void shouldReturnBadRequestWhenCreatingConstructorWithBlankName() {
+        ConstructorDto newConstructor = ConstructorDto.builder()
+                .name("   ")
+                .build();
+
+        ResponseEntity<String> response = restTemplate
+                .exchange("/api/constructors",
+                        HttpMethod.POST,
+                        getPostEntityWithRole(newConstructor, "EMPLOYEE"),
+                        String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
     // DELETE
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/testData/CleanData.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)

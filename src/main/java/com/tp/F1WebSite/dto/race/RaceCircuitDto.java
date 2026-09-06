@@ -26,4 +26,6 @@ public class RaceCircuitDto {
     private String winnerName;
 
     private String constructorName;
+
+    private Boolean sprintAppearance;
 }

@@ -46,10 +46,10 @@ public class QualifyingServiceImpl implements QualifyingService {
     // GET
     @Override
     public List<QualifyingDto> findMany(Long raceId) {
-        if (!qualifyingRepository.existsById(raceId)) {
+        if (!raceRepository.existsById(raceId)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "Qualifying does not exist"
+                    "Race does not exist"
             );
         }
 

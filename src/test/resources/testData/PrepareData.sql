@@ -23,11 +23,11 @@ VALUES
     ('Circuit de Barcelona', 'Spain', 'http://catalunatrack'),
     ('SPA', 'Belgium', 'http://spa');
 
-INSERT INTO races(circuit_id, date, name)
+INSERT INTO races(circuit_id, date, name, sprint_appearance)
 VALUES
-    (1, '2025-10-12', 'GP Poznan'),
-    (2, '2025-11-12', 'GP Barcelona'),
-    (1, '2026-10-12', 'GP Poznan');
+    (1, '2025-10-12', 'GP Poznan', false),
+    (2, '2025-11-12', 'GP Barcelona', true),
+    (1, '2026-10-12', 'GP Poznan', false);
 
 INSERT INTO qualifying(race_id, driver_id, constructor_id, position)
 VALUES

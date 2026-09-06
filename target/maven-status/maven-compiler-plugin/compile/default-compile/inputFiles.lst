@@ -12,12 +12,14 @@ E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\dto\Dr
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\dto\QualifyingDto.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\dto\RaceDto.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\dto\ResultDto.java
+E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\dto\SprintResultDto.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\entities\CircuitEntity.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\entities\ConstructorEntity.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\entities\DriverEntity.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\entities\QualifyingEntity.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\entities\RaceEntity.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\entities\ResultEntity.java
+E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\entities\SprintResultEntity.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\entities\UserEntity.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\domain\enums\UserRole.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\dto\auth\AuthResponseDto.java
@@ -38,6 +40,7 @@ E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\dto\race\Qual
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\dto\race\RaceCircuitDto.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\dto\race\RaceCreationDto.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\dto\race\ResultCreationDto.java
+E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\dto\race\SprintResultCreationDto.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\F1WebSite.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\mappers\impl\CircuitMapperImpl.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\mappers\impl\ConstructorMapperImpl.java
@@ -45,6 +48,7 @@ E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\mappers\impl\
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\mappers\impl\QualifyingMapperImpl.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\mappers\impl\RaceMapperImpl.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\mappers\impl\ResultMapperImpl.java
+E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\mappers\impl\SprintResultMapperImpl.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\mappers\Mapper.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\repositories\CircuitRepository.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\repositories\ConstructorRepository.java
@@ -52,6 +56,7 @@ E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\repositories\
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\repositories\QualifyingRepository.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\repositories\RaceRepository.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\repositories\ResultRepository.java
+E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\repositories\SprintResultRepository.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\repositories\UserRepository.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\security\CustomUserDetailsService.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\security\JwtAuthenticationFilter.java
@@ -69,6 +74,8 @@ E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\services\impl
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\services\impl\QualifyingServiceImpl.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\services\impl\RaceServiceImpl.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\services\impl\ResultServiceImpl.java
+E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\services\impl\SprintResultServiceImpl.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\services\QualifyingService.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\services\RaceService.java
 E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\services\ResultService.java
+E:\praca\java\SpringBoot\F1StatsHub\src\main\java\com\tp\F1WebSite\services\SprintResultService.java

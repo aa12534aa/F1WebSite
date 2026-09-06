@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -27,11 +28,17 @@ public class JwtGenerator {
 
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
+        String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority != null && !authority.isBlank())
+                .findFirst()
+                .orElse("ROLE_USER");
         Date currentDate = new Date();
         Date expirationDate = new Date(currentDate.getTime() + jwtExpirationMs);
 
         return Jwts.builder()
                 .setSubject(username)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
                 .signWith(key, SignatureAlgorithm.HS256)

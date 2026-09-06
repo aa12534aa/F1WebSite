@@ -20,4 +20,6 @@ public class RaceDto {
     private LocalDate date;
 
     private String name;
+
+    private Boolean sprintAppearance;
 }

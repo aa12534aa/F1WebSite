@@ -2,7 +2,6 @@ package com.tp.F1WebSite.services.impl;
 
 import com.tp.F1WebSite.domain.dto.RaceDto;
 import com.tp.F1WebSite.domain.entities.CircuitEntity;
-import com.tp.F1WebSite.domain.entities.DriverEntity;
 import com.tp.F1WebSite.domain.entities.RaceEntity;
 import com.tp.F1WebSite.dto.race.RaceCreationDto;
 import com.tp.F1WebSite.dto.race.RaceCircuitDto;
@@ -50,12 +49,17 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
+    public Page<RaceCircuitDto> findManyByNameAndSprint(String searchName, Boolean sprint, Pageable pageable) {
+        return raceRepository.findRacesCircuitsByNameAndSprint(searchName, sprint, pageable);
+    }
+
+    @Override
     public RaceDto findOneById(Long raceId) {
         RaceEntity raceEntity = raceRepository.findById(raceId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Race Not Found"
-        ));
+                ));
         return raceMapper.mapTo(raceEntity);
     }
 
@@ -78,6 +82,7 @@ public class RaceServiceImpl implements RaceService {
                 .circuit(circuit)
                 .date(raceCreationDto.getDate())
                 .name(raceCreationDto.getName())
+                .sprintAppearance(raceCreationDto.getSprintAppearance())
                 .isDeleted(false)
                 .build();
         RaceEntity savedRace = raceRepository.save(raceEntity);
@@ -132,6 +137,7 @@ public class RaceServiceImpl implements RaceService {
                 .circuit(circuitEntity)
                 .date(raceCreationDto.getDate())
                 .name(raceCreationDto.getName())
+                .sprintAppearance(raceCreationDto.getSprintAppearance())
                 .isDeleted(false)
                 .build();
 

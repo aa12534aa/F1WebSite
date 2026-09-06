@@ -23,4 +23,7 @@ public class RaceCreationDto {
 
     @NotBlank
     private String circuitName;
+
+    @NotNull
+    private Boolean sprintAppearance;
 }

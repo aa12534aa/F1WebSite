@@ -92,12 +92,13 @@ public class RaceIntegrationTests {
                         RaceCircuitDto::getCircuitName,
                         RaceCircuitDto::getCountry,
                         RaceCircuitDto::getWinnerName,
-                        RaceCircuitDto::getConstructorName
+                        RaceCircuitDto::getConstructorName,
+                        RaceCircuitDto::getSprintAppearance
                 )
                 .containsExactlyInAnyOrder(
-                        tuple("GP Poznan", "Tor Poznan", "Poland", "Julian Sokołowski", "ferrari"),
-                        tuple("GP Barcelona", "Circuit de Barcelona", "Spain", "Charles Leclerc", "ferrari"),
-                        tuple("GP Poznan", "Tor Poznan", "Poland", null, null)
+                        tuple("GP Poznan", "Tor Poznan", "Poland", "Julian Sokołowski", "ferrari", false),
+                        tuple("GP Barcelona", "Circuit de Barcelona", "Spain", "Charles Leclerc", "ferrari", true),
+                        tuple("GP Poznan", "Tor Poznan", "Poland", null, null, false)
                 );
     }
 
@@ -117,6 +118,7 @@ public class RaceIntegrationTests {
         assertThat(responseBody).isNotNull();
         assertThat(responseBody.getDate()).isEqualTo(LocalDate.of(2025, 10, 12));
         assertThat(responseBody.getName()).isEqualTo("GP Poznan");
+        assertThat(responseBody.getSprintAppearance()).isFalse();
 
         CircuitDto expectedCircuit = CircuitDto.builder()
                 .circuitId(1L)
@@ -264,6 +266,7 @@ public class RaceIntegrationTests {
                 .name("GP PL")
                 .date(LocalDate.of(2025, 12, 12))
                 .circuitName("Tor Poznan")
+                .sprintAppearance(true)
                 .build();
 
         ResponseEntity<RaceDto> response = restTemplate
@@ -296,6 +299,7 @@ public class RaceIntegrationTests {
                 .name("GP Poznan")
                 .date(LocalDate.of(2025, 10, 12))
                 .circuitName("Tor Poznan")
+                .sprintAppearance(false)
                 .build();
 
         ResponseEntity<RaceDto> response = restTemplate
@@ -315,6 +319,7 @@ public class RaceIntegrationTests {
                 .name("GP PL")
                 .date(LocalDate.of(2025, 12, 12))
                 .circuitName("Tor Warszawa")
+                .sprintAppearance(false)
                 .build();
 
         ResponseEntity<RaceDto> response = restTemplate
@@ -376,9 +381,10 @@ public class RaceIntegrationTests {
                         RaceDto::getRaceId,
                         RaceDto::getName,
                         RaceDto::getDate,
-                        RaceDto::getCircuit
+                        RaceDto::getCircuit,
+                        RaceDto::getSprintAppearance
                 )
-                .containsExactlyInAnyOrder(1L, "GP Poznan", LocalDate.of(2025, 10, 12), circuit);
+                .containsExactlyInAnyOrder(1L, "GP Poznan", LocalDate.of(2025, 10, 12), circuit, false);
     }
 
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -490,9 +496,10 @@ public class RaceIntegrationTests {
                         RaceDto::getRaceId,
                         RaceDto::getName,
                         RaceDto::getDate,
-                        RaceDto::getCircuit
+                        RaceDto::getCircuit,
+                        RaceDto::getSprintAppearance
                 )
-                .containsExactlyInAnyOrder(1L, "GP Poznan", LocalDate.of(2025, 10, 12), circuit);
+                .containsExactlyInAnyOrder(1L, "GP Poznan", LocalDate.of(2025, 10, 12), circuit, false);
     }
 
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -671,6 +678,7 @@ public class RaceIntegrationTests {
                 .circuitName("SPA")
                 .date(LocalDate.of(2025, 10, 13))
                 .name("GP Belgium")
+                .sprintAppearance(false)
                 .build();
 
         ResponseEntity<RaceDto> response = restTemplate.exchange("/api/races/1",
@@ -702,6 +710,7 @@ public class RaceIntegrationTests {
                 .circuitName("SPA")
                 .date(LocalDate.of(2025, 10, 13))
                 .name("GP Belgium")
+                .sprintAppearance(false)
                 .build();
 
         ResponseEntity<RaceDto> response = restTemplate.exchange("/api/races/100",
@@ -720,6 +729,7 @@ public class RaceIntegrationTests {
                 .circuitName("SPA")
                 .date(LocalDate.of(2025, 11, 12))
                 .name("GP Belgium")
+                .sprintAppearance(false)
                 .build();
 
         ResponseEntity<RaceDto> response = restTemplate.exchange("/api/races/1",
@@ -738,6 +748,7 @@ public class RaceIntegrationTests {
                 .circuitName("Hungaroring")
                 .date(LocalDate.of(2025, 10, 13))
                 .name("GP Belgium")
+                .sprintAppearance(false)
                 .build();
 
         ResponseEntity<RaceDto> response = restTemplate.exchange("/api/races/1",
@@ -797,9 +808,10 @@ public class RaceIntegrationTests {
                         RaceDto::getRaceId,
                         RaceDto::getName,
                         RaceDto::getDate,
-                        RaceDto::getCircuit
+                        RaceDto::getCircuit,
+                        RaceDto::getSprintAppearance
                 )
-                .containsExactlyInAnyOrder(1L, "GP Poznan", LocalDate.of(2025, 10, 12), circuit);
+                .containsExactlyInAnyOrder(1L, "GP Poznan", LocalDate.of(2025, 10, 12), circuit, false);
     }
 
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -947,9 +959,10 @@ public class RaceIntegrationTests {
                         RaceDto::getRaceId,
                         RaceDto::getName,
                         RaceDto::getDate,
-                        RaceDto::getCircuit
+                        RaceDto::getCircuit,
+                        RaceDto::getSprintAppearance
                 )
-                .containsExactlyInAnyOrder(1L, "GP Poznan", LocalDate.of(2025, 10, 12), circuit);
+                .containsExactlyInAnyOrder(1L, "GP Poznan", LocalDate.of(2025, 10, 12), circuit, false);
     }
 
     @Sql(scripts = "/testData/PrepareData.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)

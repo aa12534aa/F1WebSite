@@ -12,7 +12,10 @@
 
 <div class="container">
     <div class="header-section">
-        <h1>F1 Races Registry</h1>
+        <div class="header-section--split">
+            <h1>F1 Races Registry</h1>
+            <button id="create-race-btn" class="btn-primary" type="button" data-open-create="races" data-employee-action="true" hidden>Create Race</button>
+        </div>
         <div class="search-container">
             <input type="text" id="search-input" class="search-input" placeholder="Search by race name or date...">
             <button id="search-btn" class="search-btn" type="button">Search</button>
@@ -31,6 +34,16 @@
                 <th>Country</th>
                 <th>Winner</th>
                 <th>Constructor</th>
+                <th>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        Sprint
+                        <select id="sprint-filter" style="padding: 2px 4px; border-radius: 4px;">
+                            <option value="both">Both</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </th>
                 <th class="text-right">Action</th>
             </tr>
             </thead>

@@ -12,7 +12,10 @@
 
 <div class="container">
     <div class="header-section">
-        <h1>F1 Circuits Registry</h1>
+        <div class="header-section--split">
+            <h1>F1 Circuits Registry</h1>
+            <button id="create-circuit-btn" class="btn-primary" type="button" data-open-create="circuits" data-employee-action="true" hidden>Create Circuit</button>
+        </div>
         <div class="search-container">
             <input type="text" id="search-input" class="search-input" placeholder="Search by name...">
             <button id="search-btn" class="search-btn" type="button">Search</button>
@@ -29,6 +32,7 @@
                 <th>Name</th>
                 <th>Country</th>
                 <th class="text-right">Total Races Hosted</th>
+                <th class="text-right">Action</th>
             </tr>
             </thead>
             <tbody id="circuits-body"></tbody>

@@ -1,11 +1,8 @@
 package com.tp.F1WebSite.controllers;
 
 import com.tp.F1WebSite.domain.dto.CircuitDto;
-import com.tp.F1WebSite.domain.dto.RaceDto;
-import com.tp.F1WebSite.domain.entities.RaceEntity;
 import com.tp.F1WebSite.dto.circuit.CircuitAllInfoDto;
 import com.tp.F1WebSite.dto.circuit.CircuitRacesDto;
-import com.tp.F1WebSite.mappers.Mapper;
 import com.tp.F1WebSite.services.CircuitService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

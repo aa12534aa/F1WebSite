@@ -33,8 +33,14 @@ public class RaceEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private Boolean sprintAppearance;
+
     @OneToMany(mappedBy = "race")
     private List<ResultEntity> results;
+
+    @OneToMany(mappedBy = "race")
+    private List<SprintResultEntity> sprintResults;
 
     @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean isDeleted = false;

@@ -94,4 +94,10 @@ public class ViewController {
         model.addAttribute("raceId", id);
         return "race-qualifying";
     }
+
+    @GetMapping("/races/{id}/sprint-results")
+    public String getRaceSprintResultsPage(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("raceId", id);
+        return "race-sprint-results";
+    }
 }

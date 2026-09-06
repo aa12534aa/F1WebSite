@@ -15,6 +15,7 @@
 
     <div class="header-section">
         <h1 class="page-title"><span id="race-name">Race</span> - Results</h1>
+        <button id="create-result-btn" class="btn-primary" type="button" data-open-create="results" th:attr="data-race-id=${raceId}" data-employee-action="true" hidden>Create Result</button>
     </div>
 
     <div id="status-message">Loading results...</div>
@@ -30,6 +31,7 @@
                     <th>Nationality</th>
                     <th>Constructor</th>
                     <th class="text-right">Points</th>
+                    <th class="text-right">Actions</th>
                 </tr>
                 </thead>
                 <tbody id="results-body">

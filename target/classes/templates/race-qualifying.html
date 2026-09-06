@@ -15,6 +15,7 @@
 
     <div class="header-section">
         <h1 class="page-title"><span id="race-name">Race</span> - Qualifying</h1>
+        <button id="create-qualifying-btn" class="btn-primary" type="button" data-open-create="qualifying" th:attr="data-race-id=${raceId}" data-employee-action="true" hidden>Create Qualifying</button>
     </div>
 
     <div id="status-message">Loading qualifying data...</div>
@@ -28,6 +29,7 @@
                     <th>Driver</th>
                     <th>Nationality</th>
                     <th>Constructor</th>
+                    <th class="text-right">Actions</th>
                 </tr>
                 </thead>
                 <tbody id="qualifying-body">

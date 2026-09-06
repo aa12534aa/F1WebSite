@@ -31,6 +31,9 @@ public class ConstructorEntity {
     @OneToMany(mappedBy = "constructor")
     private List<QualifyingEntity> qualifying;
 
+    @OneToMany(mappedBy = "constructor")
+    private List<SprintResultEntity> sprintResults;
+
     @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 }
